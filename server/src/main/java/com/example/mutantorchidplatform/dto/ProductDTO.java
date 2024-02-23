@@ -1,11 +1,10 @@
 package com.example.mutantorchidplatform.dto;
 
 
-import com.example.mutantorchidplatform.entity.Category;
-import com.example.mutantorchidplatform.entity.Feedback;
+import com.example.mutantorchidplatform.entity.Rating;
+import com.example.mutantorchidplatform.entity.Review;
 import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.entity.enums.InventoryType;
-import com.example.mutantorchidplatform.entity.enums.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -25,15 +24,23 @@ public class ProductDTO {
     @Min(0)
     private int available; // số lượng
 
-    private CategoryDTO category;
+    private String category;
+
+    private String code;
+
+    private List<String> colors;
+
 
     private String cover;
 
     @NotBlank
     private String description;
 
+    private String gender;
+
     private List<String> images;
 
+    @Enumerated(EnumType.STRING)
     private InventoryType inventoryType;
 
     private String name;
@@ -42,11 +49,19 @@ public class ProductDTO {
 
     private String priceSale;
 
-    private List<FeedbackDTO> feedbacks;
+    private List<Rating> ratings;
+
+    private List<ReviewDTO> reviews;
+
+    private List<String> sizes;
+
+    private String sku;
 
     private int sold;
 
     private String status;
+
+    private List<String> tags;
 
     private float totalRating;
 

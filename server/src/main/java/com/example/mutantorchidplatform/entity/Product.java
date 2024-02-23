@@ -19,14 +19,22 @@ public class Product extends TimeAuditable{
 
     private int available; // số lượng
 
-    @ManyToOne
-    private Category category;
+    private String category;
+
+    private String code;
+
+    @ElementCollection
+    @CollectionTable(name = "product_colors", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "color")
+    private List<String> colors;
+
 
     private String cover;
 
     @Column(length = 5000)
     private String description;
 
+    private String gender;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
@@ -43,11 +51,26 @@ public class Product extends TimeAuditable{
     private String priceSale;
 
     @OneToMany(mappedBy = "product")
-    private List<Feedback> feedbacks;
+    private List<Rating> ratings;
+
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews;
+
+    @ElementCollection
+    @CollectionTable(name = "product_sizes", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "size")
+    private List<String> sizes;
+
+    private String sku;
 
     private int sold;
 
     private String status;
+
+    @ElementCollection
+    @CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "tag")
+    private List<String> tags;
 
     private float totalRating;
 

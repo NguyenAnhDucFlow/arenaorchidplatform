@@ -5,12 +5,15 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Category {
+public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(unique = true)
+    private int id;
     private String name;
+    private int starCount;
+    private int reviewCount;
+
+    @ManyToOne
+    private Product product;
 }
