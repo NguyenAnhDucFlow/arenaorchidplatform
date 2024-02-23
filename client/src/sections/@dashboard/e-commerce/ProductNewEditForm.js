@@ -13,7 +13,6 @@ import { Card, Chip, Grid, Stack, TextField, Typography, Autocomplete, InputAdor
 
 // utils
 import axios from '../../../utils/axios';
-
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -35,11 +34,7 @@ const CATEGORY_OPTION = [
   {
     group: 'Mutant Orchid',
     classify: [
-      { id: 1, name: '5 cánh trắng' },
-      { id: 2, name: 'Shenzhen Nongke' },
-      { id: 3, name: 'Odontoglossum' },
-      { id: 4, name: 'Giant Ansellia' },
-      { id: 5, name: 'bướm Hochstetter' },
+      '5 cánh trắng', 'Shenzhen Nongke', 'Odontoglossum', 'Giant Ansellia', 'bướm Hochstetter' 
       // thêm các classify khác ở đây
     ]
   }
@@ -99,7 +94,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       inStock: true,
       taxes: true,
       // gender: currentProduct?.gender || GENDER_OPTION[2],
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[0].id,
+      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -137,18 +132,14 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       const formData = new FormData();
       formData.append('name', getValues('name'));
       formData.append('description', getValues('description'));
-      formData.append('category.id', getValues('category').id);
+      formData.append('category', getValues('category'));
       formData.append('price', getValues('price'));
 
       getValues('images').forEach((file) => {
         if (typeof file === "string")
-        return;
+          return;
         formData.append('files', file);
       });
-
-
-
-      console.log("cate", getValues('category'));
 
       let response;
       if (isEdit) {
@@ -167,9 +158,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       console.error(error);
     }
   };
-
-
-
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -243,19 +231,17 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   />
                 </div> */}
 
-
                 <RHFSelect name="category" label="Category">
                   {CATEGORY_OPTION.map((category) => (
                     <optgroup key={category.group} label={category.group}>
                       {category.classify.map((classify) => (
-                        <option key={classify.id} value={classify.id}>
-                          {classify.name}
+                        <option key={classify} value={classify}>
+                          {classify}
                         </option>
                       ))}
                     </optgroup>
                   ))}
                 </RHFSelect>
-
 
                 {/* <Controller
                   name="tags"
