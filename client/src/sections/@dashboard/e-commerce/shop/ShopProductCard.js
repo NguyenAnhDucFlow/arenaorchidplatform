@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
@@ -19,9 +18,10 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
+
   const { name, cover, price, colors, status, priceSale } = product;
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const linkTo = PATH_DASHBOARD.eCommerce.view(name);
 
   return (
     <Card>

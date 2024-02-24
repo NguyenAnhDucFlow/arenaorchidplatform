@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useContext } from 'react';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,7 @@ import { Card, Chip, Grid, Stack, TextField, Typography, Autocomplete, InputAdor
 
 // utils
 import axios from '../../../utils/axios';
+import { AuthContext } from '../../../contexts/JWTContext';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -75,6 +76,9 @@ ProductNewEditForm.propTypes = {
 };
 
 export default function ProductNewEditForm({ isEdit, currentProduct }) {
+
+  const { user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -139,6 +143,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       formData.append('description', getValues('description'));
       formData.append('category.id', getValues('category').id);
       formData.append('price', getValues('price'));
+      formData.append('owner.id', user.id);
+
 
       getValues('images').forEach((file) => {
         if (typeof file === "string")
