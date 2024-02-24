@@ -16,10 +16,6 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
-
-// utils
-import axios from '../../utils/axios';
-
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts } from '../../redux/slices/product';
@@ -104,21 +100,13 @@ export default function EcommerceProductList() {
     setPage(0);
   };
 
-  const handleDeleteRow = async (id) => {
-    // Gọi API để xóa dữ liệu từ máy chủ
-    await axios.delete(`/product/${id}`);
-  
-    // Xóa hàng khỏi trạng thái cục bộ
+  const handleDeleteRow = (id) => {
     const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
   };
 
-  const handleDeleteRows = async (selected) => {
-    // Gọi API để xóa dữ liệu từ máy chủ cho mỗi hàng được chọn
-    await Promise.all(selected.map((id) => axios.delete(`/product/${id}`)));
-  
-    // Xóa các hàng khỏi trạng thái cục bộ
+  const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
