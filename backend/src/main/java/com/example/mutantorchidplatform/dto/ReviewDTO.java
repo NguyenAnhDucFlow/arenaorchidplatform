@@ -1,11 +1,7 @@
 package com.example.mutantorchidplatform.dto;
 
-import com.example.mutantorchidplatform.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 

@@ -1,7 +1,6 @@
 package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.UserDTO;
-import com.example.mutantorchidplatform.entity.Product;
 import com.example.mutantorchidplatform.entity.Role;
 import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.RoleRepository;

@@ -1,6 +1,5 @@
 package com.example.mutantorchidplatform.entity;
 
-import com.example.mutantorchidplatform.entity.enums.ProductStatus;
 import com.example.mutantorchidplatform.entity.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;

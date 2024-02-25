@@ -1,7 +1,5 @@
 package com.example.mutantorchidplatform.dto;
 
-import com.example.mutantorchidplatform.entity.Product;
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

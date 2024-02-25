@@ -1,6 +1,5 @@
 package com.example.mutantorchidplatform.controller;
 
-import com.example.mutantorchidplatform.dto.ProductDTO;
 import com.example.mutantorchidplatform.dto.ResponseDTO;
 import com.example.mutantorchidplatform.dto.UserDTO;
 import com.example.mutantorchidplatform.entity.Role;
@@ -9,22 +8,14 @@ import com.example.mutantorchidplatform.jwt.JwtTokenService;
 import com.example.mutantorchidplatform.repository.UserRepository;
 import com.example.mutantorchidplatform.service.S3StorageService;
 import com.example.mutantorchidplatform.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")

@@ -1,5 +1,4 @@
 package com.example.mutantorchidplatform.dto;
-import com.example.mutantorchidplatform.entity.Role;
 import com.example.mutantorchidplatform.entity.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,12 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class UserDTO {

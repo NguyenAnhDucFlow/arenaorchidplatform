@@ -2,8 +2,6 @@ package com.example.mutantorchidplatform.dto;
 
 
 import com.example.mutantorchidplatform.entity.Rating;
-import com.example.mutantorchidplatform.entity.Review;
-import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.entity.enums.InventoryType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

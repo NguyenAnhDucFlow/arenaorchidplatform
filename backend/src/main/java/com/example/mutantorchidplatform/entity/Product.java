@@ -1,7 +1,5 @@
 package com.example.mutantorchidplatform.entity;
-
 import com.example.mutantorchidplatform.entity.enums.InventoryType;
-import com.example.mutantorchidplatform.entity.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
