@@ -129,8 +129,8 @@ export default function UserList() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+  const handleEditRow = (name) => {
+    navigate(PATH_DASHBOARD.user.edit(paramCase(name)));
   };
 
   const dataFiltered = applySortFilter({

@@ -36,9 +36,6 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-
-    private final String UPLOAD_FOLDER = "D:/arenaorchid/user/";
-
     @Autowired
     S3StorageService s3StorageService;
 
@@ -106,6 +103,7 @@ public class UserController {
 
     @PutMapping("/")
     public ResponseDTO<Void> updateUser(@ModelAttribute @Valid UserDTO userDTO) throws IOException {
+
         if (userDTO.getFile() != null && !userDTO.getFile().isEmpty()) {
             String filename = userDTO.getFile().getOriginalFilename();
             // lay dinh dang file

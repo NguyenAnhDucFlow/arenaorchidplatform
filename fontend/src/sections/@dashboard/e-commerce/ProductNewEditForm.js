@@ -151,10 +151,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         formData.append('files', file);
       });
 
-
-
-      console.log("cate", getValues('category'));
-
       let response;
       if (isEdit) {
         // Call the API to update the product

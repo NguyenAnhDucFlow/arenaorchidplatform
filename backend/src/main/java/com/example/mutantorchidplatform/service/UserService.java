@@ -66,12 +66,18 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
-        modelMapper.map(userDTO, User.class);
-        user.setRoles(userDTO.getRoles().stream().map(role -> roleRepository.findById(role.getId()).orElse(null))
-                .filter(r -> r != null).collect(Collectors.toSet()));
-
+        modelMapper.map(userDTO, user);
+        if (userDTO.getRoles() != null) {
+            user.setRoles(userDTO.getRoles().stream()
+                    .map(role -> roleRepository.findById(role.getId()).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet()));
+        } else {
+            user.setRoles(new HashSet<>());
+        }
         userRepository.save(user);
     }
+
 
     @Override
     @Transactional

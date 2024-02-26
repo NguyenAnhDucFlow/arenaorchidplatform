@@ -6,7 +6,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Grid, Card, Stack, Typography } from '@mui/material';
+
 import { LoadingButton } from '@mui/lab';
+
+import axios from '../../../../utils/axios';
+
 // hooks
 import useAuth from '../../../../hooks/useAuth';
 // utils
@@ -47,6 +51,7 @@ export default function AccountGeneral() {
   });
 
   const {
+    getValues,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -54,12 +59,41 @@ export default function AccountGeneral() {
 
   const onSubmit = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
+      const formData = new FormData();
+
+      // Append each field individually
+      formData.append('id', user.id);
+      formData.append('displayName', getValues('displayName'));
+      formData.append('email', getValues('email'));
+      const photoFile = getValues('photoURL');
+      if (typeof photoFile !== "string") {
+        formData.append('file', photoFile);
+      } else {
+        formData.append('photoURL', photoFile);
+      }
+      formData.append('phoneNumber', getValues('phoneNumber'));
+      formData.append('country', getValues('country'));
+      formData.append('address', getValues('address'));
+      formData.append('state', getValues('state'));
+      formData.append('city', getValues('city'));
+      formData.append('zipCode', getValues('zipCode'));
+      formData.append('about', getValues('about'));
+      formData.append('isPublic', getValues('isPublic'));
+
+      // Replace 'url' with the URL you're posting to.
+      const response = await axios.put('/users/', formData);
+
+      if (response.status === 200) {
+        enqueueSnackbar('Update success!');
+      } else {
+        enqueueSnackbar('Update failed!');
+      }
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Update failed!');
     }
   };
+
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
