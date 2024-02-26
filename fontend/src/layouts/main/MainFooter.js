@@ -12,7 +12,7 @@ import SocialsButton from '../../components/SocialsButton';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'OrchidArena',
     children: [
       { name: 'About us', href: PATH_PAGE.about },
       { name: 'Contact us', href: PATH_PAGE.contact },
@@ -29,8 +29,8 @@ const LINKS = [
   {
     headline: 'Contact',
     children: [
-      { name: 'support@minimals.cc', href: '#' },
-      { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' },
+      { name: 'Ducnase161841@fpt.edu.vn', href: '#' },
+      { name: 'Fpt University HCM', href: '#' },
     ],
   },
 ];
@@ -57,8 +57,8 @@ export default function MainFooter() {
           </Grid>
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              Welcome to your next venture with our Orchid Auction Platform
+              . It’s designed to be customized to your style, providing a unique and engaging experience for all orchid enthusiasts.
             </Typography>
 
             <Stack
@@ -109,7 +109,7 @@ export default function MainFooter() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          © 2021. All rights reserved
+          © 2024. All rights reserved
         </Typography>
       </Container>
     </RootStyle>

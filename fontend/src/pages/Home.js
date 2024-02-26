@@ -2,6 +2,8 @@
 import { styled } from '@mui/material/styles';
 // components
 import Page from '../components/Page';
+
+import MainFooter from '../layouts/main/MainFooter';
 // sections
 import {
   HomeHero,
@@ -31,25 +33,25 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function HomePage() {
   return (
-    <Page title="The starting point for your next project">
+    <Page title="OrchidArena">
       <RootStyle>
         <HomeHero />
         <ContentStyle>
-          <HomeMinimal />
+          {/* <HomeMinimal /> */}
 
-          <HomeHugePackElements />
+          {/* <HomeHugePackElements /> */}
 
-          <HomeDarkMode />
+          {/* <HomeDarkMode /> */}
 
           <HomeColorPresets />
 
-          <HomeCleanInterfaces />
+          {/* <HomeCleanInterfaces /> */}
 
-          <HomePricingPlans />
+          {/* <HomePricingPlans /> */}
 
-          <HomeLookingFor />
+          {/* <HomeLookingFor /> */}
 
-          <HomeAdvertisement />
+          {/* <HomeAdvertisement /> */}
         </ContentStyle>
       </RootStyle>
     </Page>

@@ -72,13 +72,12 @@ export default function HomeHero() {
       <RootStyle>
         <HeroOverlayStyle
           alt="overlay"
-          src="https://minimal-assets-api.vercel.app/assets/overlay.svg"
+          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/backgroud.jpg"
           variants={varFade().in}
         />
-
         <HeroImgStyle
           alt="hero"
-          src="https://minimal-assets-api.vercel.app/assets/images/home/hero.png"
+          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/backgrouoverplay.jpg"
           variants={varFade().inUp}
         />
 
