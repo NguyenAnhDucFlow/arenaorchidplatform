@@ -45,12 +45,17 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public User createUser(UserDTO userDTO) {
-
         User user = modelMapper.map(userDTO, User.class);
-        Set<Role> roles = roleRepository.searchByID(2);
-        user.setRoles(roles);
+        if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
+            Set<Role> roles = roleRepository.searchByID(2);
+            user.setRoles(roles);
+        } else {
+            user.setRoles(userDTO.getRoles().stream()
+                    .map(role -> roleRepository.findById(role.getId()).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet()));
+        }
         return userRepository.save(user);
-
     }
 
     @Override

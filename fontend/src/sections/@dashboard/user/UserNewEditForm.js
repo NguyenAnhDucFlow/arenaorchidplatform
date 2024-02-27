@@ -17,6 +17,7 @@ import { fData } from '../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // _mock
 import { countries } from '../../../_mock';
+import { roles } from '../../../_mock/_roles';
 // components
 import Label from '../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
@@ -42,7 +43,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
     company: Yup.string().required('Company is required'),
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role Number is required'),
+    roles: Yup.string().required('roles Number is required'),
     avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
     password: Yup.string().required('Password is required'),
   });
@@ -61,7 +62,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
       company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      roles: currentUser?.roles || '',
       password: currentUser?.password || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +108,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
       formData.append('company', getValues('company'));
       formData.append('state', getValues('state'));
       formData.append('city', getValues('city'));
-      formData.append('role', getValues('role'));
+      formData.append('roles[0].id', getValues('roles'));
       const avatarFile = getValues('avatarUrl');
       formData.append('file', avatarFile);
       formData.append('password', getValues('password'));
@@ -261,7 +262,15 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
               <RHFTextField name="address" label="Address" />
               <RHFTextField name="zipCode" label="Zip/Code" />
               <RHFTextField name="company" label="Company" />
-              <RHFTextField name="role" label="Role" />
+              <RHFSelect name="roles" label="Role" placeholder="Role">
+                <option value="" />
+                {roles.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
