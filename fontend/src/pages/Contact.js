@@ -7,7 +7,7 @@ import { ContactHero, ContactForm, ContactMap } from '../sections/contact';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
+const RootStyle1 = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(8),
   [theme.breakpoints.up('md')]: {
     paddingTop: theme.spacing(11),
@@ -19,7 +19,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function Contact() {
   return (
     <Page title="Contact us">
-      <RootStyle>
+      <RootStyle1>
         <ContactHero />
 
         <Container sx={{ my: 10 }}>
@@ -32,7 +32,7 @@ export default function Contact() {
             </Grid>
           </Grid>
         </Container>
-      </RootStyle>
+      </RootStyle1>
     </Page>
   );
 }

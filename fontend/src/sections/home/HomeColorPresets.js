@@ -6,6 +6,7 @@ import {
   Box,
   Stack,
   Radio,
+  Grid,
   Tooltip,
   Container,
   Typography,
@@ -13,6 +14,8 @@ import {
   CardActionArea,
   FormControlLabel,
 } from '@mui/material';
+import { ContactForm } from '../contact';
+
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -25,6 +28,13 @@ const RootStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(15, 0),
 }));
 
+const RootStyle1 = styled('div')(({ theme }) => ({
+  paddingTop: theme.spacing(8),
+  [theme.breakpoints.up('md')]: {
+    paddingTop: theme.spacing(11),
+  },
+}));
+
 // ----------------------------------------------------------------------
 
 export default function HomeColorPresets() {
@@ -33,29 +43,7 @@ export default function HomeColorPresets() {
   return (
     <RootStyle>
       <Container component={MotionViewport} sx={{ position: 'relative', textAlign: 'center' }}>
-        <m.div variants={varFade().inUp}>
-          <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-            choose your style
-          </Typography>
-        </m.div>
-
-        <m.div variants={varFade().inUp}>
-          <Typography variant="h2" sx={{ mb: 3 }}>
-            Color presets
-          </Typography>
-        </m.div>
-
-        <m.div variants={varFade().inUp}>
-          <Typography
-            sx={{
-              color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'text.primary'),
-            }}
-          >
-            Express your own style with just one click.
-          </Typography>
-        </m.div>
-
-        <RadioGroup name="themeColorPresets" value={themeColorPresets} onChange={onChangeColor} sx={{ my: 5 }}>
+        <RadioGroup name="themeColorPresets" value={themeColorPresets} onChange={onChangeColor} sx={{ my: 1 }}>
           <Stack
             direction={{ xs: 'row', lg: 'column' }}
             justifyContent="center"
@@ -63,6 +51,8 @@ export default function HomeColorPresets() {
             sx={{
               position: { lg: 'absolute' },
               right: { lg: 0 },
+
+              paddingTop: 20,
             }}
           >
             {colorOption.map((color) => {
@@ -126,59 +116,9 @@ export default function HomeColorPresets() {
           </Stack>
         </RadioGroup>
 
-        <Box sx={{ position: 'relative' }}>
-          <Image
-            disabledEffect
-            alt="grid"
-            src="https://minimal-assets-api.vercel.app/assets/images/home/theme-color/grid.png"
-          />
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <m.div variants={varFade().inUp}>
-              <Image
-                disabledEffect
-                alt="screen"
-                src={`https://minimal-assets-api.vercel.app/assets/images/home/theme-color/screen-${themeColorPresets}.png`}
-              />
-            </m.div>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <m.div variants={varFade().inDown}>
-              <m.div animate={{ y: [0, -15, 0] }} transition={{ duration: 8, repeat: Infinity }}>
-                <Image
-                  disabledEffect
-                  alt="sidebar"
-                  src={`https://minimal-assets-api.vercel.app/assets/images/home/theme-color/block1-${themeColorPresets}.png`}
-                />
-              </m.div>
-            </m.div>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <m.div variants={varFade().inDown}>
-              <m.div animate={{ y: [-5, 10, -5] }} transition={{ duration: 8, repeat: Infinity }}>
-                <Image
-                  disabledEffect
-                  alt="sidebar"
-                  src={`https://minimal-assets-api.vercel.app/assets/images/home/theme-color/block2-${themeColorPresets}.png`}
-                />
-              </m.div>
-            </m.div>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <m.div variants={varFade().inDown}>
-              <m.div animate={{ y: [-25, 5, -25] }} transition={{ duration: 10, repeat: Infinity }}>
-                <Image
-                  disabledEffect
-                  alt="sidebar"
-                  src={`https://minimal-assets-api.vercel.app/assets/images/home/theme-color/sidebar-${themeColorPresets}.png`}
-                />
-              </m.div>
-            </m.div>
-          </Box>
-        </Box>
+        <Grid item xs={12} md={6}>
+          <ContactForm />
+        </Grid>
       </Container>
     </RootStyle>
   );

@@ -3,7 +3,7 @@ import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container, Typography, Stack } from '@mui/material';
+import { Container, Typography, Stack, Pagination, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts, filterProducts } from '../../redux/slices/product';
@@ -106,15 +106,16 @@ export default function EcommerceShop() {
 
   return (
     <Page title="Ecommerce: Shop">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
         <HeaderBreadcrumbs
           heading="Shop"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
+            // { name: 'Home', href: PATH_DASHBOARD.root },
+            { name: 'Home', href: '/' },
+            // {
+            //   name: 'E-Commerce',
+            //   href: PATH_DASHBOARD.eCommerce.root,
+            // },
             { name: 'Shop' },
           ]}
         />
@@ -166,6 +167,13 @@ export default function EcommerceShop() {
 
         <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
         <CartWidget />
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+        <Pagination count={10} size="large" />
+        </Box>
+
+
+
       </Container>
     </Page>
   );
