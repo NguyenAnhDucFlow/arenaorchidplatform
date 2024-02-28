@@ -127,3 +127,16 @@ export const _mapContact = [
     phoneNumber: _mock.phoneNumber(2),
   },
 ];
+
+// name, cover, price, colors, status, priceSale
+
+export const _carouselsProducts = [...Array(5)].map((_, index) => ({
+  id: _mock.id(index),
+  name: _mock.name.fullName(index),
+  cover: _mock.image.product(index),
+  price: _mock.number.price(index),
+  colors: '',
+  status: randomInArray(['sale', 'new', '']) || null,
+  priceSale: _mock.number.price(index),
+}));
+
