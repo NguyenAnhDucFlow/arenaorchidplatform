@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import { m } from 'framer-motion';
+import { useSelector } from 'react-redux';
+
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Stack, Card, Typography, Container } from '@mui/material';
@@ -33,6 +35,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function HomePage() {
   const carouselRef = useRef(null);
   const theme = useTheme();
+  const products = useSelector((state) => state.product.products);
 
   const settings = {
     arrows: false,
@@ -79,9 +82,8 @@ export default function HomePage() {
             <Box maxWidth="lg" position="relative" m="auto">
               <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
                 <Slider ref={carouselRef} {...settings}>
-                  {_carouselsProducts.map((product) => (
+                  {products.map((product) => ( // Sử dụng dữ liệu từ Redux
                     <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
-                      {/* <MemberCard member={member} /> */}
                       <ShopProductCard key={product.id} product={product} />
                     </Box>
                   ))}
