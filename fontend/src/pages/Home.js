@@ -75,7 +75,7 @@ export default function HomePage() {
 
             <m.div variants={varFade().inUp}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                Great team is the key
+                Discover our latest blossoms
               </Typography>
             </m.div>
 
