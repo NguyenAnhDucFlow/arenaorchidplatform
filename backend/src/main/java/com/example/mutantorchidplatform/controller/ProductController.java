@@ -73,11 +73,9 @@ public class ProductController {
     @GetMapping("/name")
     public ResponseDTO<ProductDTO> getProductByName(@RequestParam("name") String name) {
 
-        String productName = name.replace("-", " ");
-
         return ResponseDTO.<ProductDTO>builder()
                 .status(200)
-                .data(productService.getByName(productName))
+                .data(productService.getByName(name))
                 .build();
     }
 

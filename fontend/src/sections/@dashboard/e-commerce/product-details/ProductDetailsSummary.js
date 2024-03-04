@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_HOME } from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -100,7 +100,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         });
       }
       onGotoStep(0);
-      navigate(PATH_DASHBOARD.eCommerce.checkout);
+      navigate(PATH_HOME.checkout);
     } catch (error) {
       console.error(error);
     }

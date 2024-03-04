@@ -98,7 +98,7 @@ export default function EcommerceCheckout() {
 
   return (
     <Page title="Ecommerce: Checkout">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}> 
         <HeaderBreadcrumbs
           heading="Checkout"
           links={[

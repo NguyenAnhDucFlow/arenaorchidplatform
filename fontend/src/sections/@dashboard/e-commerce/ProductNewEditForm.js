@@ -79,12 +79,20 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const COLORS_OPTION = ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'White'];
+  const SIZES_OPTION = ['Small (below 15 cm)', 'Medium (15-30 cm)', 'Large (30-60 cm)', 'Extra Large (above 60 cm)'];
+
+
+
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
     images: Yup.array().min(1, 'Images is required'),
     price: Yup.number().moreThan(0, 'Price should not be $0.00'),
     available: Yup.number().min(1, 'Availability should not be less than 1').required('available is required'),
+    colors: Yup.array().of(Yup.string()).required('Colors are required'),
+    sizes: Yup.array().of(Yup.string()).required('Sizes are required'),
+
   });
 
   const defaultValues = useMemo(
@@ -102,6 +110,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       // gender: currentProduct?.gender || GENDER_OPTION[2],
       category: currentProduct?.category || CATEGORY_OPTION[0].classify[0],
       available: currentProduct?.available || 1,
+      colors: currentProduct?.colors || [],
+      sizes: currentProduct?.sizes || [],
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -137,13 +148,20 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      formData.append('name', getValues('name'));
+      formData.append('name', getValues('name').trim());
       formData.append('description', getValues('description'));
       formData.append('category', getValues('category'));
       formData.append('price', getValues('price'));
       formData.append('available', getValues('available'));
       formData.append('owner.id', user.id);
-
+      const colors = getValues('colors');
+      colors.forEach((color) => {
+        formData.append('colors', color); 
+      });
+      const sizes = getValues('sizes');
+      sizes.forEach((size) => {
+        formData.append('sizes', size);
+      });
 
       getValues('images').forEach((file) => {
         if (typeof file === "string")
@@ -237,6 +255,50 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   InputProps={{ inputProps: { min: 0 } }}
                 />
                 <RHFTextField name="sku" label="Product SKU" />
+                <div>
+                  <LabelStyle>Colors</LabelStyle>
+                  <Controller
+                    name="colors"
+                    control={control}
+                    render={({ field }) => (
+                      <Autocomplete
+                        {...field}
+                        multiple
+                        freeSolo
+                        onChange={(event, newValue) => field.onChange(newValue)}
+                        options={COLORS_OPTION.map((option) => option)}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
+                          ))
+                        }
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    )}
+                  />
+                </div>
+                <div>
+                  <LabelStyle>Sizes</LabelStyle>
+                  <Controller
+                    name="sizes"
+                    control={control}
+                    render={({ field }) => (
+                      <Autocomplete
+                        {...field}
+                        multiple
+                        freeSolo
+                        onChange={(event, newValue) => field.onChange(newValue)}
+                        options={SIZES_OPTION.map((option) => option)}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
+                          ))
+                        }
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    )}
+                  />
+                </div>
 
                 {/* <div>
                   <LabelStyle>Gender</LabelStyle>

@@ -79,7 +79,7 @@ export default function Router() {
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
+            // { path: 'checkout', element: <EcommerceCheckout /> },
           ],
         },
         {
@@ -160,6 +160,7 @@ export default function Router() {
         { path: 'faqs', element: <Faqs /> },
         { path: 'shop', element: <EcommerceShop /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
+        { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },

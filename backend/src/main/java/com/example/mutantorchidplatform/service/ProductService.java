@@ -4,6 +4,7 @@ import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.ProductDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
 import com.example.mutantorchidplatform.entity.Product;
+import com.example.mutantorchidplatform.entity.enums.InventoryType;
 import com.example.mutantorchidplatform.repository.ProductRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
@@ -48,6 +49,15 @@ class ProductServiceImpl implements ProductService {
     @Transactional
     public void create(ProductDTO productDTO) {
         Product product = modelMapper.map(productDTO, Product.class);
+
+        if (product.getAvailable() == 0) {
+            product.setInventoryType(InventoryType.out_of_stock);
+        } else if (product.getAvailable() < 5) {
+            product.setInventoryType(InventoryType.low_stock);
+        } else {
+            product.setInventoryType(InventoryType.in_stock);
+        }
+
         productRepository.save(product);
     }
 
