@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_HOME } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -21,7 +21,7 @@ export default function ShopProductCard({ product }) {
 
   const { name, cover, price, colors, status, priceSale } = product;
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(name);
+  const linkTo = PATH_HOME.view(name);
 
   return (
     <Card>

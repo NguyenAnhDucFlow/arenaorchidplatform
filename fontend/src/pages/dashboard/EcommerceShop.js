@@ -8,7 +8,7 @@ import { Container, Typography, Stack, Pagination, Box } from '@mui/material';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts, filterProducts } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_HOME } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -110,12 +110,7 @@ export default function EcommerceShop() {
         <HeaderBreadcrumbs
           heading="Shop"
           links={[
-            // { name: 'Home', href: PATH_DASHBOARD.root },
-            { name: 'Home', href: '/' },
-            // {
-            //   name: 'E-Commerce',
-            //   href: PATH_DASHBOARD.eCommerce.root,
-            // },
+            { name: 'Home', href: PATH_HOME.root },
             { name: 'Shop' },
           ]}
         />

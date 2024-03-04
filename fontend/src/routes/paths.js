@@ -6,6 +6,8 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_HOME = '/';
+const ROOTS_PRODUCTOWNER = '/productowner';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +19,12 @@ export const PATH_AUTH = {
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
+};
+
+export const PATH_HOME = {
+  root: ROOTS_HOME,
+  shop: path(ROOTS_HOME, '/shop'),  // Add more paths as needed
+  view: (name) => path(ROOTS_HOME, `product/${name}`),
 };
 
 export const PATH_PAGE = {

@@ -9,7 +9,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProduct, addCart, onGotoStep } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_HOME } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -82,18 +82,14 @@ export default function EcommerceProductDetails() {
 
   return (
     <Page title="Ecommerce: Product Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
         <HeaderBreadcrumbs
           heading="Product Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
+            { name: 'Home', href: PATH_HOME.root },
             {
               name: 'Shop',
-              href: PATH_DASHBOARD.eCommerce.shop,
+              href: PATH_HOME.shop,
             },
             { name: sentenceCase(name) },
           ]}
