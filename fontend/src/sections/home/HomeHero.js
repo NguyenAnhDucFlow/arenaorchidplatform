@@ -72,12 +72,12 @@ export default function HomeHero() {
       <RootStyle>
         <HeroOverlayStyle
           alt="overlay"
-          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/backgroud.jpg"
+          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/8619272.png"
           variants={varFade().in}
         />
         <HeroImgStyle
           alt="hero"
-          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/backgrouoverplay.jpg"
+          src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/man-about-hit-with-gavel-removebg-preview.png"
           variants={varFade().inUp}
         />
 

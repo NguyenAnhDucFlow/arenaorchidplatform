@@ -74,6 +74,17 @@ export default function HomePage() {
   const handleNext = () => {
     carouselRef.current?.slickNext();
   };
+
+  const carouselRef2 = useRef(null);
+
+  const handlePrevious2 = () => {
+    carouselRef2.current?.slickPrev();
+  };
+
+  const handleNext2 = () => {
+    carouselRef2.current?.slickNext();
+  };
+
   return (
     <Page title="OrchidArena">
       <RootStyle>
@@ -91,6 +102,24 @@ export default function HomePage() {
               <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
                 <Slider ref={carouselRef} {...settings}>
                   {products.map((product) => ( // Sử dụng dữ liệu từ Redux
+                    <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
+                      <ShopProductCard key={product.id} product={product} />
+                    </Box>
+                  ))}
+                </Slider>
+              </CarouselArrows>
+            </Box>
+
+            <m.div variants={varFade().inUp}>
+              <Typography variant="h2" sx={{ mb: 3 }}>
+                Latest Auctions
+              </Typography>
+            </m.div>
+
+            <Box maxWidth="lg" position="relative" m="auto">
+              <CarouselArrows filled onNext={handleNext2} onPrevious={handlePrevious2}>
+                <Slider ref={carouselRef2} {...settings}>
+                  {products.map((product) => (
                     <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
                       <ShopProductCard key={product.id} product={product} />
                     </Box>

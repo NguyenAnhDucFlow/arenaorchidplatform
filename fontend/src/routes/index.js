@@ -69,6 +69,7 @@ export default function Router() {
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
+        { path: 'login', element: <Login /> },
 
         {
           path: 'e-commerce',
@@ -163,6 +164,7 @@ export default function Router() {
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
+    { path: 'login', element: <Login /> },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }

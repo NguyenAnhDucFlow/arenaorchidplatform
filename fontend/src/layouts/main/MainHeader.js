@@ -90,9 +90,9 @@ export default function MainHeader() {
           {!user ? (
             <Button
               variant="contained"
-              target="_blank"
+              // target="_blank"
               rel="noopener"
-              href="https://material-ui.com/store/items/minimal-dashboard/"
+              href="/login"
             >
               Login
             </Button>

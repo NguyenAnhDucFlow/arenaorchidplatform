@@ -77,7 +77,17 @@ class ProductServiceImpl implements ProductService {
     @Transactional
     public void update(ProductDTO productDTO) {
         productRepository.findById(productDTO.getId()).orElseThrow(NoResultException::new);
-        productRepository.save(modelMapper.map(productDTO, Product.class));
+        Product product = modelMapper.map(productDTO, Product.class);
+
+        if (product.getAvailable() == 0) {
+            product.setInventoryType(InventoryType.out_of_stock);
+        } else if (product.getAvailable() < 5) {
+            product.setInventoryType(InventoryType.low_stock);
+        } else {
+            product.setInventoryType(InventoryType.in_stock);
+        }
+
+        productRepository.save(product);
     }
 
     @Override

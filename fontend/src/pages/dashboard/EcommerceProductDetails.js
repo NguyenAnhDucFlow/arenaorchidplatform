@@ -91,7 +91,7 @@ export default function EcommerceProductDetails() {
               name: 'Shop',
               href: PATH_HOME.shop,
             },
-            { name: sentenceCase(name) },
+            { name },
           ]}
         />
 
