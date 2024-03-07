@@ -1,11 +1,17 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import { useContext } from 'react';
+
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Dialog, Button, Divider, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
+// utils
+import { AuthContext } from '../../../../contexts/JWTContext';
+import axios from '../../../../utils/axios';
 // _mock
 import { countries } from '../../../../_mock';
 import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../../../components/hook-form';
@@ -20,6 +26,9 @@ CheckoutNewAddressForm.propTypes = {
 };
 
 export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCreateBilling }) {
+
+  const { user } = useContext(AuthContext);
+
   const NewAddressSchema = Yup.object().shape({
     receiver: Yup.string().required('Fullname is required'),
     phone: Yup.string().required('Phone is required'),
@@ -53,13 +62,22 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
   const onSubmit = async (data) => {
     try {
       onNextStep();
-      onCreateBilling({
+
+      const newAddrest = {
+        user: { id: user.id },
         receiver: data.receiver,
         phone: data.phone,
         fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipcode}`,
         addressType: data.addressType,
         isDefault: data.isDefault,
-      });
+      }
+
+      const response = await axios.post('/shipment/', newAddrest);
+      if (response.status === 200) {
+        onCreateBilling(newAddrest);
+      } else {
+        console.error('Error saving the address')
+      }
     } catch (error) {
       console.error(error);
     }

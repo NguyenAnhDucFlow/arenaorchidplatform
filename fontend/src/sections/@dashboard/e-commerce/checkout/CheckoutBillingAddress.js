@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 // @mui
 import { Box, Grid, Card, Button, Typography } from '@mui/material';
 // redux
@@ -13,6 +13,7 @@ import Iconify from '../../../../components/Iconify';
 //
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutNewAddressForm from './CheckoutNewAddressForm';
+import { AuthContext } from '../../../../contexts/JWTContext';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,9 @@ export default function CheckoutBillingAddress() {
   const { total, discount, subtotal } = checkout;
   //
   const [open, setOpen] = useState(false);
+
+  const { user } = useContext(AuthContext);
+  console.log("user address", user);
 
   const handleClickOpen = () => {
     setOpen(true);

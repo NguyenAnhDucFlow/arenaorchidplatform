@@ -46,6 +46,8 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     private UserStatus status = UserStatus.ACTIVE;
 
+    private List<ShipmentDTO> shipments;
+
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -46,6 +47,9 @@ public class User extends TimeAuditable{
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Shipment> shipments;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
