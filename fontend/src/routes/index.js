@@ -148,6 +148,10 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
+        { path: 'buyer/login', element: <LoginBuyer /> }, 
+        { path: 'seller/login', element: <LoginSeller /> }, 
+        { path: 'buyer/signup', element: <SignupBuyer /> }, 
+        { path: 'seller/signup', element: <SignupSeller /> }, 
         { path: '*', element: <Navigate to="/404" replace /> },
       ],
     },
@@ -164,7 +168,6 @@ export default function Router() {
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
-    { path: 'login', element: <Login /> },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
