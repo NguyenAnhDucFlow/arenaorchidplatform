@@ -92,7 +92,7 @@ export default function MainHeader() {
               variant="contained"
               // target="_blank"
               rel="noopener"
-              href="/login"
+              href="/buyer/login"
             >
               Login
             </Button>

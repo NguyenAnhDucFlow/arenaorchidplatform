@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography } from '@mui/material';
 // routes
-import { PATH_AUTH } from '../../routes/paths';
+import { PATH_HOME } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useResponsive from '../../hooks/useResponsive';
@@ -75,7 +75,7 @@ export default function LoginBuyer() {
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               Don’t have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
+              <Link variant="subtitle2" component={RouterLink} to={PATH_HOME.signupBuyer}>
               Create an account
               </Link>
             </Typography>
@@ -126,7 +126,7 @@ export default function LoginBuyer() {
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Don’t have an account?{' '}
-                <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
+                <Link variant="subtitle2" component={RouterLink} to={PATH_HOME.signupBuyer}>
                 Create an account
                 </Link>
               </Typography>

@@ -1,5 +1,5 @@
 // routes
-import { PATH_AUTH, PATH_DOCS, PATH_PAGE } from '../../routes/paths';
+import { PATH_AUTH, PATH_HOME, PATH_PAGE } from '../../routes/paths';
 // components
 import { PATH_AFTER_LOGIN } from '../../config';
 // components
@@ -26,12 +26,12 @@ const menuConfig = [
   {
     title: 'Auction',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: PATH_DOCS,
+    path: PATH_PAGE.comingSoon,
   },
   {
     title: 'Start Selling',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: PATH_DOCS,
+    path: PATH_HOME.loginSeller,
   },
 
   {
