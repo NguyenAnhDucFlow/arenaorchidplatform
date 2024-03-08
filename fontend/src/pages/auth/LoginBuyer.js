@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { LoginForm } from '../../sections/auth/login';
+import { LoginBuyerForm } from '../../sections/auth/login/index';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function LoginBuyer() {
   const { method } = useAuth();
 
   const smUp = useResponsive('up', 'sm');
@@ -121,7 +121,7 @@ export default function Login() {
               Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
             </Alert> */}
 
-            <LoginForm />
+            <LoginBuyerForm />
 
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>

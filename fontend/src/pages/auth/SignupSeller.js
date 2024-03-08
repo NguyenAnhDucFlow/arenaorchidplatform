@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { RegisterForm } from '../../sections/auth/register';
+import { SignUpSellerForm } from '../../sections/auth/register/index';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Register() {
+export default function SignUpSeller() {
   const { method } = useAuth();
 
   const smUp = useResponsive('up', 'sm');
@@ -85,7 +85,7 @@ export default function Register() {
         {mdUp && (
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Orchid Auctions Made Easy with Arena Orchid
+              Sign Up to Become a Seller at Arena Orchid
             </Typography>
             <Image
               visibleByDefault
@@ -101,9 +101,9 @@ export default function Register() {
             <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Join Our Orchid Community for Free!
+                Join Our Seller Community for Free!
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Start Bidding or Buying Today</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Start Selling Today and Enjoy the Benefits of Being a Seller at Arena Orchid</Typography>
               </Box>
               <Tooltip title={capitalCase(method)}>
                 <>
@@ -116,7 +116,7 @@ export default function Register() {
               </Tooltip>
             </Box>
 
-            <RegisterForm />
+            <SignUpSellerForm />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               By registering, I agree to Arena Orchid&nbsp;

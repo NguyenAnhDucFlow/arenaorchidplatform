@@ -27,7 +27,7 @@ public class Shipment {
 
     private String zipcode;
 
-    private boolean isDefault;
+    private Boolean isDefault;
 
     @ManyToOne
     private User user;

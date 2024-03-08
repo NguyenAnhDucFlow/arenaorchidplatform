@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { RegisterForm } from '../../sections/auth/register';
+import { SignUpBuyerForm } from '../../sections/auth/register/index';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Register() {
+export default function SignUpBuyer() {
   const { method } = useAuth();
 
   const smUp = useResponsive('up', 'sm');
@@ -116,7 +116,7 @@ export default function Register() {
               </Tooltip>
             </Box>
 
-            <RegisterForm />
+            <SignUpBuyerForm />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               By registering, I agree to Arena Orchid&nbsp;

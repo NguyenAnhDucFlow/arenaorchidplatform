@@ -148,10 +148,10 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
-        { path: 'buyer/login', element: <LoginBuyer /> }, 
-        { path: 'seller/login', element: <LoginSeller /> }, 
-        { path: 'buyer/signup', element: <SignupBuyer /> }, 
-        { path: 'seller/signup', element: <SignupSeller /> }, 
+        { path: 'buyer/login', element: <LoginBuyer /> },
+        { path: 'seller/login', element: <LoginSeller /> },
+        { path: 'buyer/signup', element: <SignUpBuyer /> },
+        { path: 'seller/signup', element: <SignUpSeller /> },
         { path: '*', element: <Navigate to="/404" replace /> },
       ],
     },
@@ -177,6 +177,11 @@ const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
+const LoginBuyer = Loadable(lazy(() => import('../pages/auth/LoginBuyer')));
+const LoginSeller = Loadable(lazy(() => import('../pages/auth/LoginSeller')));
+const SignUpBuyer = Loadable(lazy(() => import('../pages/auth/SignUpBuyer')));
+const SignUpSeller = Loadable(lazy(() => import('../pages/auth/SignUpSeller')));
+
 
 // DASHBOARD
 

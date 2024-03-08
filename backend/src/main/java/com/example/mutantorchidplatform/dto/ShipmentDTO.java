@@ -1,7 +1,6 @@
 package com.example.mutantorchidplatform.dto;
 
-import com.example.mutantorchidplatform.entity.User;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
@@ -25,7 +24,8 @@ public class ShipmentDTO {
 
     private String zipcode;
 
-    private boolean isDefault;
+    private Boolean isDefault;
 
+    @JsonIgnoreProperties("shipments")
     private UserDTO user;
 }

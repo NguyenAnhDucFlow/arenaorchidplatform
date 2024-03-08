@@ -27,7 +27,7 @@ public class JwtTokenService {
     @Value("${jwt.secret:123}")
     private String secretKey;
 
-    private long validity = 5;
+    private long validity = 15;
 
     public TokenAndUser createToken(String email, List<String> authority){
         Claims claims = Jwts.claims().setSubject(email);

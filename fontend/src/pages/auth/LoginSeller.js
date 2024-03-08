@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { LoginForm } from '../../sections/auth/login';
+import { LoginSellerForm } from '../../sections/auth/login/index';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function LoginSeller() {
   const { method } = useAuth();
 
   const smUp = useResponsive('up', 'sm');
@@ -74,9 +74,9 @@ export default function Login() {
           <Logo />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Don’t have an account? {''}
+              Don't have a seller account? {''}
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-              Create an account
+                Create a seller account
               </Link>
             </Typography>
           )}
@@ -101,7 +101,7 @@ export default function Login() {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                Sign in to Arena Orchid
+                  Sign in to Seller Area
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
               </Box>
@@ -121,13 +121,13 @@ export default function Login() {
               Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
             </Alert> */}
 
-            <LoginForm />
+            <LoginSellerForm />
 
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?{' '}
+                Don't have a seller account?{' '}
                 <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                Create an account
+                  Create a seller account
                 </Link>
               </Typography>
             )}

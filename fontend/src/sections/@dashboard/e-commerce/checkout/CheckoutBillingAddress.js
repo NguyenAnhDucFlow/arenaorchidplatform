@@ -26,7 +26,7 @@ export default function CheckoutBillingAddress() {
   const [open, setOpen] = useState(false);
 
   const { user } = useContext(AuthContext);
-  console.log("user address", user);
+  console.log("shipments", user.shipments);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -52,7 +52,7 @@ export default function CheckoutBillingAddress() {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {_addressBooks.map((address, index) => (
+          {user.shipments.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
