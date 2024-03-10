@@ -4,12 +4,13 @@ import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
+import DashboardSeller from '../layouts/dashboardseller';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
-import { PATH_AFTER_LOGIN } from '../config';
+import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINBUYER } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -25,6 +26,21 @@ const Loadable = (Component) => (props) => {
     </Suspense>
   );
 };
+
+
+// {
+//   path: 'dashboard',
+//   element: (
+//     <RoleBasedGuard accessibleRoles={['admin']}>
+//       <AuthGuard>
+//         <DashboardLayout />
+//       </AuthGuard>
+//     </RoleBasedGuard>
+//   ),
+//   children: [
+//     // ...children routes here...
+//   ],
+// }
 
 export default function Router() {
   return useRoutes([
@@ -136,6 +152,50 @@ export default function Router() {
         { path: 'kanban', element: <Kanban /> },
       ],
     },
+
+    // DashboardSeller
+
+    {
+      path: 'productowner',
+      element: (
+          <DashboardSeller />
+      ),
+      children: [
+        { element: <Navigate to={PATH_AFTER_LOGINBUYER} replace />, index: true },
+        { path: 'app', element: <GeneralApp /> },
+        { path: 'ecommerce', element: <GeneralEcommerce /> },
+        { path: 'analytics', element: <GeneralAnalytics /> },
+        { path: 'banking', element: <GeneralBanking /> },
+        { path: 'booking', element: <GeneralBooking /> },
+        { path: 'login', element: <Login /> },
+
+        {
+          path: 'e-commerce',
+          children: [
+            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
+            { path: 'list', element: <EcommerceProductList /> },
+            { path: 'product/new', element: <EcommerceProductCreate /> },
+            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+          ],
+        },
+
+        {
+          path: 'invoice',
+          children: [
+            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
+            { path: 'list', element: <InvoiceList /> },
+            { path: ':id', element: <InvoiceDetails /> },
+            { path: ':id/edit', element: <InvoiceEdit /> },
+            { path: 'new', element: <InvoiceCreate /> },
+          ],
+        },
+
+
+
+      ],
+    },
+
+
 
     // Main Routes
     {

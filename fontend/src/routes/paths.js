@@ -11,6 +11,41 @@ const ROOTS_PRODUCTOWNER = '/productowner';
 
 // ----------------------------------------------------------------------
 
+export const PATH_PRODUCTOWNER = {
+  root: ROOTS_PRODUCTOWNER,
+  general: {
+    ecommerce: path(ROOTS_PRODUCTOWNER, '/ecommerce'),
+    analytics: path(ROOTS_PRODUCTOWNER, '/analytics'),
+  },
+  chat: {
+    root: path(ROOTS_PRODUCTOWNER, '/chat'),
+    new: path(ROOTS_PRODUCTOWNER, '/chat/new'),
+    view: (name) => path(ROOTS_PRODUCTOWNER, `/chat/${name}`),
+  },
+  calendar: path(ROOTS_PRODUCTOWNER, '/calendar'),
+  kanban: path(ROOTS_PRODUCTOWNER, '/kanban'),
+  eCommerce: {
+    root: path(ROOTS_PRODUCTOWNER, '/e-commerce'),
+    shop: path(ROOTS_PRODUCTOWNER, '/e-commerce/shop'),
+    list: path(ROOTS_PRODUCTOWNER, '/e-commerce/list'),
+    checkout: path(ROOTS_PRODUCTOWNER, '/e-commerce/checkout'),
+    new: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/new'),
+    view: (name) => path(ROOTS_PRODUCTOWNER, `/e-commerce/product/${name}`),
+    edit: (name) => path(ROOTS_PRODUCTOWNER, `/e-commerce/product/${name}/edit`),
+    demoEdit: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
+    demoView: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/nike-air-force-1-ndestrukt'),
+  },
+  invoice: {
+    root: path(ROOTS_PRODUCTOWNER, '/invoice'),
+    list: path(ROOTS_PRODUCTOWNER, '/invoice/list'),
+    new: path(ROOTS_PRODUCTOWNER, '/invoice/new'),
+    view: (id) => path(ROOTS_PRODUCTOWNER, `/invoice/${id}`),
+    edit: (id) => path(ROOTS_PRODUCTOWNER, `/invoice/${id}/edit`),
+    demoEdit: path(ROOTS_PRODUCTOWNER, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1/edit'),
+    demoView: path(ROOTS_PRODUCTOWNER, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5'),
+  },
+};
+
 export const PATH_AUTH = {
   root: ROOTS_AUTH,
   login: path(ROOTS_AUTH, '/login'),
@@ -20,6 +55,7 @@ export const PATH_AUTH = {
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
 };
+
 
 export const PATH_HOME = {
   root: ROOTS_HOME,

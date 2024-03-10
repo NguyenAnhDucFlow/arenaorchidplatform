@@ -61,6 +61,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LoginBuyer() {
+  
   const { method } = useAuth();
 
   const smUp = useResponsive('up', 'sm');

@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD } from './routes/paths';
+import { PATH_DASHBOARD, PATH_PRODUCTOWNER } from './routes/paths';
 
 // API
 // ----------------------------------------------------------------------
@@ -32,7 +32,7 @@ export const MAPBOX_API = process.env.REACT_APP_MAPBOX;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/app'
-
+export const PATH_AFTER_LOGINBUYER = PATH_PRODUCTOWNER.general.ecommerce;
 // LAYOUT
 // ----------------------------------------------------------------------
 
