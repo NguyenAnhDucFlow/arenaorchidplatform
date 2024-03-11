@@ -224,6 +224,7 @@ export default function Router() {
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
         { path: 'shop', element: <EcommerceShop /> },
+        { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
@@ -254,6 +255,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
+const Auction = Loadable(lazy(() => import('../pages/dashboard/Auction')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));

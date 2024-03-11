@@ -59,6 +59,18 @@ const slice = createSlice({
       state.product = action.payload;
     },
 
+    // GET AUCTIONS
+    getAuctionsSuccess(state, action) {
+      state.isLoading = false;
+      state.auctions = action.payload;
+    },
+
+    // GET AUCTION
+    getAuctionSuccess(state, action) {
+      state.isLoading = false;
+      state.auction = action.payload;
+    },
+
     //  SORT & FILTER PRODUCTS
     sortByProducts(state, action) {
       state.sortBy = action.payload;
@@ -241,3 +253,30 @@ export function getProduct(name) {
     }
   };
 }
+
+export function getAuctions() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/auction/');
+      console.log(response.data.data)
+      dispatch(slice.actions.getAuctionsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getAuction(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/auction/${id}`);
+      console.log(response.data.data)
+      dispatch(slice.actions.getAuctionSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+

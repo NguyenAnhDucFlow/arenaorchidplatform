@@ -1,10 +1,15 @@
 package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.OrderDTO;
+import com.example.mutantorchidplatform.dto.OrderDetailDTO;
 import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
 import com.example.mutantorchidplatform.entity.Order;
+import com.example.mutantorchidplatform.entity.OrderDetail;
+import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.OrderRepository;
+import com.example.mutantorchidplatform.repository.ProductRepository;
+import com.example.mutantorchidplatform.repository.UserRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public interface OrderService {
@@ -39,11 +46,34 @@ class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    ProductRepository productRepository;
+
 
     @Override
     @Transactional
     public void create(OrderDTO orderDTO) {
-        orderRepository.save(modelMapper.map(orderDTO, Order.class));
+
+        User user = userRepository.findById(orderDTO.getCustomer().getId()).orElseThrow(NoResultException::new);
+        Order order = new Order();
+        order.setCustomer(user);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetails()) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(
+                    productRepository.findById(orderDetailDTO.getProduct().getId()).orElseThrow(NoResultException::new));
+            orderDetail.setPrice(orderDetailDTO.getPrice());
+            orderDetail.setQuantity(orderDetailDTO.getQuantity());
+            orderDetails.add(orderDetail);
+       }
+        order.setOrderDetails(orderDetails);
+        orderRepository.save(order);
+        orderDTO.setId(order.getId());
+        orderDTO.getCustomer().setEmail(order.getCustomer().getEmail());
     }
 
     @Override
@@ -56,8 +86,13 @@ class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void update(OrderDTO orderDTO) {
-        orderRepository.findById(orderDTO.getId()).orElseThrow(NoResultException::new);
-        orderRepository.save(modelMapper.map(orderDTO, Order.class));
+
+        User user = userRepository.findById(orderDTO.getCustomer().getId()).orElseThrow(NoResultException::new);
+
+        Order order = orderRepository.findById(orderDTO.getId()).orElseThrow(NoResultException::new);
+        order.setCustomer(user);
+
+        orderRepository.save(order);
     }
 
     @Override

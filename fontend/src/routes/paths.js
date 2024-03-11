@@ -59,7 +59,8 @@ export const PATH_AUTH = {
 
 export const PATH_HOME = {
   root: ROOTS_HOME,
-  shop: path(ROOTS_HOME, 'shop'),  // Add more paths as needed
+  shop: path(ROOTS_HOME, 'shop'),  
+  auction: path(ROOTS_HOME, 'auction'),  
   view: (name) => path(ROOTS_HOME, `product/${name}`),
   checkout: path(ROOTS_HOME, 'checkout'),
   loginBuyer: path(ROOTS_HOME, 'buyer/login'),

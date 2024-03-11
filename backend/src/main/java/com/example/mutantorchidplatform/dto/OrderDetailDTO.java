@@ -12,6 +12,8 @@ public class OrderDetailDTO {
     @NotNull
     private int quantity;
 
+    private double price;
+
     @JsonBackReference
     @NotNull
     private OrderDTO order;

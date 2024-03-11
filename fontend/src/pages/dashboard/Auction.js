@@ -27,7 +27,7 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop() {
+export default function Auction() {
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
@@ -105,7 +105,7 @@ export default function EcommerceShop() {
   };
 
   return (
-    <Page title="Shop">
+    <Page title="Auction">
       <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
         <HeaderBreadcrumbs
           heading="Shop"

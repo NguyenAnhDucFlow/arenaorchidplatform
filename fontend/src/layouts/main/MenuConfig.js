@@ -21,12 +21,12 @@ const menuConfig = [
   {
     title: 'Shop',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: '/shop',
+    path: PATH_HOME.shop,
   },
   {
     title: 'Auction',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: PATH_PAGE.comingSoon,
+    path: PATH_HOME.auction,
   },
   {
     title: 'Start Selling',

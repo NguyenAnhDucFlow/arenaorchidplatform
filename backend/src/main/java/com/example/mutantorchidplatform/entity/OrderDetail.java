@@ -13,6 +13,8 @@ public class OrderDetail {
 
     private int quantity;
 
+    private double price;
+
     @ManyToOne
     private Order order;
 
