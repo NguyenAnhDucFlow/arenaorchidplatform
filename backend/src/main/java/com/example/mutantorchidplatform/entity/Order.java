@@ -4,6 +4,7 @@ import com.example.mutantorchidplatform.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "Orders")
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     @Id
@@ -25,6 +27,13 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    private String deliveryOption;
+
+    private String paymentOption;
+
+    @ManyToOne
+    private Shipment shipment;
 
     @ManyToOne
     private User customer;

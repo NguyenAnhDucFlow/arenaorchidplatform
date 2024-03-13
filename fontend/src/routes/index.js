@@ -1,18 +1,22 @@
 import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+// guards
+import GuestGuard from '../guards/GuestGuard';
+import SellerGuard from '../guards/SellerGuard';
+import AuthGuard from '../guards/AuthGuard';
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardSeller from '../layouts/dashboardseller';
-// guards
-import GuestGuard from '../guards/GuestGuard';
-import AuthGuard from '../guards/AuthGuard';
+
+
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
-import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINBUYER } from '../config';
+import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINSELLER } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+
 
 // ----------------------------------------------------------------------
 
@@ -55,14 +59,14 @@ export default function Router() {
             </GuestGuard>
           ),
         },
-        // {
-        //   path: 'register',
-        //   element: (
-        //     <GuestGuard>
-        //       <Register />
-        //     </GuestGuard>
-        //   ),
-        // },
+        {
+          path: 'register',
+          element: (
+            <GuestGuard>
+              <Register />
+            </GuestGuard>
+          ),
+        },
         { path: 'login-unprotected', element: <Login /> },
         { path: 'register-unprotected', element: <Register /> },
         { path: 'reset-password', element: <ResetPassword /> },
@@ -161,7 +165,7 @@ export default function Router() {
           <DashboardSeller />
       ),
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGINBUYER} replace />, index: true },
+        { element: <Navigate to={PATH_AFTER_LOGINSELLER} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
@@ -172,10 +176,11 @@ export default function Router() {
         {
           path: 'e-commerce',
           children: [
-            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
+            { element: <Navigate to="/e-commerce/shop" replace />, index: true },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+            { path: 'order', element: <Order /> },
           ],
         },
 
@@ -209,7 +214,11 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: 'buyer/login', element: <LoginBuyer /> },
-        { path: 'seller/login', element: <LoginSeller /> },
+        { path: 'seller/login', element: ( 
+          <SellerGuard>
+            <LoginSeller />
+          </SellerGuard>
+        ) },
         { path: 'buyer/signup', element: <SignUpBuyer /> },
         { path: 'seller/signup', element: <SignUpSeller /> },
         { path: '*', element: <Navigate to="/404" replace /> },
@@ -260,6 +269,7 @@ const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const Order = Loadable(lazy(() => import('../pages/dashboard/Order')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));

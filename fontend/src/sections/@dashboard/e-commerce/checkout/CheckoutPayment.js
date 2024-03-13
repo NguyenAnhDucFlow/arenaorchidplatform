@@ -8,6 +8,9 @@ import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { onGotoStep, onBackStep, onNextStep, applyShipping } from '../../../../redux/slices/product';
+
+import axios from '../../../../utils/axios';
+
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -39,15 +42,15 @@ const PAYMENT_OPTIONS = [
     description: 'You will be redirected to PayPal website to complete your purchase securely.',
     icons: ['https://minimal-assets-api.vercel.app/assets/icons/ic_paypal.svg'],
   },
-  {
-    value: 'credit_card',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
-    icons: [
-      'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
-      'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
-    ],
-  },
+  // {
+  //   value: 'credit_card',
+  //   title: 'Credit / Debit Card',
+  //   description: 'We support Mastercard, Visa, Discover and Stripe.',
+  //   icons: [
+  //     'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
+  //     'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
+  //   ],
+  // },
   {
     value: 'cash',
     title: 'Cash on CheckoutDelivery',
@@ -68,6 +71,11 @@ export default function CheckoutPayment() {
   const { checkout } = useSelector((state) => state.product);
 
   const { total, discount, subtotal, shipping } = checkout;
+
+  console.log("checkout", checkout);
+  console.log("address", checkout.billing.id);
+  console.log("customer", checkout.billing.user.id);
+  console.log("orderdetail", checkout.cart)
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -104,9 +112,32 @@ export default function CheckoutPayment() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     try {
-      handleNextStep();
+
+      const deliveryOption = DELIVERY_OPTIONS.find(option => option.value === data.delivery);
+      const paymentOption = PAYMENT_OPTIONS.find(option => option.value === data.payment);
+
+
+      const order = {
+        total,
+        customer: { id: checkout.billing.user.id },
+        shipment: { id: checkout.billing.id },
+        orderDetails: checkout.cart.map(item => ({
+          product: { id: item.id },
+          price: parseInt(item.price, 10),
+          quantity: item.quantity
+        })),
+        deliveryOption: deliveryOption.title,
+        paymentOption: paymentOption.title,
+      }
+      console.log("order:", order);
+      const response = await axios.post('/order/', order);
+      if (response.status === 200) {
+        handleNextStep();
+      } else {
+        console.error('Error saving the order')
+      }
     } catch (error) {
       console.error(error);
     }

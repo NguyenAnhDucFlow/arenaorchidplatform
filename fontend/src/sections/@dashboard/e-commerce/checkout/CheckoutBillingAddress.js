@@ -26,7 +26,6 @@ export default function CheckoutBillingAddress() {
   const [open, setOpen] = useState(false);
 
   const { user } = useContext(AuthContext);
-  console.log("shipments", user.shipments);
 
   const handleClickOpen = () => {
     setOpen(true);

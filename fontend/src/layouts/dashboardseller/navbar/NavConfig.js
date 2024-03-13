@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_PRODUCTOWNER } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
@@ -61,15 +61,14 @@ const navConfig = [
       // E-COMMERCE
       {
         title: 'e-commerce',
-        path: PATH_DASHBOARD.eCommerce.root,
+        path: PATH_PRODUCTOWNER.eCommerce.root,
         icon: ICONS.cart,
         children: [
-          // { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
-          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
-          { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          // { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
+          { title: 'list', path: PATH_PRODUCTOWNER.eCommerce.list },
+          { title: 'create', path: PATH_PRODUCTOWNER.eCommerce.new },
+          { title: 'create auction', path: PATH_PRODUCTOWNER.eCommerce.new },
+          { title: 'order', path: PATH_PRODUCTOWNER.eCommerce.order },
+          { title: 'order details', path: PATH_PRODUCTOWNER.eCommerce.order },
         ],
       },
 

@@ -16,7 +16,7 @@ import axios from '../../../utils/axios';
 import { AuthContext } from '../../../contexts/JWTContext';
 
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_PRODUCTOWNER } from '../../../routes/paths';
 // components
 import {
   FormProvider,
@@ -181,7 +181,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.eCommerce.list);
+      navigate(PATH_PRODUCTOWNER.eCommerce.list);
     } catch (error) {
       console.error(error);
     }

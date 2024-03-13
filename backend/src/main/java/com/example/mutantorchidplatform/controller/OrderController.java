@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -19,6 +21,14 @@ public class OrderController {
         return ResponseDTO.<Void>builder()
                 .status(200)
                 .msg("ok")
+                .build();
+    }
+
+    @GetMapping("/")
+    public ResponseDTO<List<OrderDTO>> getAll() {
+        return ResponseDTO.<List<OrderDTO>>builder()
+                .status(200)
+                .data(orderService.getAllUser())
                 .build();
     }
 

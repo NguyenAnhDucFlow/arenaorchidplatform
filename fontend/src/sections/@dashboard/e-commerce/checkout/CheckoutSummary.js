@@ -92,7 +92,7 @@ export default function CheckoutSummary({
             </Box>
           </Stack>
 
-          {enableDiscount && onApplyDiscount && (
+          {/* {enableDiscount && onApplyDiscount && (
             <TextField
               fullWidth
               placeholder="Discount codes / Gifts"
@@ -107,7 +107,7 @@ export default function CheckoutSummary({
                 ),
               }}
             />
-          )}
+          )} */}
         </Stack>
       </CardContent>
     </Card>

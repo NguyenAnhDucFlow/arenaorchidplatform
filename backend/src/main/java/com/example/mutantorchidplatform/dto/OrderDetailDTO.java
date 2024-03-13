@@ -1,6 +1,7 @@
 package com.example.mutantorchidplatform.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -14,8 +15,7 @@ public class OrderDetailDTO {
 
     private double price;
 
-    @JsonBackReference
-    @NotNull
+    @JsonIgnoreProperties("orderDetails")
     private OrderDTO order;
 
     @NotNull

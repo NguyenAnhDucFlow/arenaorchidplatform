@@ -1,9 +1,6 @@
 package com.example.mutantorchidplatform.service;
 
-import com.example.mutantorchidplatform.dto.OrderDTO;
-import com.example.mutantorchidplatform.dto.OrderDetailDTO;
-import com.example.mutantorchidplatform.dto.PageDTO;
-import com.example.mutantorchidplatform.dto.SearchDTO;
+import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Order;
 import com.example.mutantorchidplatform.entity.OrderDetail;
 import com.example.mutantorchidplatform.entity.User;
@@ -35,6 +32,8 @@ public interface OrderService {
     void delete(int id);
 
     PageDTO<OrderDTO> search(SearchDTO searchDTO);
+
+    List<OrderDTO> getAllUser();
 }
 @Service
 class OrderServiceImpl implements OrderService {
@@ -59,6 +58,7 @@ class OrderServiceImpl implements OrderService {
 
         User user = userRepository.findById(orderDTO.getCustomer().getId()).orElseThrow(NoResultException::new);
         Order order = new Order();
+        modelMapper.map(orderDTO, order);
         order.setCustomer(user);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetails()) {
@@ -125,6 +125,13 @@ class OrderServiceImpl implements OrderService {
                 .totalElements(orderPage.getTotalElements())
                 .contents(orderPage.get().map(this::convertToOrderDTO).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public List<OrderDTO> getAllUser() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
     private OrderDTO convertToOrderDTO(Order order) {

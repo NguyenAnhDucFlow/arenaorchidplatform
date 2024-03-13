@@ -1,5 +1,6 @@
 package com.example.mutantorchidplatform.entity;
 
+import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,9 @@ public class Auction extends TimeAuditable{
     private double stepPrice;
 
     private double currentPrice;
+
+    @Enumerated(EnumType.STRING)
+    private AuctionStatus status;
 
     @ManyToOne
     private Product product;

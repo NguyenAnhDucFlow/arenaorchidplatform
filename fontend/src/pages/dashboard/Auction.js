@@ -108,10 +108,10 @@ export default function Auction() {
     <Page title="Auction">
       <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
         <HeaderBreadcrumbs
-          heading="Shop"
+          heading="Auction"
           links={[
             { name: 'Home', href: PATH_HOME.root },
-            { name: 'Shop' },
+            { name: 'Auction' },
           ]}
         />
 

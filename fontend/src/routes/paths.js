@@ -26,14 +26,12 @@ export const PATH_PRODUCTOWNER = {
   kanban: path(ROOTS_PRODUCTOWNER, '/kanban'),
   eCommerce: {
     root: path(ROOTS_PRODUCTOWNER, '/e-commerce'),
-    shop: path(ROOTS_PRODUCTOWNER, '/e-commerce/shop'),
     list: path(ROOTS_PRODUCTOWNER, '/e-commerce/list'),
+    order: path(ROOTS_PRODUCTOWNER, '/e-commerce/order'),
     checkout: path(ROOTS_PRODUCTOWNER, '/e-commerce/checkout'),
     new: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/new'),
     view: (name) => path(ROOTS_PRODUCTOWNER, `/e-commerce/product/${name}`),
     edit: (name) => path(ROOTS_PRODUCTOWNER, `/e-commerce/product/${name}/edit`),
-    demoEdit: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
-    demoView: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/nike-air-force-1-ndestrukt'),
   },
   invoice: {
     root: path(ROOTS_PRODUCTOWNER, '/invoice'),
