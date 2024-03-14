@@ -56,9 +56,10 @@ const ROLE_OPTIONS = [
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Order', align: 'left' },
-  { id: 'company', label: 'Payment Method', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  { id: 'company', label: 'Customer', align: 'left' },
+  { id: 'role', label: 'Date', align: 'left' },
+  { id: 'isVerified', label: 'Item', align: 'center' },
+  { id: 'isVerified', label: 'Price', align: 'center' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
 ];

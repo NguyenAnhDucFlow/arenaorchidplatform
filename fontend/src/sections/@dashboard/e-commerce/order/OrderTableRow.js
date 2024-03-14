@@ -3,6 +3,9 @@ import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+// utils
+import { fDate } from '../../../../utils/formatTime';
+import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -21,10 +24,13 @@ OrderTableRow.propTypes = {
 export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { displayName, photoURL, paymentOption, roles, isVerified, status } = row;
+  const { id, customer, total, date, paymentOption, status } = row;
+
+  const name = customer?.displayName;
+  const avatar = customer?.photoURL;
 
   console.log("row order", row)
-  
+
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -41,30 +47,25 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
+      <TableCell align="left">#{id}</TableCell>
+
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={displayName} src={photoURL} sx={{ mr: 2 }} />
+        <Avatar alt={name} src={avatar} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
-          {displayName}
+          {name}
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{paymentOption}</TableCell>
-
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {Array.isArray(roles) ? roles.map(item => item.name).join(', ') : roles}
-      </TableCell>
+      <TableCell>{date}</TableCell>
 
       <TableCell align="center">
-        <Iconify
-          icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-          sx={{
-            width: 20,
-            height: 20,
-            color: 'success.main',
-            ...(!isVerified && { color: 'warning.main' }),
-          }}
-        />
+            {paymentOption === 'Cash on CheckoutDelivery' ? 'CheckoutDelivery' : 'Paypal'}
       </TableCell>
+
+
+      <TableCell align="center">{total}</TableCell>
+
+
 
       <TableCell align="left">
         <Label
