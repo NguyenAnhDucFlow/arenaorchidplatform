@@ -3,14 +3,14 @@ import { randomInArray } from './funcs';
 
 // ----------------------------------------------------------------------
 
-export const _carouselsExample = [...Array(5)].map((_, index) => ({
+export const _carouselsExample = [...Array(6)].map((_, index) => ({
   id: _mock.id(index),
   title: _mock.text.title(index),
   image: _mock.image.feed(index),
   description: _mock.text.description(index),
 }));
 
-export const _carouselsMembers = [...Array(5)].map((_, index) => ({
+export const _carouselsMembers = [...Array(6)].map((_, index) => ({
   id: _mock.id(index),
   name: _mock.name.fullName(index),
   role: _mock.role(index),

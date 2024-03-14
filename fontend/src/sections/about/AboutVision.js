@@ -19,7 +19,7 @@ export default function AboutVision() {
         }}
       >
         <Image
-          src="https://minimal-assets-api.vercel.app/assets/images/about/vision.jpg"
+          src="https://www.10wallpaper.com/wallpaper/1366x768/1909/Purple_dendrobium_orchids_Flower_4k_HD_Photo_1366x768.jpg"
           alt="about-vision"
           effect="black-and-white"
         />
@@ -54,7 +54,7 @@ export default function AboutVision() {
         <Grid item xs={12} sm={8}>
           <m.div variants={varFade().inUp}>
             <Typography variant="h3" sx={{ textAlign: 'center' }}>
-              Our vision offering the best product nulla vehicula tortor scelerisque ultrices malesuada.
+              Our vision is to make the tedious process of selling and buying orchids become easier for our users.
             </Typography>
           </m.div>
         </Grid>

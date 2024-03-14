@@ -4,16 +4,16 @@ import { Box } from '@mui/material';
 // components
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
-import ShopProductCard from './AuctionCard';
+import AuctionCard from './AuctionCard';
 
 // ----------------------------------------------------------------------
 
-ShopProductList.propTypes = {
+AuctionList.propTypes = {
   products: PropTypes.array.isRequired,
   loading: PropTypes.bool,
 };
 
-export default function ShopProductList({ products, loading }) {
+export default function AuctionList({ products, loading }) {
   return (
     <Box
       sx={{

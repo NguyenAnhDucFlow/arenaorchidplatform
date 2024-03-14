@@ -1,5 +1,5 @@
 export { default as ShopTagFiltered } from './ShopTagFiltered';
-export { default as ShopProductCard } from './AuctionCard';
+export { default as AuctionCard } from './AuctionCard';
 export { default as ShopProductList } from './ShopProductList';
 export { default as ShopProductSort } from './ShopProductSort';
 export { default as ShopFilterSidebar } from './ShopFilterSidebar';

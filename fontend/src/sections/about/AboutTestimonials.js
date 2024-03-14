@@ -18,37 +18,37 @@ const TESTIMONIALS = [
     name: 'Jenny Wilson',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `Excellent Work! Thanks a lot!`,
+    content: `Excellent Website!`,
   },
   {
     name: 'Cody Fisher',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `It's a very good dashboard and we are really liking the product . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the product is one of the best in terms of design and application architecture. The team did a really good job.`,
+    content: `The user-friendly interface made browsing an absolute pleasure.`,
   },
   {
     name: 'Marvin McKinney',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `Customer support is realy fast and helpful the desgin of this theme is looks amazing also the code is very clean and readble realy good job !`,
+    content: `Customer support is realy fast and helpful !`,
   },
   {
     name: 'Darrell Steward',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `Amazing, really good code quality and gives you a lot of examples for implementations.`,
+    content: `Such a huge sellection of orchids`,
   },
   {
     name: 'Jacob Jones',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `Got a few questions after purchasing the product. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`,
+    content: `The orchid arrived meticulously packaged and exceeded my expectations in size and health. !`,
   },
   {
     name: 'Bessie Cooper',
     rating: 5,
     dateCreate: 'April 19, 2021',
-    content: `CEO of Codealy.io here. We’ve built a developer assessment platform that makes sense - tasks are based on git repositories and run in virtual machines. We automate the pain points - storing candidates code, running it and sharing test results with the whole team, remotely. Bought this template as we need to provide an awesome dashboard for our early customers. I am super happy with purchase. The code is just as good as the design. Thanks!`,
+    content: `Discovering this orchid haven was a true delight! From the moment I landed on the website, I was captivated by the diverse array of orchids available.`,
   },
 ];
 
@@ -93,14 +93,14 @@ export default function AboutTestimonials() {
 
               <m.div variants={varFade().inUp}>
                 <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
-                  Who love <br />
-                  my work
+                  People who love <br />
+                  our work
                 </Typography>
               </m.div>
 
               <m.div variants={varFade().inUp}>
                 <Typography sx={{ color: 'common.white' }}>
-                  Our goal is to create a product and service that you’re satisfied with and use it every day. This is
+                  Our goal is to create a website and service that you’re satisfied with and use it every day. This is
                   why we’re constantly working on our services to make it better every day and really listen to what our
                   users has to say.
                 </Typography>
