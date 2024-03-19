@@ -1,22 +1,20 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
-import { AuthContext } from 'src/contexts/JWTContext';
-import { useContext } from 'react';
+import { AuthContext } from '../contexts/JWTContext'; 
 
-// ----------------------------------------------------------------------
 
 RoleBasedGuard.propTypes = {
-  accessibleRoles: PropTypes.array, // Example ['admin', 'leader']
-  children: PropTypes.node
+  accessibleRoles: PropTypes.array.isRequired, // Example ['admin', 'leader']
+  children: PropTypes.node,
 };
 
-// const useCurrentRole = () => {
-//   // Logic here to get current user role
-//   const role = 'admin';
-//   return role;
-// };
-
 export default function RoleBasedGuard({ accessibleRoles, children }) {
+  const { user } = useContext(AuthContext); 
+
+  
+  const currentRole = user?.role; 
+  console.log("currentRole", currentRole)
 
   if (!accessibleRoles.includes(currentRole)) {
     return (
@@ -29,6 +27,6 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
     );
   }
 
-
+  // If the user has an accessible role, render children components
   return <>{children}</>;
 }
