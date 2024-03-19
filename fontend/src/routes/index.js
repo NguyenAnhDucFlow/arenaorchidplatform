@@ -11,7 +11,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardSeller from '../layouts/dashboardseller';
 
 
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINSELLER } from '../config';
 // components

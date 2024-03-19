@@ -29,7 +29,7 @@ public class ProductDTO {
     private List<String> colors;
 
 
-    private String cover;
+    private String cover; // anh hien dau tien trong ds
 
     @NotBlank
     private String description;
