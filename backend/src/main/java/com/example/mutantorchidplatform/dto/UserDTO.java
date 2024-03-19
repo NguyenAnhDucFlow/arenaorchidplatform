@@ -1,4 +1,5 @@
 package com.example.mutantorchidplatform.dto;
+import com.example.mutantorchidplatform.entity.Role;
 import com.example.mutantorchidplatform.entity.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,7 +52,7 @@ public class UserDTO {
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
-    private List<RoleDTO> roles;
+    private RoleDTO role;
 
     private String state;
 

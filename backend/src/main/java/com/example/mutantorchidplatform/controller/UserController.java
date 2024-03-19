@@ -58,9 +58,8 @@ public class UserController {
         User user = userService.createUser(userDTO);
 
         List<String> authorities = new ArrayList<>();
-        for(Role role : user.getRoles()){
-            authorities.add(role.getName().toString());
-        }
+
+        authorities.add(userDTO.getRole().getName());
 
         return ResponseDTO.<JwtTokenService.TokenAndUser>builder()
                 .status(200)

@@ -46,14 +46,10 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public User createUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
-        if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
-            Set<Role> roles = roleRepository.searchByID(2);
-            user.setRoles(roles);
-        } else {
-            user.setRoles(userDTO.getRoles().stream()
-                    .map(role -> roleRepository.findById(role.getId()).orElse(null))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet()));
+
+        if (userDTO.getRole() == null) {
+            Role role = roleRepository.searchByID(2);
+            user.setRole(role);
         }
         return userRepository.save(user);
     }
@@ -64,21 +60,14 @@ class UserServiceImpl implements UserService, UserDetailsService {
         return modelMapper.map(user, UserDTO.class);
     }
 
-
-
-
     @Override
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
         modelMapper.map(userDTO, user);
-        if (userDTO.getRoles() != null) {
-            user.setRoles(userDTO.getRoles().stream()
-                    .map(role -> roleRepository.findById(role.getId()).orElse(null))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet()));
-        } else {
-            user.setRoles(new HashSet<>());
+        if (userDTO.getRole() == null) {
+            Role role = roleRepository.searchByID(2);
+            user.setRole(role);
         }
         userRepository.save(user);
     }
@@ -110,9 +99,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
         //convert userentity -> userdetails
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         //chuyen vai tro ve quyen
-        for(Role role : userEntity.getRoles()){
-            authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
-        }
+            authorities.add(new SimpleGrantedAuthority(userEntity.getRole().getName().toString()));
         return new org.springframework.security.core.userdetails.User(email,
                 userEntity.getPassword(), authorities);
     }
