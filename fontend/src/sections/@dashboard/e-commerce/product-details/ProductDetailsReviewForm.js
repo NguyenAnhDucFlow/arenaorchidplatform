@@ -53,7 +53,8 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    console.log("data", data)
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
