@@ -15,11 +15,10 @@ public class ShipmentController {
     ShipmentService shipmentService;
 
     @PostMapping("/")
-    public ResponseDTO<Void> create(@RequestBody @Valid ShipmentDTO shipmentDTO) {
-        shipmentService.create(shipmentDTO);
-        return ResponseDTO.<Void>builder()
+    public ResponseDTO<ShipmentDTO> create(@RequestBody @Valid ShipmentDTO shipmentDTO) {
+        return ResponseDTO.<ShipmentDTO>builder()
                 .status(200)
-                .msg("ok")
+                .data(shipmentService.create(shipmentDTO))
                 .build();
     }
 

@@ -4,7 +4,9 @@ import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
 import com.example.mutantorchidplatform.dto.ShipmentDTO;
 import com.example.mutantorchidplatform.entity.Shipment;
+import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.ShipmentRepository;
+import com.example.mutantorchidplatform.repository.UserRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface ShipmentService {
 
-    void create(ShipmentDTO shipmentDTO);
+    ShipmentDTO create(ShipmentDTO shipmentDTO);
 
     ShipmentDTO getById(int id);
 
@@ -39,12 +42,21 @@ class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     ShipmentRepository shipmentRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
 
     @Override
     @Transactional
-    public void create(ShipmentDTO shipmentDTO) {
+    public ShipmentDTO create(ShipmentDTO shipmentDTO) {
+        User user = userRepository.findById(shipmentDTO.getUser().getId()).orElseThrow(NoResultException::new);
+        Shipment shipment =shipmentRepository.save(modelMapper.map(shipmentDTO, Shipment.class));
 
-        shipmentRepository.save(modelMapper.map(shipmentDTO, Shipment.class));
+        if (shipmentDTO.getIsDefault()){
+            user.setDefaultShipmentId(shipment.getId());
+            userRepository.save(user);
+        }
+        return modelMapper.map(shipment, ShipmentDTO.class);
     }
 
     @Override

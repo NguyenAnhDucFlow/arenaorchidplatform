@@ -51,6 +51,8 @@ public class User extends TimeAuditable{
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Shipment> shipments;
 
+    private int defaultShipmentId;
+
     @ManyToOne
     private Role role;
 

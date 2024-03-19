@@ -49,6 +49,8 @@ public class UserDTO {
 
     private List<ShipmentDTO> shipments;
 
+    private int defaultShipmentId;
+
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 

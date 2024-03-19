@@ -14,6 +14,7 @@ import Iconify from '../../../../components/Iconify';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutNewAddressForm from './CheckoutNewAddressForm';
 import { AuthContext } from '../../../../contexts/JWTContext';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +52,9 @@ export default function CheckoutBillingAddress() {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {user.shipments.map((address, index) => (
+          {user.shipments.sort( a => 
+            user.defaultShipmentId === a.id ? -1 : 0 // sort array
+          ).map((address, index) => (
             <AddressItem
               key={index}
               address={address}
@@ -98,7 +101,10 @@ AddressItem.propTypes = {
 };
 
 function AddressItem({ address, onNextStep, onCreateBilling }) {
-  const { receiver, fullAddress, addressType, phone, isDefault } = address;
+  const { receiver, fullAddress, addressType, phone, id } = address;
+
+  const { user } = useAuth();
+  const isDefault = user.defaultShipmentId === id;
 
   const handleCreateBilling = () => {
     onCreateBilling(address);

@@ -16,26 +16,9 @@ RoleBasedGuard.propTypes = {
 //   return role;
 // };
 
-// export default function RoleBasedGuard({ accessibleRoles, children }) {
-
-//   if (!accessibleRoles.includes(currentRole)) {
-//     return (
-//       <Container>
-//         <Alert severity="error">
-//           <AlertTitle>Permission Denied</AlertTitle>
-//           You do not have permission to access this page
-//         </Alert>
-//       </Container>
-//     );
-//   }
-
 export default function RoleBasedGuard({ accessibleRoles, children }) {
-  const { user } = useContext(AuthContext);
-  const userRoles = user.roles;
 
-  const hasAccess = userRoles.some(role => accessibleRoles.includes(role));
-
-  if (!hasAccess) {
+  if (!accessibleRoles.includes(currentRole)) {
     return (
       <Container>
         <Alert severity="error">
@@ -45,6 +28,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
       </Container>
     );
   }
+
 
   return <>{children}</>;
 }

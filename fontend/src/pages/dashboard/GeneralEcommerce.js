@@ -23,7 +23,7 @@ import {
 export default function GeneralEcommerce() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
-
+ console.log("first")
   return (
     <Page title="General: E-commerce">
       <Container maxWidth={themeStretch ? false : 'xl'}>

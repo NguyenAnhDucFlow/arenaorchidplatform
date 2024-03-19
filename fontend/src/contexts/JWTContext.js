@@ -75,14 +75,17 @@ function AuthProvider({ children }) {
           setSession(accessToken);
 
           const response = await axios.get('/users/my-account');
-          console.log(response.data.data)
+          console.log("my user 1111", response.data.data)
           const { user } = response.data.data;
 
           dispatch({
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: true,
-              user,
+              user: {
+                ...user, 
+                role: user.role.name
+              },
             },
           });
         } else {

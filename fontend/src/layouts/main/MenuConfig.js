@@ -40,7 +40,6 @@ const menuConfig = [
     icon: <Iconify icon={'eva:file-fill'} {...ICON_SIZE} />,
     children: [
       {
-        subheader: 'Order',
         items: [
           { title: 'About us', path: PATH_PAGE.about },
           { title: 'Contact us', path: PATH_PAGE.contact },

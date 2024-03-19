@@ -12,9 +12,9 @@ SellerGuard.propTypes = {
 };
 
 export default function SellerGuard({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
 
-  if (isAuthenticated) {
+  if (isAuthenticated && isInitialized) {
     return <Navigate to={PATH_PRODUCTOWNER.root} />;
   }
 

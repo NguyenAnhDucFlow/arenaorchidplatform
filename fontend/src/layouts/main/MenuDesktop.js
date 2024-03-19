@@ -29,6 +29,7 @@ const ListItemStyle = styled(ListItem)(({ theme }) => ({
   marginTop: theme.spacing(3),
   color: theme.palette.text.secondary,
   transition: theme.transitions.create('color'),
+  width:"150px",
   '&:hover': {
     color: theme.palette.text.primary,
   },
@@ -144,7 +145,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
         <Popover
           open={isOpen}
           anchorReference="anchorPosition"
-          anchorPosition={{ top: 80, left: 0 }}
+          anchorPosition={{ top: 80, left: "unset" }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
           onClose={onClose}
@@ -153,7 +154,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
               px: 3,
               pt: 5,
               pb: 3,
-              right: 16,
+              right: "23%",
               m: 'auto',
               borderRadius: 2,
               maxWidth: (theme) => theme.breakpoints.values.lg,
@@ -161,27 +162,13 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
             },
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{marginTop: "-60px"}}>
             {children.map((list) => {
               const { subheader, items } = list;
 
               return (
                 <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
                   <List disablePadding>
-                    <ListSubheader
-                      disableSticky
-                      disableGutters
-                      sx={{
-                        display: 'flex',
-                        lineHeight: 'unset',
-                        alignItems: 'center',
-                        color: 'text.primary',
-                        typography: 'overline',
-                      }}
-                    >
-                      <IconBullet type="subheader" /> {subheader}
-                    </ListSubheader>
-
                     {items.map((item) => (
                       <ListItemStyle
                         key={item.title}

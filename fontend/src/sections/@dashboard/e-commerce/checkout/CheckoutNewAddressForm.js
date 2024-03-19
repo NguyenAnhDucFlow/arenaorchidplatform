@@ -46,7 +46,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
     state: '',
     country: countries[0].label,
     zipcode: '',
-    isDefault: true,
+    isDefault: false,
   };
 
   const methods = useForm({
@@ -74,7 +74,10 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
       const response = await axios.post('/shipment/', newAddrest);
       if (response.status === 200) {
-        onCreateBilling(newAddrest);
+        onCreateBilling({
+          ...newAddrest,
+          id: response.data.data.id
+        });
       } else {
         console.error('Error saving the address')
       }

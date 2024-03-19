@@ -2,7 +2,6 @@ package com.example.mutantorchidplatform.controller;
 
 import com.example.mutantorchidplatform.dto.ResponseDTO;
 import com.example.mutantorchidplatform.dto.UserDTO;
-import com.example.mutantorchidplatform.entity.Role;
 import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.jwt.JwtTokenService;
 import com.example.mutantorchidplatform.repository.UserRepository;
@@ -59,7 +58,7 @@ public class UserController {
 
         List<String> authorities = new ArrayList<>();
 
-        authorities.add(userDTO.getRole().getName());
+            authorities.add(user.getRole().getName());
 
         return ResponseDTO.<JwtTokenService.TokenAndUser>builder()
                 .status(200)
