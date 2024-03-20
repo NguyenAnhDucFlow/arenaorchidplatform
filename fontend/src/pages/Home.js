@@ -17,8 +17,7 @@ import { MotionViewport, varFade } from '../components/animate';
 import Image from '../components/Image';
 import SocialsButton from '../components/SocialsButton';
 import { ShopProductCard } from '../sections/@dashboard/e-commerce/shop';
-import { getProducts } from '../redux/slices/product';
-
+import { getAuctions, getProducts } from '../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -35,14 +34,15 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
-
   const carouselRef = useRef(null);
   const theme = useTheme();
   const products = useSelector((state) => state.product.products);
+  const auctions = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getAuctions());
   }, [dispatch]);
 
   const settings = {
@@ -91,7 +91,6 @@ export default function HomePage() {
         <HomeHero />
         <ContentStyle>
           <Container component={MotionViewport} sx={{ pb: 10, textAlign: 'center', marginTop: '30px' }}>
-
             <m.div variants={varFade().inUp}>
               <Typography variant="h2" sx={{ mb: 3 }}>
                 Discover our latest blossoms
@@ -101,11 +100,15 @@ export default function HomePage() {
             <Box maxWidth="lg" position="relative" m="auto">
               <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
                 <Slider ref={carouselRef} {...settings}>
-                  {products.map((product) => ( // Sử dụng dữ liệu từ Redux
-                    <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
-                      <ShopProductCard key={product.id} product={product} />
-                    </Box>
-                  ))}
+                  {products.map(
+                    (
+                      product // Sử dụng dữ liệu từ Redux
+                    ) => (
+                      <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
+                        <ShopProductCard key={product.id} product={product} />
+                      </Box>
+                    )
+                  )}
                 </Slider>
               </CarouselArrows>
             </Box>
@@ -127,7 +130,6 @@ export default function HomePage() {
                 </Slider>
               </CarouselArrows>
             </Box>
-
           </Container>
           <HomeColorPresets />
         </ContentStyle>
@@ -135,7 +137,6 @@ export default function HomePage() {
     </Page>
   );
 }
-
 
 MemberCard.propTypes = {
   member: PropTypes.shape({

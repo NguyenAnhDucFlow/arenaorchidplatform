@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/auction")
 public class AuctionController {
@@ -53,6 +55,14 @@ public class AuctionController {
         return ResponseDTO.<PageDTO<AuctionDTO>>builder()
                 .status(200)
                 .data(auctionService.search(searchDTO))
+                .build();
+    }
+
+    @GetMapping
+    public ResponseDTO<List<AuctionMetadata>> getLatestAuctions() {
+        return ResponseDTO.<List<AuctionMetadata>>builder()
+                .status(200)
+                .data(auctionService.getLatestAuctions())
                 .build();
     }
 }

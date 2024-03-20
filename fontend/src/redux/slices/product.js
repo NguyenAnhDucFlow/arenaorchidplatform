@@ -227,7 +227,7 @@ export function getProducts() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/product/');
-      console.log(response.data.data)
+      console.log(response.data.data);
       dispatch(slice.actions.getProductsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -245,7 +245,7 @@ export function getProduct(name) {
       const response = await axios.get('/product/name', {
         params: { name },
       });
-      console.log(response.data.data)
+      console.log(response.data.data);
       dispatch(slice.actions.getProductSuccess(response.data.data));
     } catch (error) {
       console.error(error);
@@ -258,8 +258,8 @@ export function getAuctions() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/auction/');
-      console.log(response.data.data)
+      const response = await axios.get('/auction');
+      console.log('auctions', response.data.data);
       dispatch(slice.actions.getAuctionsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -272,11 +272,10 @@ export function getAuction(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/auction/${id}`);
-      console.log(response.data.data)
+      console.log(response.data.data);
       dispatch(slice.actions.getAuctionSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
-

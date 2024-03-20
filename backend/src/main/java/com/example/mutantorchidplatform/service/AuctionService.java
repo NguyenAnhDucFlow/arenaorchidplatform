@@ -1,6 +1,7 @@
 package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.AuctionDTO;
+import com.example.mutantorchidplatform.dto.AuctionMetadata;
 import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
 import com.example.mutantorchidplatform.entity.Auction;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public interface AuctionService {
@@ -28,6 +30,8 @@ public interface AuctionService {
     void delete(int id);
 
     PageDTO<AuctionDTO> search(SearchDTO searchDTO);
+
+    List<AuctionMetadata> getLatestAuctions();
 }
 @Service
 class AuctionServiceImpl implements AuctionService {
@@ -91,9 +95,18 @@ class AuctionServiceImpl implements AuctionService {
                 .build();
     }
 
-    private AuctionDTO convertToAuctionDTO(Auction auction) {
+    @Override
+    public List<AuctionMetadata> getLatestAuctions() {
+        return auctionRepository.findTop10ByOrderByStartDateDesc().stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
+    }
 
+
+    private AuctionDTO convertToAuctionDTO(Auction auction) {
         return modelMapper.map(auction, AuctionDTO.class);
+    }
+
+    private AuctionMetadata convertToAuctionMetadata(Auction auction) {
+        return modelMapper.map(auction, AuctionMetadata.class);
     }
 }
 

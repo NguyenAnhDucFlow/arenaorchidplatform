@@ -64,9 +64,9 @@ export default function MenuDesktop({ isOffset, isHome, navConfig }) {
 
   return (
     <Stack direction="row">
-      {navConfig.map((link) => (
+      {navConfig.map((link, index) => (
         <MenuDesktopItem
-          key={link.title}
+          key={index}
           item={link}
           isOpen={open}
           onOpen={handleOpen}
@@ -145,7 +145,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
         <Popover
           open={isOpen}
           anchorReference="anchorPosition"
-          anchorPosition={{ top: 80 }}
+          anchorPosition={{ top: 80, left: 0 }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
           onClose={onClose}
@@ -155,6 +155,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
               pt: 5,
               pb: 3,
               right: "23%",
+              left: "unset!important",
               m: 'auto',
               borderRadius: 2,
               maxWidth: (theme) => theme.breakpoints.values.lg,
@@ -163,11 +164,11 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
           }}
         >
           <Grid container spacing={3} sx={{marginTop: "-60px"}}>
-            {children.map((list) => {
+            {children.map((list, idx) => {
               const { subheader, items } = list;
 
               return (
-                <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
+                <Grid key={idx} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
                   <List disablePadding>
                     {items.map((item) => (
                       <ListItemStyle
