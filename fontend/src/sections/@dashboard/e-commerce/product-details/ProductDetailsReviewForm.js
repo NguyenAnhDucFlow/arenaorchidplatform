@@ -9,6 +9,7 @@ import { Button, Stack, Rating, Typography, FormHelperText } from '@mui/material
 import { LoadingButton } from '@mui/lab';
 // components
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,9 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
   });
+
+  const { user } = useAuth();
+  console.log("user-----------", user);
 
   const defaultValues = {
     rating: null,
@@ -91,10 +95,6 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
           </div>
 
           <RHFTextField name="review" label="Review *" multiline rows={3} />
-
-          <RHFTextField name="name" label="Name *" />
-
-          <RHFTextField name="email" label="Email *" />
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
             <Button color="inherit" variant="outlined" onClick={onCancel}>
