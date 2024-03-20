@@ -249,8 +249,8 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 const LoginBuyer = Loadable(lazy(() => import('../pages/auth/LoginBuyer')));
 const LoginSeller = Loadable(lazy(() => import('../pages/auth/LoginSeller')));
-const SignUpBuyer = Loadable(lazy(() => import('../pages/auth/SignUpBuyer')));
-const SignUpSeller = Loadable(lazy(() => import('../pages/auth/SignUpSeller')));
+const SignUpBuyer = Loadable(lazy(() => import('../pages/auth/SignupBuyer')));
+const SignUpSeller = Loadable(lazy(() => import('../pages/auth/SignupSeller')));
 
 
 // DASHBOARD
