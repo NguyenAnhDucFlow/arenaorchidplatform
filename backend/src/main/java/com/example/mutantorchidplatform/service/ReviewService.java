@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface ReviewService {
 
     void create(ReviewDTO reviewDTO);
+
+    Review updateHelpful(int reviewId, boolean isHelpful);
+
 }
 
 @Service
@@ -33,4 +36,15 @@ class ReviewServiceImpl implements  ReviewService {
         Review review = modelMapper.map(reviewDTO, Review.class);
         reviewRepository.save(review);
     }
+
+    @Override
+    @Transactional
+    public Review updateHelpful(int reviewId, boolean isHelpful) {
+        return reviewRepository.findById(reviewId).map(review -> {
+            review.setHelpful(review.getHelpful() + (isHelpful ? 1 : -1)); // Tăng hoặc giảm dựa trên isHelpful
+            return reviewRepository.save(review);
+        }).orElseThrow(() -> new RuntimeException("Review not found!"));
+    }
+
 }
+

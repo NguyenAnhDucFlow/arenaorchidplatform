@@ -68,9 +68,22 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
       }
       console.log("ratingData", ratingData);
 
+      const reviewData = {
+        avatarUrl: user.photoURL,
+        comment: data.review,
+        name: user.displayName,
+        rating: data.rating,
+        product: {
+          id
+        },
+      }
+
 
       const ratingResponse = await axios.post("/ratings/", ratingData);
       console.log("ratingResponse", ratingResponse.data);
+      const reviewResponse = await axios.post("/reviews/", reviewData);
+      console.log("reviewResponse", reviewResponse.data);
+
 
       reset();
       onClose();

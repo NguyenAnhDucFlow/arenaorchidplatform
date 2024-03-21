@@ -5,6 +5,7 @@ import com.example.mutantorchidplatform.entity.Rating;
 import com.example.mutantorchidplatform.entity.enums.InventoryType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -49,6 +50,8 @@ public class ProductDTO {
 
     private List<RatingDTO> ratings;
 
+    @JsonManagedReference //đặt trên "bên chủ" của mối quan hệ (nơi chứa collection).
+    // chỉ hoạt động tốt với quan hệ 1 nhiều
     private List<ReviewDTO> reviews;
 
     private List<String> sizes;

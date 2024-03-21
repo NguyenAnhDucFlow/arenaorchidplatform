@@ -7,6 +7,7 @@ import { fDate } from '../../../../utils/formatTime';
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -40,10 +41,24 @@ ReviewItem.propTypes = {
 function ReviewItem({ review }) {
   const [isHelpful, setHelpfuls] = useState(false);
 
-  const { name, rating, comment, helpful, postedAt, avatarUrl, isPurchased } = review;
+  const { id, name, rating, comment, helpful, postedAt, avatarUrl, isPurchased } = review;
+
+  const updateReviewHelpful = async (reviewId, helpfulStatus) => {
+    try {
+      const response = await axios.post(`/reviews/${reviewId}/helpful`, {
+        isHelpful: helpfulStatus,
+      });
+      console.log(response.data);
+      setHelpfuls(helpfulStatus);
+    } catch (error) {
+      console.error('Failed to update review helpful status', error);
+    }
+  };
 
   const handleClickHelpful = () => {
-    setHelpfuls((prev) => !prev);
+    // Gọi API và cập nhật state
+    const newHelpfulStatus = !isHelpful;
+    updateReviewHelpful(id, newHelpfulStatus);
   };
 
   return (
