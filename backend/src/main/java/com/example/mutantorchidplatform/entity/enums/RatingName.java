@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum RatingName {
-    
+
         ONE_STAR("1 Star"),
         TWO_STAR("2 Star"),
         THREE_STAR("3 Star"),
