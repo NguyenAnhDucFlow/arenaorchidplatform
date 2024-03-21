@@ -31,7 +31,7 @@ export default function ProductDetailsReview({ product }) {
       <Divider />
 
       <Collapse in={reviewBox}>
-        <ProductDetailsReviewForm onClose={handleCloseReviewBox} id="move_add_review" />
+        <ProductDetailsReviewForm onClose={handleCloseReviewBox} id={product.id} />
         <Divider />
       </Collapse>
 

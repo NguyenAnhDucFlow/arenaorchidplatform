@@ -25,7 +25,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 ProductDetailsReviewForm.propTypes = {
   onClose: PropTypes.func,
-  id: PropTypes.string,
+  id: PropTypes.number,
 };
 
 export default function ProductDetailsReviewForm({ onClose, id, ...other }) {

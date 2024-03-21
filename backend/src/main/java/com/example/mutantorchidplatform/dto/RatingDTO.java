@@ -1,6 +1,6 @@
 package com.example.mutantorchidplatform.dto;
 
-import com.example.mutantorchidplatform.entity.enums.RatingName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
@@ -8,11 +8,12 @@ public class RatingDTO {
 
     private long id;
 
-    private RatingName ratingName;
+    private String ratingName;
 
     private int starCount;
 
     private int reviewCount;
 
+    @JsonIgnoreProperties("ratings")
     private ProductDTO product;
 }

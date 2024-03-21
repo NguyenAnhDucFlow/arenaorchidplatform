@@ -1,6 +1,5 @@
 package com.example.mutantorchidplatform.entity;
 
-import com.example.mutantorchidplatform.entity.enums.RatingName;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,8 +11,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Enumerated(EnumType.STRING)
-    private RatingName ratingName;
+    private String ratingName;
 
     private int starCount;
 

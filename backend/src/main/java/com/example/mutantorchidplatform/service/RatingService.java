@@ -3,7 +3,6 @@ package com.example.mutantorchidplatform.service;
 import com.example.mutantorchidplatform.dto.RatingDTO;
 import com.example.mutantorchidplatform.entity.Product;
 import com.example.mutantorchidplatform.entity.Rating;
-import com.example.mutantorchidplatform.entity.enums.RatingName;
 import com.example.mutantorchidplatform.repository.RatingRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,8 @@ class RatingServiceImpl implements RatingService {
             rating.setReviewCount(0);
         }
 
-        rating.setStarCount(ratingDTO.getStarCount() + 1);
-        rating.setReviewCount(ratingDTO.getReviewCount() + 1);
+        rating.setStarCount(rating.getStarCount() + 1);
+        rating.setReviewCount(rating.getReviewCount() + 1);
 
         Product product = modelMapper.map(ratingDTO.getProduct(), Product.class);
         rating.setProduct(product);

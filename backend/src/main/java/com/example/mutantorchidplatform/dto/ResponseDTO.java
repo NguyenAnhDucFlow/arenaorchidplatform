@@ -12,4 +12,5 @@ public class ResponseDTO<T> {
     private String msg;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+
 }

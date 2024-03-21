@@ -48,7 +48,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
         User user = modelMapper.map(userDTO, User.class);
 
         if (userDTO.getRole() == null) {
-            Role role = roleRepository.searchByID(2);
+            Role role = roleRepository.findById(2).orElseThrow(NoResultException::new);
             user.setRole(role);
         }
         return userRepository.save(user);
@@ -66,7 +66,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
         modelMapper.map(userDTO, user);
         if (userDTO.getRole() == null) {
-            Role role = roleRepository.searchByID(2);
+            Role role = roleRepository.findById(2).orElseThrow(NoResultException::new);
             user.setRole(role);
         }
         userRepository.save(user);

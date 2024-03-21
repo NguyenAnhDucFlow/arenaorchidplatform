@@ -47,7 +47,7 @@ public class ProductDTO {
 
     private String priceSale;
 
-    private List<Rating> ratings;
+    private List<RatingDTO> ratings;
 
     private List<ReviewDTO> reviews;
 
