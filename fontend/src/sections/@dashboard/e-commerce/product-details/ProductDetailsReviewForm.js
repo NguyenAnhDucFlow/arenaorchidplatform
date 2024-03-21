@@ -10,6 +10,7 @@ import { LoadingButton } from '@mui/lab';
 // components
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import useAuth from '../../../../hooks/useAuth';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -31,12 +32,10 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
   const ReviewSchema = Yup.object().shape({
     rating: Yup.mixed().required('Rating is required'),
     review: Yup.string().required('Review is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    // name: Yup.string().required('Name is required'),
   });
 
   const { user } = useAuth();
-  console.log("user-----------", user);
 
   const defaultValues = {
     rating: null,
@@ -58,9 +57,21 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("data", data)
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const ratingData = {
+        ratingName: data.rating,
+        product: {
+          id
+        },
+      }
+      console.log("ratingData", ratingData);
+
+
+      const ratingResponse = await axios.post("/ratings/", ratingData);
+      console.log("ratingResponse", ratingResponse.data);
+
       reset();
       onClose();
     } catch (error) {
