@@ -1,5 +1,4 @@
 package com.example.mutantorchidplatform.dto;
-import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class AuctionDTO {
     @Min(0)
     private double currentPrice;
 
-    private AuctionStatus status;
+    private Boolean isPublished;
 
     @NotNull
     private ProductDTO product;
