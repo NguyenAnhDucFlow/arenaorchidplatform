@@ -86,10 +86,11 @@ ProgressItem.propTypes = {
 };
 
 function ProgressItem({ star, total }) {
-  const { name, starCount, reviewCount } = star;
+  const { ratingName, starCount, reviewCount } = star;
+  console.log("ngueue", star)
   return (
     <Stack direction="row" alignItems="center" spacing={1.5}>
-      <Typography variant="subtitle2">{name}</Typography>
+      <Typography variant="subtitle2">{ratingName}</Typography>
       <LinearProgress
         variant="determinate"
         value={(starCount / total) * 100}

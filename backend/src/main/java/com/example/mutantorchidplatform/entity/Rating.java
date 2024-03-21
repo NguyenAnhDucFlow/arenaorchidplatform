@@ -19,4 +19,8 @@ public class Rating {
 
     @ManyToOne
     private Product product;
+
+    public void setRatingName(String ratingName) {
+        this.ratingName = ratingName + " Star";
+    }
 }
