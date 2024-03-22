@@ -26,6 +26,7 @@ import {
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
+const ITEMS_PER_PAGE = 10; // size
 
 export default function EcommerceShop() {
   const { themeStretch } = useSettings();
@@ -33,6 +34,8 @@ export default function EcommerceShop() {
   const dispatch = useDispatch();
 
   const [openFilter, setOpenFilter] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1); // set currentPage
 
   const { products, sortBy, filters } = useSelector((state) => state.product);
 
@@ -104,6 +107,16 @@ export default function EcommerceShop() {
     setValue('rating', '');
   };
 
+  // handel pagination
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const displayedProducts = filteredProducts.slice(startIndex, endIndex);
+
+
   return (
     <Page title="Shop">
       <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
@@ -160,11 +173,16 @@ export default function EcommerceShop() {
           )}
         </Stack>
 
-        <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
+        <ShopProductList products={displayedProducts} loading={!products.length && isDefault} />
         <CartWidget />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
-        <Pagination count={10} size="large" />
+        <Pagination
+            count={Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)} 
+            page={currentPage}
+            onChange={handlePageChange}
+            size="large"
+          />
         </Box>
 
 
