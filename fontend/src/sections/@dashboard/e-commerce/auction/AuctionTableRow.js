@@ -45,6 +45,16 @@ export default function AuctionTableRow({ row, selected, onEditRow, onSelectRow,
     setOpenMenuActions(null);
   };
 
+  const handleDeleteRow = () => {
+    onDeleteRow();
+    handleCloseMenu();
+  };
+
+  const handleEditRow = () => {
+    onEditRow();
+    handleCloseMenu();
+  };
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -79,24 +89,13 @@ export default function AuctionTableRow({ row, selected, onEditRow, onSelectRow,
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
-                onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onEditRow();
-                  handleCloseMenu();
-                }}
-              >
+              <MenuItem onClick={handleEditRow}>
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
+              </MenuItem>
+              <MenuItem onClick={handleDeleteRow} sx={{ color: 'error.main' }}>
+                <Iconify icon={'eva:trash-2-outline'} />
+                Delete
               </MenuItem>
             </>
           }

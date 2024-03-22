@@ -1,6 +1,4 @@
-import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -14,10 +12,12 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
+  DialogTitle,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getAuctionsTable } from '../../redux/slices/product';
+import { deleteAuction, deleteAuctions, getAuctionsTable } from '../../redux/slices/product';
 // routes
 import { PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
@@ -38,6 +38,8 @@ import {
 // sections
 import { ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import AuctionTableRow from '../../sections/@dashboard/e-commerce/auction/AuctionTableRow';
+import { DialogAnimate } from '../../components/animate';
+import AuctionEditForm from '../../sections/@dashboard/e-commerce/auction/AuctionEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -74,9 +76,9 @@ export default function EcommerceAuctionList() {
     defaultOrderBy: 'createdAt',
   });
 
-  const { themeStretch } = useSettings();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const navigate = useNavigate();
+  const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
 
@@ -85,6 +87,10 @@ export default function EcommerceAuctionList() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
+
+  const [isOpenModal, setOpenModal] = useState(false);
+
+  const [selectedAuction, setSelectedAuction] = useState(null);
 
   useEffect(() => {
     dispatch(getAuctionsTable(filterName, page, rowsPerPage, orderBy));
@@ -105,16 +111,21 @@ export default function EcommerceAuctionList() {
     const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
+    enqueueSnackbar('Delete success!');
+    dispatch(deleteAuction(id));
   };
 
   const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
+    enqueueSnackbar('Delete success!');
+    dispatch(deleteAuctions(selected.map((id) => id)));
   };
 
-  const handleEditRow = (id) => {
-    // navigate(PATH_PRODUCTOWNER.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (auction) => {
+    setSelectedAuction(auction);
+    setOpenModal(true);
   };
 
   const dataFiltered = applySortFilter({
@@ -126,6 +137,8 @@ export default function EcommerceAuctionList() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  console.log(selectedAuction);
 
   return (
     <Page title="Ecommerce: Product List">
@@ -185,22 +198,20 @@ export default function EcommerceAuctionList() {
                 />
 
                 <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <AuctionTableRow
-                          key={row.id}
-                          row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                    row ? (
+                      <AuctionTableRow
+                        key={row.id}
+                        row={row}
+                        selected={selected.includes(row.id)}
+                        onSelectRow={() => onSelectRow(row.id)}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        onEditRow={() => handleEditRow(row)}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
 
                   <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
 
@@ -228,6 +239,15 @@ export default function EcommerceAuctionList() {
             />
           </Box>
         </Card>
+        <DialogAnimate open={isOpenModal} onClose={() => setOpenModal(false)}>
+          <DialogTitle>Auction detail</DialogTitle>
+
+          <AuctionEditForm
+            auction={selectedAuction || {}}
+            onCancel={() => setOpenModal(false)}
+            refetchTable={async () => dispatch(getAuctionsTable(filterName, page, rowsPerPage, orderBy))}
+          />
+        </DialogAnimate>
       </Container>
     </Page>
   );

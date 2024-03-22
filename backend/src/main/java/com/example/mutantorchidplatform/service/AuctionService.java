@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +26,15 @@ public interface AuctionService {
 
     AuctionDTO getById(int id);
 
-    void update(AuctionDTO auctionDTO);
+    void update(int id, AuctionCreateDTO auctionDTO);
 
     void delete(int id);
 
     PageDTO<AuctionMetadata> search(SearchDTO searchDTO);
 
     List<AuctionMetadata> getLatestAuctions();
+
+    void delete(List<Integer> ids);
 }
 
 @Service
@@ -73,9 +74,17 @@ class AuctionServiceImpl implements AuctionService {
 
     @Override
     @Transactional
-    public void update(AuctionDTO auctionDTO) {
-        auctionRepository.findById(auctionDTO.getId()).orElseThrow(NoResultException::new);
-        auctionRepository.save(modelMapper.map(auctionDTO, Auction.class));
+    public void update(int id, AuctionCreateDTO dto) {
+        Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
+
+        auction.setStatus(dto.getStatus());
+        auction.setStartDate(dto.getStartDate());
+        auction.setEndDate(dto.getEndDate());
+        auction.setCurrentPrice(dto.getCurrentPrice());
+        auction.setStartPrice(dto.getStartPrice());
+        auction.setStepPrice(dto.getStepPrice());
+
+        auctionRepository.save(auction);
     }
 
     @Override
@@ -113,6 +122,11 @@ class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionMetadata> getLatestAuctions() {
         return auctionRepository.findTop10ByOrderByStartDateDesc(AuctionStatus.APPROVED).stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(List<Integer> ids) {
+        auctionRepository.deleteAllById(ids);
     }
 
 
