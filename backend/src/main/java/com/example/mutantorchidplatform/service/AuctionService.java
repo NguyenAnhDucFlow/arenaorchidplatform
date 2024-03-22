@@ -112,7 +112,7 @@ class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionMetadata> getLatestAuctions() {
-        return auctionRepository.findTop10ByOrderByStartDateDesc(new Date()).stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
+        return auctionRepository.findTop10ByOrderByStartDateDesc(new Date(), AuctionStatus.APPROVED).stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
     }
 
 
