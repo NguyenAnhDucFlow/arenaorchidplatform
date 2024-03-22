@@ -1,4 +1,4 @@
-import { paramCase, capitalCase } from 'change-case';
+import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
@@ -13,11 +13,15 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
+import axios from '../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function UserCreate() {
+  
   const { themeStretch } = useSettings();
+
+  const [tableData, setTableData] = useState([]);
 
   const { pathname } = useLocation();
 
@@ -25,7 +29,24 @@ export default function UserCreate() {
 
   const isEdit = pathname.includes('edit');
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
+  useEffect(() => {
+    axios.get('/users/')
+      .then((response) =>  {
+        const modifiedData = response.data.data.map(user => {
+          const roleName = user.role.name;
+          const { role, ...rest } = user;
+          return { ...rest, role: roleName };
+        });
+        setTableData(modifiedData);
+        console.log("modifiedData", modifiedData)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+  console.log("table", tableData);
+
+  const currentUser = tableData.find((user) => (user.name) === name);
 
   return (
     <Page title="User: Create a new user">
@@ -35,7 +56,7 @@ export default function UserCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'User', href: PATH_DASHBOARD.user.list },
-            { name: !isEdit ? 'New user' : capitalCase(name) },
+            { name: !isEdit ? 'New user' : (name) },
           ]}
         />
 

@@ -21,7 +21,8 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { displayName, photoURL, company, roles, isVerified, status } = row;
+  const { displayName, photoURL, company, role, isVerified, status } = row;
+  
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -49,7 +50,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       <TableCell align="left">{company}</TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {Array.isArray(roles) ? roles.map(item => item.name).join(', ') : roles}
+        {role.name}
       </TableCell>
 
       <TableCell align="center">

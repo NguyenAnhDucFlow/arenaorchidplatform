@@ -1,4 +1,3 @@
-import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -89,7 +88,7 @@ export default function UserList() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -130,7 +129,7 @@ export default function UserList() {
   };
 
   const handleEditRow = (name) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(name)));
+    navigate(PATH_DASHBOARD.user.edit((name)));
   };
 
   const dataFiltered = applySortFilter({
