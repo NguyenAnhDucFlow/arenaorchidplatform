@@ -60,8 +60,8 @@ export default function AuctionCard({ auction }) {
           <Countdown date={new Date(endDate).getTime()} intervalDelay={0} precision={3} renderer={CountdownRenderer} />
         ) : (
           <Card sx={{ position: 'absolute', bottom: 10, left: 15, right: 15, paddingInline: '15px', boxShadow: 3 }}>
-            <Typography variant="body2" sx={{ textAlign: 'center' }}>
-              Auction is not started yet
+            <Typography variant="body2" sx={{ textAlign: 'center', marginBlock: '23px' }}>
+              Not started yet
             </Typography>
           </Card>
         )}
@@ -89,7 +89,7 @@ const CountdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     return (
       <Card sx={{ position: 'absolute', bottom: 10, left: 15, right: 15, paddingInline: '15px', boxShadow: 3 }}>
-        <Typography variant="body2" sx={{ textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ textAlign: 'center', marginBlock: '23px' }}>
           Auction is over
         </Typography>
       </Card>

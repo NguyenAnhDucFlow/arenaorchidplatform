@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Card, Typography, Container } from '@mui/material';
+import { Box, Stack, Card, Typography, Container, Grid } from '@mui/material';
 // components
 import { useEffect, useRef } from 'react';
 import Page from '../components/Page';
@@ -96,29 +96,7 @@ export default function HomePage() {
         <ContentStyle>
           <Container component={MotionViewport} sx={{ pb: 10, textAlign: 'center', marginTop: '30px' }}>
             <m.div variants={varFade().inUp}>
-              <Typography variant="h2" sx={{ mb: 3 }}>
-                Discover our latest blossoms
-              </Typography>
-            </m.div>
-
-            <Box maxWidth="lg" position="relative" m="auto">
-              <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
-                <Slider ref={carouselRef} {...settings}>
-                  {(products || []).map(
-                    (
-                      product // Sử dụng dữ liệu từ Redux
-                    ) => (
-                      <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
-                        <ShopProductCard key={product.id} product={product} />
-                      </Box>
-                    )
-                  )}
-                </Slider>
-              </CarouselArrows>
-            </Box>
-
-            <m.div variants={varFade().inUp}>
-              <Typography variant="h2" sx={{ mb: 3 }}>
+              <Typography variant="h3" sx={{ mb: 3 }}>
                 Latest Auctions
               </Typography>
             </m.div>
@@ -128,7 +106,7 @@ export default function HomePage() {
                 <CarouselArrows filled onNext={handleNext2} onPrevious={handlePrevious2}>
                   <Slider ref={carouselRef2} {...settings}>
                     {auctions.map((auction) => (
-                      <Box key={auction.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
+                      <Box key={auction.id} component={m.div} variants={varFade().in} sx={{ px: 1.5 }}>
                         <AuctionCard key={auction.id} auction={auction} />
                       </Box>
                     ))}
@@ -140,8 +118,24 @@ export default function HomePage() {
                 No auctions available
               </Typography>
             )}
+
+            <m.div variants={varFade().inUp}>
+              <Typography variant="h4" sx={{ mb: 3, textAlign: 'start', mt: 10 }}>
+                Discover our latest blossoms
+              </Typography>
+            </m.div>
+
+            <Box maxWidth="lg" position="relative" m="auto">
+              <Grid container spacing={2}>
+                {(products || []).map((product) => (
+                  <Grid item xs={3} key={product.id} sx={{ px: 1.5, py: 10 }}>
+                    <ShopProductCard key={product.id} product={product} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
           </Container>
-          <HomeColorPresets />
+          {/* <HomeColorPresets /> */}
         </ContentStyle>
       </RootStyle>
     </Page>
