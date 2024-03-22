@@ -13,4 +13,6 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
 
     @Query("SELECT r FROM Role r WHERE r.name LIKE :name")
     Page<Role> searchByName(@Param("name") String name, Pageable pageable);
+
+    Role findByName(String name);
 }
