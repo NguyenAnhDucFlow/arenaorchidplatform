@@ -13,7 +13,7 @@ import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-import SocialsButton from '../../../../components/SocialsButton';
+import WishListReportButton from '../../../../components/WishListReportButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 
@@ -252,7 +252,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         </Stack>
 
         <Stack alignItems="center" sx={{ mt: 3 }}>
-          <SocialsButton initialColor />
+          <WishListReportButton initialColor />
         </Stack>
       </FormProvider>
     </RootStyle>

@@ -24,72 +24,94 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionController {
-	// log, slf4j
 
-	final
-	JwtTokenFilter jwtTokenFilter;
-	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final JwtTokenFilter jwtTokenFilter;
+	private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
 	public ExceptionController(JwtTokenFilter jwtTokenFilter) {
 		this.jwtTokenFilter = jwtTokenFilter;
 	}
 
-	@ExceptionHandler({ NoResultException.class, EmptyResultDataAccessException.class })
+	@ExceptionHandler({NoResultException.class, EmptyResultDataAccessException.class})
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public ResponseDTO<Void> noResult(Exception ex) {
 		logger.error("NoResultException or EmptyResultDataAccessException: ", ex);
-		return ResponseDTO.<Void>builder().status(404).msg("Not Found").build();
+		return ResponseDTO.<Void>builder().status(404).msg("Resource Not Found").build();
 	}
 
-	@ExceptionHandler({ AccessDeniedException.class })
+	@ExceptionHandler({AccessDeniedException.class})
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
 	public ResponseDTO<Void> accessDeny(Exception ex) {
 		logger.error("AccessDeniedException: ", ex);
-		return ResponseDTO.<Void>builder().status(403).msg("Deny").build();
+		return ResponseDTO.<Void>builder().status(403).msg("Access Denied").build();
 	}
 
-	@ExceptionHandler({ ExpiredJwtException.class, MalformedJwtException.class})
+	@ExceptionHandler({ExpiredJwtException.class, MalformedJwtException.class})
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	public ResponseDTO<Void> unauthorized(Exception ex) {
 		logger.error("ExpiredJwtException or MalformedJwtException: ", ex);
-		return ResponseDTO.<Void>builder().status(401).msg("JWT Expired").build();
+		return ResponseDTO.<Void>builder().status(401).msg("Unauthorized: JWT Expired or Malformed").build();
 	}
 
-
-	@ExceptionHandler({ BadCredentialsException.class })
+	@ExceptionHandler({BadCredentialsException.class})
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	public ResponseDTO<Void> badCredential(Exception ex) {
 		logger.error("BadCredentialsException: ", ex);
-		return ResponseDTO.<Void>builder().status(401).msg("Thông tin đăng nhập không chính xác!").build();
+		return ResponseDTO.<Void>builder().status(401).msg("Incorrect login credentials").build();
 	}
 
-	@ExceptionHandler({ DataIntegrityViolationException.class })
+	@ExceptionHandler({DataIntegrityViolationException.class})
 	@ResponseStatus(code = HttpStatus.CONFLICT)
 	public ResponseDTO<Void> conflict(Exception ex) {
 		logger.error("DataIntegrityViolationException: ", ex);
-		return ResponseDTO.<Void>builder().status(409).msg("CONFLICT").build();
+		return ResponseDTO.<Void>builder().status(409).msg("Data Conflict").build();
 	}
 
-	@ExceptionHandler({ MethodArgumentNotValidException.class })
+	@ExceptionHandler({MethodArgumentNotValidException.class})
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ResponseDTO<Void> badInput(MethodArgumentNotValidException ex) {
 		List<ObjectError> errors = ex.getBindingResult().getAllErrors();
 
 		String msg = errors.stream()
-				.map(e -> ((FieldError) e).getField() + ":" + e.getDefaultMessage())
-				.collect(Collectors.joining(";"));
+				.map(e -> ((FieldError) e).getField() + ": " + e.getDefaultMessage())
+				.collect(Collectors.joining("; "));
 
 		logger.error("MethodArgumentNotValidException: ", ex);
-		return ResponseDTO.<Void>builder().status(400).msg(msg).build();
+		return ResponseDTO.<Void>builder().status(400).msg("Invalid Input: " + msg).build();
 	}
 
-
-
-	@ExceptionHandler({ Exception.class })
+	@ExceptionHandler({NullPointerException.class})
 	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-	public ResponseDTO<Void> generalException(Exception ex) {
-		logger.error("Exception: ", ex);
-		return ResponseDTO.<Void>builder().status(500).msg("SERVER ERROR").build();
+	public ResponseDTO<Void> nullPointer(Exception ex) {
+		logger.error("NullPointerException: ", ex);
+		return ResponseDTO.<Void>builder().status(500).msg("Internal Server Error: Null Pointer Exception").build();
 	}
 
+	@ExceptionHandler({IllegalArgumentException.class})
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ResponseDTO<Void> illegalArgument(Exception ex) {
+		logger.error("IllegalArgumentException: ", ex);
+		return ResponseDTO.<Void>builder().status(400).msg("Bad Request: Illegal Argument").build();
+	}
+
+	@ExceptionHandler({UnsupportedOperationException.class})
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ResponseDTO<Void> unsupportedOperation(Exception ex) {
+		logger.error("UnsupportedOperationException: ", ex);
+		return ResponseDTO.<Void>builder().status(400).msg("Bad Request: Unsupported Operation").build();
+	}
+
+	@ExceptionHandler({NumberFormatException.class})
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ResponseDTO<Void> numberFormat(Exception ex) {
+		logger.error("NumberFormatException: ", ex);
+		return ResponseDTO.<Void>builder().status(400).msg("Bad Request: Invalid Number Format").build();
+	}
+
+	@ExceptionHandler({RuntimeException.class})
+	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseDTO<Void> runtimeException(Exception ex) {
+		logger.error("RuntimeException: ", ex);
+		return ResponseDTO.<Void>builder().status(500).msg("Internal Server Error: Runtime Exception").build();
+	}
 }
