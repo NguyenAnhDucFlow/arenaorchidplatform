@@ -11,7 +11,7 @@ import useIsMountedRef from '../../../../hooks/useIsMountedRef';
 // utils
 import axios from '../../../../utils/axios';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_HOME } from '../../../../routes/paths';
 // components
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
@@ -39,12 +39,19 @@ export default function ShopProductSearch() {
     try {
       setSearchQuery(value);
       if (value) {
-        const response = await axios.get('/api/products/search', {
-          params: { query: value },
+        const response = await axios.post('/product/search', {
+          keyword: value,
+          currentPage: 0, // Giá trị currentPage và size có thể thay đổi tùy vào yêu cầu của bạn
+          size: 10, // Đây là số lượng kết quả bạn muốn lấy từ API
+          sortedField: "name" // Trường bạn muốn sắp xếp kết quả theo (ví dụ: "name", "price",...)
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
 
         if (isMountedRef.current) {
-          setSearchResults(response.data.results);
+          setSearchResults(response.data.data.contents);
         }
       }
     } catch (error) {
@@ -53,7 +60,7 @@ export default function ShopProductSearch() {
   };
 
   const handleClick = (name) => {
-    navigate(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
+    navigate(PATH_HOME.view(name));
   };
 
   const handleKeyUp = (event) => {
