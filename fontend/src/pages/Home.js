@@ -19,6 +19,56 @@ import { ShopProductCard } from '../sections/@dashboard/e-commerce/shop';
 import { getAuctions, getProductsPageable } from '../redux/slices/product';
 import { AuctionCard } from '../sections/@dashboard/e-commerce/auction';
 
+const categories = [
+  {
+    name: 'Moth orchid',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (1).jpg',
+  },
+  {
+    name: 'Brassavola',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (2).jpg',
+  },
+  {
+    name: 'Brassia',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (3).jpg',
+  },
+  {
+    name: 'Cattleya',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (4).jpg',
+  },
+  {
+    name: 'Cymbidium',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (5).jpg',
+  },
+  {
+    name: 'Dancing-lady Orchid',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (6).jpg',
+  },
+  {
+    name: 'Dendrobium',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (7).jpg',
+  },
+  {
+    name: 'Miltonia',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (8).jpg',
+  },
+  {
+    name: 'Phalaenopsis',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (9).jpg',
+  },
+  {
+    name: 'Vanda orchids',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (10).jpg',
+  },
+  {
+    name: 'Boat Orchid',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (11).jpg',
+  },
+  {
+    name: 'Cattleya',
+    image: 'https://mutantorchid.s3.ap-southeast-1.amazonaws.com/hoa-orchids (12).jpg',
+  },
+];
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(() => ({
@@ -91,7 +141,22 @@ export default function HomePage() {
         <ContentStyle>
           <Container component={MotionViewport} sx={{ pb: 10, textAlign: 'center', marginTop: '30px' }}>
             <m.div variants={varFade().inUp}>
-              <Typography variant="h3" sx={{ mb: 3 }}>
+              <Typography variant="h4" sx={{ mb: 3, textAlign: 'start', mt: 5 }}>
+                Categories
+              </Typography>
+            </m.div>
+            <Box maxWidth="lg" position="relative" m="auto">
+              <Grid container spacing={1}>
+                {(categories || []).map((category, idx) => (
+                  <Grid item xs={3} md={2} key={idx}>
+                    <CategoryCard category={category} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+
+            <m.div variants={varFade().inUp}>
+              <Typography variant="h3" sx={{ mb: 3, mt: 10 }}>
                 Latest Auctions
               </Typography>
             </m.div>
@@ -173,6 +238,25 @@ function MemberCard({ member }) {
       <Stack alignItems="center" sx={{ mt: 2, mb: 1 }}>
         <SocialsButton sx={{ color: 'action.active' }} />
       </Stack>
+    </Card>
+  );
+}
+
+CategoryCard.propTypes = {
+  category: PropTypes.shape({
+    name: PropTypes.string,
+    image: PropTypes.string,
+  }),
+};
+function CategoryCard({ category }) {
+  const { name, image } = category;
+
+  return (
+    <Card key={name} sx={{ p: 1 }}>
+      <Image alt={name} src={image} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5 }}>
+        {name}
+      </Typography>
     </Card>
   );
 }
