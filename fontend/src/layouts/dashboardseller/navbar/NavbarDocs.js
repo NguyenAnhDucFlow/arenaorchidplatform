@@ -24,14 +24,10 @@ export default function NavbarDocs() {
           Hi, {user?.displayName}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Need help?
-          <br /> Please check our docs
+          Looking to boost your sales?
+          <br /> Explore our seller guides and resources
         </Typography>
       </div>
-
-      <Button href={PATH_DOCS} target="_blank" rel="noopener" variant="contained">
-        Documentation
-      </Button>
     </Stack>
   );
 }
