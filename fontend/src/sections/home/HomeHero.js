@@ -1,17 +1,11 @@
 import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
-// @mui
 import { styled } from '@mui/material/styles';
 import { Button, Box, Link, Container, Typography, Stack } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
+import { PATH_HOME } from '../../routes/paths';
 import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
-import TextIconLabel from '../../components/TextIconLabel';
 import { MotionContainer, varFade } from '../../components/animate';
-
-// ----------------------------------------------------------------------
 
 const RootStyle = styled(m.div)(({ theme }) => ({
   position: 'relative',
@@ -24,6 +18,7 @@ const RootStyle = styled(m.div)(({ theme }) => ({
     display: 'flex',
     position: 'fixed',
     alignItems: 'center',
+    perspective: '1000px', // Thêm perspective để tạo hiệu ứng 3D
   },
 }));
 
@@ -57,14 +52,14 @@ const HeroImgStyle = styled(m.img)(({ theme }) => ({
   width: '100%',
   margin: 'auto',
   position: 'absolute',
+  transformStyle: 'preserve-3d', 
+  transform: 'rotateY(20deg) rotateX(-10deg)', 
   [theme.breakpoints.up('lg')]: {
     right: '8%',
     width: 'auto',
     height: '48vh',
   },
 }));
-
-// ----------------------------------------------------------------------
 
 export default function HomeHero() {
   return (
@@ -79,11 +74,12 @@ export default function HomeHero() {
           alt="hero"
           src="https://mutantorchid.s3.ap-southeast-1.amazonaws.com/man-about-hit-with-gavel-removebg-preview.png"
           variants={varFade().inUp}
+          whileHover={{ scale: 1.05 }}
         />
 
         <Container>
           <ContentStyle>
-            <m.div variants={varFade().inRight}>
+            <m.div variants={varFade().inRight} whileHover={{ y: [-5, 5, -5, 0] }}>
               <Typography variant="h1" sx={{ color: 'common.white' }}>
                 Discover <br />
                 Rare Orchids at<br />
@@ -93,89 +89,24 @@ export default function HomeHero() {
               </Typography>
             </m.div>
 
-            <m.div variants={varFade().inRight}>
+            <m.div variants={varFade().inRight} whileHover={{ y: [-5, 5, -5, 0] }}>
               <Typography sx={{ color: 'common.white' }}>
-              Your ultimate platform for buying and auctioning unique orchid variations. Dive into a world where rarity and beauty meet.
+                Your ultimate platform for buying and auctioning unique orchid variations. Dive into a world where rarity and beauty meet.
               </Typography>
             </m.div>
 
-            {/* <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
-              <m.div variants={varFade().inRight}>
-                <TextIconLabel
-                  icon={
-                    <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch_small.svg"
-                      sx={{ width: 20, height: 20, mr: 1 }}
-                    />
-                  }
-                  value={
-                    <Link
-                      href="https://www.sketch.com/s/76388a4d-d6e5-4b7f-8770-e5446bfa1268"
-                      target="_blank"
-                      rel="noopener"
-                      color="common.white"
-                      sx={{ typography: 'body2' }}
-                    >
-                      Preview Sketch
-                    </Link>
-                  }
-                />
-              </m.div>
-
-              <m.div variants={varFade().inRight}>
-                <TextIconLabel
-                  icon={
-                    <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_figma_small.svg"
-                      sx={{ width: 20, height: 20, mr: 1 }}
-                    />
-                  }
-                  value={
-                    <Link
-                      href="https://www.figma.com/file/x7earqGD0VGFjFdk5v2DgZ/%5BPreview%5D-Minimal-Web?node-id=866%3A55474"
-                      target="_blank"
-                      rel="noopener"
-                      color="common.white"
-                      sx={{ typography: 'body2' }}
-                    >
-                      Preview Figma
-                    </Link>
-                  }
-                />
-              </m.div>
-            </Stack> */}
-
-            <m.div variants={varFade().inRight}>
+            <m.div variants={varFade().inRight} whileHover={{ y: [-5, 5, -5, 0] }}>
               <Button
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.root}
+                to={PATH_HOME.shop}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
+                whileHover={{ scale: 1.1 }}
               >
                 Shop now
               </Button>
             </m.div>
-
-            {/* <Stack spacing={2.5}>
-              <m.div variants={varFade().inRight}>
-                <Typography variant="overline" sx={{ color: 'primary.light' }}>
-                  Available For
-                </Typography>
-              </m.div>
-
-              <Stack direction="row" spacing={1.5} justifyContent={{ xs: 'center', md: 'flex-start' }}>
-                {['ic_sketch', 'ic_figma', 'ic_js', 'ic_ts', 'ic_nextjs'].map((resource) => (
-                  <m.img
-                    key={resource}
-                    variants={varFade().inRight}
-                    src={`https://minimal-assets-api.vercel.app/assets/images/home/${resource}.svg`}
-                  />
-                ))}
-              </Stack>
-            </Stack> */}
           </ContentStyle>
         </Container>
       </RootStyle>
