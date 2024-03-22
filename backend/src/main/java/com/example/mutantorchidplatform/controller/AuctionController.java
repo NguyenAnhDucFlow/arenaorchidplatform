@@ -32,9 +32,9 @@ public class AuctionController {
                 .build();
     }
 
-    @PutMapping
-    public ResponseDTO<Void> update(@RequestBody @Valid AuctionDTO auctionDTO) {
-        auctionService.update(auctionDTO);
+    @PutMapping("/{id}")
+    public ResponseDTO<Void> update(@PathVariable int id, @RequestBody @Valid AuctionCreateDTO auctionDTO) {
+        auctionService.update(id, auctionDTO);
         return ResponseDTO.<Void>builder()
                 .status(200)
                 .msg("ok")
@@ -44,6 +44,15 @@ public class AuctionController {
     @DeleteMapping("/{id}")
     public ResponseDTO<Void> delete(@PathVariable int id) {
         auctionService.delete(id);
+        return ResponseDTO.<Void>builder()
+                .status(200)
+                .msg("ok")
+                .build();
+    }
+
+    @DeleteMapping
+    public ResponseDTO<Void> delete(@RequestBody @Valid idsDTO dto) {
+        auctionService.delete(dto.getIds());
         return ResponseDTO.<Void>builder()
                 .status(200)
                 .msg("ok")

@@ -1,6 +1,5 @@
 package com.example.mutantorchidplatform.dto;
 import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

@@ -55,6 +55,9 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
+    endLoading(state) {
+      state.isLoading = false;
+    },
     // GET PRODUCTS
     getProductsSuccess(state, action) {
       state.isLoading = false;
@@ -337,6 +340,44 @@ export function createAuction(newAuction) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.post('/auction', newAuction);
+      dispatch(slice.actions.postAuctionSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateAuction(id, newAuction) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/auction/${id}`, newAuction);
+      dispatch(slice.actions.postAuctionSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteAuction(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`/auction/${id}`);
+      dispatch(slice.actions.postAuctionSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function deleteAuctions(ids) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete('/auction', {
+        data: { ids },
+      });
       dispatch(slice.actions.postAuctionSuccess());
     } catch (error) {
       dispatch(slice.actions.hasError(error));

@@ -200,7 +200,7 @@ export default function HomePage() {
                   sx={{ margin: 'auto', marginTop: 3, display: 'block' }}
                   onClick={handleClickGetMore}
                 >
-                  Get more
+                  More
                 </Button>
               ) : (
                 <Typography variant="caption" color="gray" sx={{ mb: 3 }}>
