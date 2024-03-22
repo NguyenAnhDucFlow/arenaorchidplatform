@@ -79,11 +79,19 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseDTO<List<ProductDTO>> getAllProduct() {
         return ResponseDTO.<List<ProductDTO>>builder()
                 .status(200)
                 .data(productService.getAllProduct())
+                .build();
+    }
+
+    @GetMapping("pageable")
+    public ResponseDTO<PageDTO<ProductDTO>> getAllProductPageable(@ModelAttribute @Valid SearchDTO searchDTO) {
+        return ResponseDTO.<PageDTO<ProductDTO>>builder()
+                .status(200)
+                .data(productService.getAllProduct(searchDTO))
                 .build();
     }
 

@@ -22,12 +22,19 @@ import java.util.stream.Collectors;
 public interface ProductService {
 
     void create(ProductDTO productDTO);
+
     ProductDTO getById(Long id);
 
     ProductDTO getByName(String name);
+
     void update(ProductDTO productDTO);
+
     void delete(Long id);
+
     PageDTO<ProductDTO> search(SearchDTO searchDTO);
+
+    PageDTO<ProductDTO> getAllProduct(SearchDTO dto);
+
     List<ProductDTO> getAllProduct();
 
     List<ProductDTO> getAllProductByOwnerId(long id);
@@ -124,8 +131,28 @@ class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public PageDTO<ProductDTO> getAllProduct(SearchDTO dto) {
+        Sort sortBy = Sort.by("id").ascending();
+
+        if (dto.getCurrentPage() == null)
+            dto.setCurrentPage(0);
+
+        if (dto.getSize() == null)
+            dto.setSize(4);
+
+        PageRequest pageRequest = PageRequest.of(dto.getCurrentPage(), dto.getSize(), sortBy);
+        Page<Product> productPage = productRepository.findAll(pageRequest);
+
+        return PageDTO.<ProductDTO>builder()
+                .totalPages(productPage.getTotalPages())
+                .totalElements(productPage.getTotalElements())
+                .contents(productPage.get().map(this::convertToProductDTO).collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
     public List<ProductDTO> getAllProduct() {
-        List<Product> products  = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(this::convertToProductDTO)
                 .collect(Collectors.toList());
@@ -133,7 +160,7 @@ class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProductByOwnerId(long id) {
-        List<Product> products  = productRepository.findByOwnerId(id);
+        List<Product> products = productRepository.findByOwnerId(id);
         return products.stream()
                 .map(this::convertToProductDTO)
                 .collect(Collectors.toList());

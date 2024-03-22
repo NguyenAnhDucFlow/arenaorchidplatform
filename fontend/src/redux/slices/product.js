@@ -10,6 +10,7 @@ import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
+  isLastPage: false,
   error: null,
   products: [],
   auctions: [],
@@ -41,7 +42,13 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
+    startLoadingPageable(state, action) {
+      state.isLoading = true;
+      state.isLastPage = false;
+      if (action.payload === 0) {
+        state.products = [];
+      }
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -52,6 +59,14 @@ const slice = createSlice({
     getProductsSuccess(state, action) {
       state.isLoading = false;
       state.products = action.payload;
+    },
+
+    getProductsPageableSuccess(state, action) {
+      state.isLoading = false;
+      state.products = [...state.products, ...action.payload.contents];
+      if (action.payload.totalElements === state.products.length) {
+        state.isLastPage = true;
+      }
     },
 
     // GET PRODUCT
@@ -233,9 +248,24 @@ export function getProducts() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/product/');
+      const response = await axios.get('/product');
       console.log(response.data.data);
       dispatch(slice.actions.getProductsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getProductsPageable(page = 0, size = 4) {
+  return async () => {
+    dispatch(slice.actions.startLoadingPageable(page));
+    try {
+      const response = await axios.get('/product/pageable', {
+        params: { currentPage: page, size },
+      });
+      console.log(response.data.data);
+      dispatch(slice.actions.getProductsPageableSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

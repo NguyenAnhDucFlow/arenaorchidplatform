@@ -5,19 +5,18 @@ import { useSelector, useDispatch } from 'react-redux';
 
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Card, Typography, Container, Grid } from '@mui/material';
+import { Box, Stack, Card, Typography, Container, Grid, Button } from '@mui/material';
 // components
 import { useEffect, useRef } from 'react';
 import Page from '../components/Page';
 // sections
-import { HomeHero, HomeColorPresets } from '../sections/home';
+import { HomeHero } from '../sections/home';
 import { CarouselArrows } from '../components/carousel';
-import { _carouselsProducts } from '../_mock';
 import { MotionViewport, varFade } from '../components/animate';
 import Image from '../components/Image';
 import SocialsButton from '../components/SocialsButton';
 import { ShopProductCard } from '../sections/@dashboard/e-commerce/shop';
-import { getAuctions, getProducts } from '../redux/slices/product';
+import { getAuctions, getProductsPageable } from '../redux/slices/product';
 import { AuctionCard } from '../sections/@dashboard/e-commerce/auction';
 
 // ----------------------------------------------------------------------
@@ -35,14 +34,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
-  const carouselRef = useRef(null);
   const theme = useTheme();
   const products = useSelector((state) => state.product.products);
   const auctions = useSelector((state) => state.product.auctions);
+  const isLastPage = useSelector((state) => state.product.isLastPage);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProductsPageable());
     dispatch(getAuctions());
   }, [dispatch]);
 
@@ -71,14 +70,6 @@ export default function HomePage() {
     ],
   };
 
-  const handlePrevious = () => {
-    carouselRef.current?.slickPrev();
-  };
-
-  const handleNext = () => {
-    carouselRef.current?.slickNext();
-  };
-
   const carouselRef2 = useRef(null);
 
   const handlePrevious2 = () => {
@@ -87,6 +78,10 @@ export default function HomePage() {
 
   const handleNext2 = () => {
     carouselRef2.current?.slickNext();
+  };
+
+  const handleClickGetMore = () => {
+    dispatch(getProductsPageable(products.length / 4));
   };
 
   return (
@@ -106,7 +101,7 @@ export default function HomePage() {
                 <CarouselArrows filled onNext={handleNext2} onPrevious={handlePrevious2}>
                   <Slider ref={carouselRef2} {...settings}>
                     {auctions.map((auction) => (
-                      <Box key={auction.id} component={m.div} variants={varFade().in} sx={{ px: 1.5 }}>
+                      <Box key={auction.id} sx={{ px: 1.5 }}>
                         <AuctionCard key={auction.id} auction={auction} />
                       </Box>
                     ))}
@@ -128,14 +123,27 @@ export default function HomePage() {
             <Box maxWidth="lg" position="relative" m="auto">
               <Grid container spacing={2}>
                 {(products || []).map((product) => (
-                  <Grid item xs={3} key={product.id} sx={{ px: 1.5, py: 10 }}>
+                  <Grid item xs={6} md={3} key={product.id} sx={{ px: 1.5, py: 1 }}>
                     <ShopProductCard key={product.id} product={product} />
                   </Grid>
                 ))}
               </Grid>
+              {!isLastPage ? (
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  sx={{ margin: 'auto', marginTop: 3, display: 'block' }}
+                  onClick={handleClickGetMore}
+                >
+                  Get more
+                </Button>
+              ) : (
+                <Typography variant="caption" color="gray" sx={{ mb: 3 }}>
+                  No more available
+                </Typography>
+              )}
             </Box>
           </Container>
-          {/* <HomeColorPresets /> */}
         </ContentStyle>
       </RootStyle>
     </Page>
