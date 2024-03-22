@@ -10,13 +10,11 @@ import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardSeller from '../layouts/dashboardseller';
 
-
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINSELLER } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +28,6 @@ const Loadable = (Component) => (props) => {
     </Suspense>
   );
 };
-
 
 // {
 //   path: 'dashboard',
@@ -79,7 +76,7 @@ export default function Router() {
       path: 'dashboard',
       element: (
         // <AuthGuard>
-          <DashboardLayout />
+        <DashboardLayout />
         // </AuthGuard>
       ),
       children: [
@@ -162,9 +159,7 @@ export default function Router() {
 
     {
       path: 'productowner',
-      element: (
-          <DashboardSeller />
-      ),
+      element: <DashboardSeller />,
       children: [
         { element: <Navigate to={PATH_AFTER_LOGINSELLER} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
@@ -196,13 +191,8 @@ export default function Router() {
             { path: 'new', element: <InvoiceCreate /> },
           ],
         },
-
-
-
       ],
     },
-
-
 
     // Main Routes
     {
@@ -216,11 +206,14 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: 'buyer/login', element: <LoginBuyer /> },
-        { path: 'seller/login', element: ( 
-          <SellerGuard>
-            <LoginSeller />
-          </SellerGuard>
-        ) },
+        {
+          path: 'seller/login',
+          element: (
+            <SellerGuard>
+              <LoginSeller />
+            </SellerGuard>
+          ),
+        },
         { path: 'buyer/signup', element: <SignUpBuyer /> },
         { path: 'seller/signup', element: <SignUpSeller /> },
         { path: '*', element: <Navigate to="/404" replace /> },
@@ -237,6 +230,7 @@ export default function Router() {
         { path: 'shop', element: <EcommerceShop /> },
         { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
+        { path: 'auction/:id', element: <EcommerceAuctionDetails /> },
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },
@@ -254,7 +248,6 @@ const LoginSeller = Loadable(lazy(() => import('../pages/auth/LoginSeller')));
 const SignUpBuyer = Loadable(lazy(() => import('../pages/auth/SignUpBuyer')));
 const SignUpSeller = Loadable(lazy(() => import('../pages/auth/SignUpSeller')));
 
-
 // DASHBOARD
 
 // GENERAL
@@ -268,6 +261,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const Auction = Loadable(lazy(() => import('../pages/dashboard/Auction')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
+const EcommerceAuctionDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceAuctionList = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));

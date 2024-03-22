@@ -1,5 +1,6 @@
 package com.example.mutantorchidplatform.dto;
 
+import com.example.mutantorchidplatform.entity.enums.BidStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class BidDTO {
     private Date createdAt;
 
     @NotBlank
-    private String status;
+    private BidStatus status;
 
     @NotNull
     private UserDTO user;

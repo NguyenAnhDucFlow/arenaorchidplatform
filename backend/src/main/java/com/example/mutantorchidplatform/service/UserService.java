@@ -23,6 +23,7 @@ public interface UserService {
 
     User createUser(UserDTO userDTO);
     UserDTO getUser(Long id);
+    User getUserById(Long id);
     void updateUser(UserDTO userDTO);
     void deleteUser(Long id);
 
@@ -58,6 +59,11 @@ class UserServiceImpl implements UserService, UserDetailsService {
     public UserDTO getUser(Long id) {
         User user =userRepository.findById(id).orElseThrow(NoResultException::new);
         return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     @Override

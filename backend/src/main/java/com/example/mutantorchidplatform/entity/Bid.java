@@ -1,5 +1,6 @@
 package com.example.mutantorchidplatform.entity;
 
+import com.example.mutantorchidplatform.entity.enums.BidStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class Bid extends TimeAuditable{
+public class Bid extends TimeAuditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +16,7 @@ public class Bid extends TimeAuditable{
 
     private double amount;
 
-    private String status;
+    private BidStatus status;
 
     @ManyToOne
     private User user;

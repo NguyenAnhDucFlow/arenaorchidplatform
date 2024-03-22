@@ -1,9 +1,12 @@
 package com.example.mutantorchidplatform.service;
 
+import com.example.mutantorchidplatform.dto.BidCreateDTO;
 import com.example.mutantorchidplatform.dto.BidDTO;
 import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
+import com.example.mutantorchidplatform.entity.Auction;
 import com.example.mutantorchidplatform.entity.Bid;
+import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.BidRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 
 public interface BidService {
 
-    void create(BidDTO bidDTO);
+    void create(BidCreateDTO bidDTO);
 
     BidDTO getById(int id);
 
@@ -36,10 +39,23 @@ class BidServiceImpl implements BidService {
     @Autowired
     BidRepository bidRepository;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    AuctionService auctionService;
+
     @Override
     @Transactional
-    public void create(BidDTO bidDTO) {
-        bidRepository.save(modelMapper.map(bidDTO, Bid.class));
+    public void create(BidCreateDTO bidDTO) {
+        User user = userService.getUserById(bidDTO.getUserId());
+        Auction auction = auctionService.getAuctionById(bidDTO.getAuctionId());
+
+        Bid bid = modelMapper.map(bidDTO, Bid.class);
+        bid.setUser(user);
+        bid.setAuction(auction);
+
+        bidRepository.save(bid);
     }
 
     @Override

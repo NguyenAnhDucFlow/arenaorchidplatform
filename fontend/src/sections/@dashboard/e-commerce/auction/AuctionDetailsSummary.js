@@ -1,0 +1,286 @@
+import PropTypes from 'prop-types';
+import { sentenceCase } from 'change-case';
+import { Navigate, useNavigate } from 'react-router-dom';
+import Countdown from 'react-countdown';
+// form
+import { Controller, useForm } from 'react-hook-form';
+// @mui
+import { useTheme, styled } from '@mui/material/styles';
+import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, Card } from '@mui/material';
+// routes
+import { PATH_HOME, PATH_PAGE } from '../../../../routes/paths';
+// utils
+import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
+// components
+import Label from '../../../../components/Label';
+import Iconify from '../../../../components/Iconify';
+import WishListReportButton from '../../../../components/WishListReportButton';
+import { FormProvider, RHFSelect } from '../../../../components/hook-form';
+import { useDispatch } from '../../../../redux/store';
+import { createBid } from '../../../../redux/slices/product';
+import useAuth from '../../../../hooks/useAuth';
+
+// ----------------------------------------------------------------------
+
+const RootStyle = styled('div')(({ theme }) => ({
+  padding: theme.spacing(3),
+  [theme.breakpoints.up(1368)]: {
+    padding: theme.spacing(5, 8),
+  },
+}));
+
+// ----------------------------------------------------------------------
+
+AuctionDetailsSummary.propTypes = {
+  product: PropTypes.shape({
+    available: PropTypes.number,
+    colors: PropTypes.arrayOf(PropTypes.string),
+    cover: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    inventoryType: PropTypes.string,
+    name: PropTypes.string,
+    price: PropTypes.string,
+    priceSale: PropTypes.number,
+    sizes: PropTypes.arrayOf(PropTypes.string),
+    status: PropTypes.string,
+    totalRating: PropTypes.number,
+    totalReview: PropTypes.number,
+    auction: PropTypes.object,
+  }),
+};
+
+export default function AuctionDetailsSummary({ product, ...other }) {
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+
+  const { name, price, totalRating, totalReview, auction } = product;
+
+  const defaultValues = {
+    amount: Number(auction.startPrice),
+  };
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { watch, setValue, handleSubmit } = methods;
+
+  const values = watch();
+
+  const onSubmitBid = async (data) => {
+    dispatch(
+      createBid({
+        amount: data.amount,
+        userId: user.id,
+        auctionId: auction.id,
+      })
+    );
+  };
+
+  if (!auction) {
+    return <Navigate to={PATH_PAGE.page404} />;
+  }
+
+  const isStarted = new Date() > new Date(auction.startDate);
+
+  return (
+    <RootStyle {...other}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmitBid)}>
+        <Typography variant="h5" paragraph>
+          {name}
+        </Typography>
+
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+          <Rating value={totalRating} precision={0.1} readOnly />
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            ({fShortenNumber(totalReview)} reviews)
+          </Typography>
+        </Stack>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <Stack direction="row" gap={1} alignItems="center">
+          <Typography variant="body1" sx={{ my: 3 }}>
+            Current highest bid:
+          </Typography>
+          <Typography variant="h6" sx={{ my: 3 }} color="red">
+            {fCurrency(auction.currentPrice)}
+          </Typography>
+        </Stack>
+
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="body1" sx={{ mt: 0.5 }}>
+            Time left:
+          </Typography>
+
+          {isStarted ? (
+            <Countdown
+              date={new Date(auction.endDate).getTime()}
+              intervalDelay={0}
+              precision={3}
+              renderer={CountdownRenderer}
+            />
+          ) : (
+            <Card sx={{ paddingInline: '15px', boxShadow: 3 }}>
+              <Typography variant="body2" sx={{ textAlign: 'center', marginBlock: '23px' }}>
+                Not started yet
+              </Typography>
+            </Card>
+          )}
+          <Typography variant="caption" sx={{ mt: 0.5 }} color="gray">
+            Auction end: {new Date(auction.endDate).toLocaleString()}
+          </Typography>
+        </Box>
+
+        <Stack direction="row" gap={1} alignItems="center">
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            Minimum bid for this auction is
+          </Typography>
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            {fCurrency(auction.startPrice)}
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" gap={3} alignItems="center" sx={{ mb: 3 }}>
+          <div>
+            <Typography variant="body1" component="div" sx={{ textAlign: 'right' }}>
+              Place your bid:
+            </Typography>
+            <Typography variant="caption" sx={{ mt: 0.5 }} color="gray">
+              Step price: {fCurrency(auction.stepPrice)}
+            </Typography>
+          </div>
+          <Stack direction="row" gap={1} alignItems="center">
+            <Incrementer
+              name="amount"
+              amount={values.amount}
+              startPrice={auction.startPrice}
+              onIncrementQuantity={() => setValue('amount', values.amount + (Number(auction.stepPrice) || 1))}
+              onDecrementQuantity={() => setValue('amount', values.amount - (Number(auction.stepPrice) || 1))}
+            />
+            <Button size="small" type="submit" variant="contained" sx={{ fontSize: '14px' }}>
+              <Iconify icon={'mingcute:auction-line'} />
+              &nbsp;&nbsp;Bid
+            </Button>
+          </Stack>
+        </Stack>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+          <Button fullWidth size="large" type="button" variant="outlined">
+            Buy Now for {fCurrency(price)}
+          </Button>
+        </Stack>
+
+        <Stack alignItems="center" sx={{ mt: 3 }}>
+          <WishListReportButton initialColor />
+        </Stack>
+      </FormProvider>
+    </RootStyle>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+Incrementer.propTypes = {
+  amount: PropTypes.number,
+  onIncrementQuantity: PropTypes.func,
+  onDecrementQuantity: PropTypes.func,
+};
+
+function Incrementer({ startPrice, amount, onIncrementQuantity, onDecrementQuantity }) {
+  return (
+    <Box
+      sx={{
+        py: 0.5,
+        px: 0.75,
+        border: 1,
+        lineHeight: 0,
+        borderRadius: 1,
+        display: 'flex',
+        alignItems: 'center',
+        borderColor: 'grey.50032',
+      }}
+    >
+      <IconButton size="small" color="inherit" disabled={amount <= startPrice} onClick={onDecrementQuantity}>
+        <Iconify icon={'eva:minus-fill'} width={14} height={14} />
+      </IconButton>
+
+      <Typography variant="body2" component="span" sx={{ width: 'fit-content', textAlign: 'center' }}>
+        $ {amount}
+      </Typography>
+
+      <IconButton size="small" color="inherit" onClick={onIncrementQuantity}>
+        <Iconify icon={'eva:plus-fill'} width={14} height={14} />
+      </IconButton>
+    </Box>
+  );
+}
+
+const CountdownStyle = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+});
+const SeparatorStyle = styled(Typography)(({ theme }) => ({
+  margin: theme.spacing(0, 1),
+}));
+
+const CountdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
+    return (
+      <Card sx={{ paddingInline: '15px', boxShadow: 3 }}>
+        <Typography variant="body2" sx={{ textAlign: 'center', marginBlock: '23px' }}>
+          Auction is over
+        </Typography>
+      </Card>
+    );
+  }
+  return (
+    <Card sx={{ paddingInline: '15px', paddingBlock: '10px', boxShadow: 3 }}>
+      <CountdownStyle>
+        <div>
+          <Typography variant="subtitle1" textAlign="center">
+            {days}
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Days
+          </Typography>
+        </div>
+
+        <SeparatorStyle variant="subtitle1">:</SeparatorStyle>
+
+        <div>
+          <Typography variant="subtitle1" textAlign="center">
+            {hours}
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Hours
+          </Typography>
+        </div>
+
+        <SeparatorStyle variant="subtitle1">:</SeparatorStyle>
+
+        <div>
+          <Typography variant="subtitle1" textAlign="center">
+            {minutes}
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Minutes
+          </Typography>
+        </div>
+
+        <SeparatorStyle variant="subtitle1">:</SeparatorStyle>
+
+        <div>
+          <Typography variant="subtitle1" textAlign="center">
+            {seconds}
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Seconds
+          </Typography>
+        </div>
+      </CountdownStyle>
+    </Card>
+  );
+};

@@ -8,14 +8,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
-import { Box, Button, DialogActions, IconButton, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, DialogActions, Stack, TextField, Typography } from '@mui/material';
 // redux
-import { createEvent, deleteEvent, updateEvent } from '../../../../redux/slices/calendar';
 import { useDispatch } from '../../../../redux/store';
 // components
-import Iconify from '../../../../components/Iconify';
-import { FormProvider, RHFSwitch, RHFTextField } from '../../../../components/hook-form';
-import { createAuction } from '../../../../redux/slices/product';
+import { FormProvider, RHFTextField } from '../../../../components/hook-form';
+import { createAuction, getProducts } from '../../../../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -39,10 +37,9 @@ AuctionForm.propTypes = {
   product: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
-  isCreating: PropTypes.bool,
 };
 
-export default function AuctionForm({ product, onCancel, isCreating }) {
+export default function AuctionForm({ product, onCancel }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
@@ -60,7 +57,6 @@ export default function AuctionForm({ product, onCancel, isCreating }) {
   });
 
   const {
-    reset,
     watch,
     control,
     handleSubmit,
@@ -78,25 +74,14 @@ export default function AuctionForm({ product, onCancel, isCreating }) {
         productId: product.id,
       };
 
-      dispatch(createAuction(newAuction));
+      await dispatch(createAuction(newAuction));
       enqueueSnackbar('Create success!');
       onCancel();
-      reset();
+      dispatch(getProducts());
     } catch (error) {
       console.error(error);
     }
   };
-
-  // const handleDelete = async () => {
-  //   if (!product.id) return;
-  //   try {
-  //     onCancel();
-  //     // dispatch(deleteEvent(product.id));
-  //     enqueueSnackbar('Delete success!');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const values = watch();
 
@@ -152,13 +137,6 @@ export default function AuctionForm({ product, onCancel, isCreating }) {
       </Stack>
 
       <DialogActions>
-        {/* {!isCreating && (
-          <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete}>
-              <Iconify icon="eva:trash-2-outline" width={20} height={20} />
-            </IconButton>
-          </Tooltip>
-        )} */}
         <Box sx={{ flexGrow: 1 }} />
 
         <Button variant="outlined" color="inherit" onClick={onCancel}>

@@ -147,8 +147,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <Rating value={totalRating} precision={0.1} readOnly />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(totalReview)}
-            reviews)
+            ({fShortenNumber(totalReview)} reviews)
           </Typography>
         </Stack>
 

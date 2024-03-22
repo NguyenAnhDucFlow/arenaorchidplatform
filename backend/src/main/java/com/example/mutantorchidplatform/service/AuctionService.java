@@ -25,6 +25,7 @@ public interface AuctionService {
     void create(AuctionCreateDTO auctionDTO);
 
     AuctionDTO getById(int id);
+    Auction getAuctionById(int id);
 
     void update(int id, AuctionCreateDTO auctionDTO);
 
@@ -70,6 +71,11 @@ class AuctionServiceImpl implements AuctionService {
 
         Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
         return modelMapper.map(auction, AuctionDTO.class);
+    }
+
+    @Override
+    public Auction getAuctionById(int id) {
+        return auctionRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     @Override

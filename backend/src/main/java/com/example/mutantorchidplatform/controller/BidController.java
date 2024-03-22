@@ -1,9 +1,6 @@
 package com.example.mutantorchidplatform.controller;
 
-import com.example.mutantorchidplatform.dto.BidDTO;
-import com.example.mutantorchidplatform.dto.PageDTO;
-import com.example.mutantorchidplatform.dto.ResponseDTO;
-import com.example.mutantorchidplatform.dto.SearchDTO;
+import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.service.BidService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,9 @@ public class BidController {
     @Autowired
     BidService bidService;
 
-    @PostMapping("/")
-    public ResponseDTO<Void> create(@RequestBody @Valid BidDTO bidDTO) {
-        bidService.create(bidDTO);
+    @PostMapping
+    public ResponseDTO<Void> create(@RequestBody @Valid BidCreateDTO dto) {
+        bidService.create(dto);
         return ResponseDTO.<Void>builder()
                 .status(200)
                 .msg("ok")

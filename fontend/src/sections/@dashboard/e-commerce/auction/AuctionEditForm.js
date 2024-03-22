@@ -8,14 +8,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
-import { Box, Button, DialogActions, IconButton, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, DialogActions, IconButton, Stack, TextField, Tooltip } from '@mui/material';
 // redux
-import { createEvent, deleteEvent, updateEvent } from '../../../../redux/slices/calendar';
 import { useDispatch } from '../../../../redux/store';
 // components
 import Iconify from '../../../../components/Iconify';
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField } from '../../../../components/hook-form';
-import { createAuction, deleteAuction, updateAuction } from '../../../../redux/slices/product';
+import { FormProvider, RHFSelect, RHFTextField } from '../../../../components/hook-form';
+import { deleteAuction, updateAuction } from '../../../../redux/slices/product';
 
 // ----------------------------------------------------------------------
 

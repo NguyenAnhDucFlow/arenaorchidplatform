@@ -213,7 +213,7 @@ export default function EcommerceProductList() {
                           onDeleteRow={() => handleDeleteRow(row.id)}
                           onEditRow={() => handleEditRow(row.name)}
                           onSelectForAuction={(p) => {
-                            console.log('onSelectForAuction', p);
+                            // console.log('onSelectForAuction', p);
                             setOpenModal(true);
                             setSelectedProduct(p);
                           }}
@@ -252,7 +252,7 @@ export default function EcommerceProductList() {
         <DialogAnimate open={isOpenModal} onClose={() => setOpenModal(false)}>
           <DialogTitle>Start Auction</DialogTitle>
 
-          <AuctionForm product={selectedProduct || {}} onCancel={() => setOpenModal(false)} isCreating />
+          <AuctionForm product={selectedProduct || {}} onCancel={() => setOpenModal(false)} key={selectedProduct?.id} />
         </DialogAnimate>
       </Container>
     </Page>
