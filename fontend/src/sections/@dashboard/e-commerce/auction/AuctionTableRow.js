@@ -16,19 +16,24 @@ import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-ProductTableRow.propTypes = {
+AuctionTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
-  onSelectForAuction: PropTypes.func,
 };
 
-export default function ProductTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onSelectForAuction }) {
+export default function AuctionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, cover, createdAt, inventoryType, price } = row;
+  const {
+    startDate,
+    endDate,
+    currentPrice,
+    status,
+    product: { cover, name },
+  } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -53,21 +58,19 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         </Typography>
       </TableCell>
 
-      <TableCell>{fDate(createdAt)}</TableCell>
+      <TableCell>{fDate(startDate)}</TableCell>
+      <TableCell>{fDate(endDate)}</TableCell>
 
+      <TableCell align="center">{fCurrency(currentPrice)}</TableCell>
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={
-            (inventoryType === 'out_of_stock' && 'error') || (inventoryType === 'low_stock' && 'warning') || 'success'
-          }
+          color={(status === 'REJECTED' && 'error') || (status === 'PENDING' && 'warning') || 'success'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {inventoryType ? sentenceCase(inventoryType) : ''}
+          {status ? sentenceCase(status) : ''}
         </Label>
       </TableCell>
-
-      <TableCell align="right">{fCurrency(price)}</TableCell>
 
       <TableCell align="right">
         <TableMoreMenu
@@ -76,15 +79,6 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
-                onClick={() => {
-                  onSelectForAuction(row);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'mingcute:auction-line'} />
-                Start Auction
-              </MenuItem>
               <MenuItem
                 onClick={() => {
                   onDeleteRow();

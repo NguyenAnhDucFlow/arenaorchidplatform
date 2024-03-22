@@ -1,11 +1,12 @@
 package com.example.mutantorchidplatform.service;
 
-import com.example.mutantorchidplatform.dto.AuctionDTO;
-import com.example.mutantorchidplatform.dto.AuctionMetadata;
-import com.example.mutantorchidplatform.dto.PageDTO;
-import com.example.mutantorchidplatform.dto.SearchDTO;
+import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Auction;
+import com.example.mutantorchidplatform.entity.Product;
+import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
+import com.example.mutantorchidplatform.exception.AlreadyExistedException;
 import com.example.mutantorchidplatform.repository.AuctionRepository;
+import com.example.mutantorchidplatform.repository.ProductRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 public interface AuctionService {
 
-    void create(AuctionDTO auctionDTO);
+    void create(AuctionCreateDTO auctionDTO);
 
     AuctionDTO getById(int id);
 
@@ -29,10 +30,11 @@ public interface AuctionService {
 
     void delete(int id);
 
-    PageDTO<AuctionDTO> search(SearchDTO searchDTO);
+    PageDTO<AuctionMetadata> search(SearchDTO searchDTO);
 
     List<AuctionMetadata> getLatestAuctions();
 }
+
 @Service
 class AuctionServiceImpl implements AuctionService {
 
@@ -43,10 +45,22 @@ class AuctionServiceImpl implements AuctionService {
     @Autowired
     AuctionRepository auctionRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     @Override
     @Transactional
-    public void create(AuctionDTO auctionDTO) {
-        auctionRepository.save(modelMapper.map(auctionDTO, Auction.class));
+    public void create(AuctionCreateDTO dto) {
+        Product product = productRepository.findById(dto.getProductId()).orElseThrow(NoResultException::new);
+
+        if (product.getAuction() != null)
+            throw new AlreadyExistedException("Product already has an auction");
+
+        Auction auction = modelMapper.map(dto, Auction.class);
+        auction.setProduct(product);
+        auction.setStatus(AuctionStatus.PENDING);
+
+        auctionRepository.save(auction);
     }
 
     @Override
@@ -70,9 +84,9 @@ class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public PageDTO<AuctionDTO> search(SearchDTO searchDTO) {
+    public PageDTO<AuctionMetadata> search(SearchDTO searchDTO) {
 
-        Sort sortBy = Sort.by("startDate").ascending();
+        Sort sortBy = Sort.by("startDate").descending();
 
         if (StringUtils.hasText(searchDTO.getSortedField()))
             sortBy = Sort.by(searchDTO.getSortedField()).ascending();
@@ -88,10 +102,10 @@ class AuctionServiceImpl implements AuctionService {
 
         PageRequest pageRequest = PageRequest.of(searchDTO.getCurrentPage(), searchDTO.getSize(), sortBy);
         Page<Auction> auctionPage = auctionRepository.searchByProductName("%" + searchDTO.getKeyword() + "%", pageRequest);
-        return PageDTO.<AuctionDTO>builder()
+        return PageDTO.<AuctionMetadata>builder()
                 .totalPages(auctionPage.getTotalPages())
                 .totalElements(auctionPage.getTotalElements())
-                .contents(auctionPage.get().map(this::convertToAuctionDTO).collect(Collectors.toList()))
+                .contents(auctionPage.get().map(this::convertToAuctionMetadata).collect(Collectors.toList()))
                 .build();
     }
 

@@ -1,15 +1,13 @@
 package com.example.mutantorchidplatform.dto;
+
 import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class AuctionDTO {
-
-    private Integer id;
+public class AuctionCreateDTO {
 
     @NotNull
     private Date startDate;
@@ -25,7 +23,5 @@ public class AuctionDTO {
 
     private AuctionStatus status;
 
-    private ProductDTO product;
-
-    private UserDTO staff;
+    private Long productId;
 }

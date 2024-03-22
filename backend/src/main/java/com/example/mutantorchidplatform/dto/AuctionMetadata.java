@@ -1,5 +1,6 @@
 package com.example.mutantorchidplatform.dto;
 
+import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,11 +14,13 @@ public class AuctionMetadata {
 
     private Date endDate;
 
-    private double startPrice;
+    private String startPrice;
 
-    private double stepPrice;
+    private String stepPrice;
 
-    private double currentPrice;
+    private String currentPrice;
+
+    private AuctionStatus status;
 
     private ProductMetadata product;
 }

@@ -27,6 +27,7 @@ export const PATH_PRODUCTOWNER = {
   eCommerce: {
     root: path(ROOTS_PRODUCTOWNER, '/e-commerce'),
     list: path(ROOTS_PRODUCTOWNER, '/e-commerce/list'),
+    auction: path(ROOTS_PRODUCTOWNER, '/e-commerce/auction'),
     order: path(ROOTS_PRODUCTOWNER, '/e-commerce/order'),
     checkout: path(ROOTS_PRODUCTOWNER, '/e-commerce/checkout'),
     new: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/new'),

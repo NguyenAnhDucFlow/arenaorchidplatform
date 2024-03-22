@@ -77,5 +77,6 @@ public class Product extends TimeAuditable{
     @ManyToOne
     private User owner;
 
-
+    @OneToOne(mappedBy = "product")
+    private Auction auction;
 }

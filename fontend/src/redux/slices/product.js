@@ -12,6 +12,7 @@ const initialState = {
   isLoading: false,
   error: null,
   products: [],
+  auctions: [],
   product: null,
   sortBy: null,
   filters: {
@@ -69,6 +70,12 @@ const slice = createSlice({
     getAuctionSuccess(state, action) {
       state.isLoading = false;
       state.auction = action.payload;
+    },
+
+    // POST AUCTION
+    postAuctionSuccess(state) {
+      state.isLoading = false;
+      state.auctions = [];
     },
 
     //  SORT & FILTER PRODUCTS
@@ -267,6 +274,21 @@ export function getAuctions() {
   };
 }
 
+export function getAuctionsTable(keyword, currentPage, size, sortedField) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/auction/search', {
+        params: { currentPage, size, sortedField, keyword },
+      });
+      console.log('auctions', response.data.data);
+      dispatch(slice.actions.getAuctionsSuccess(response.data.data.contents));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function getAuction(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -274,6 +296,18 @@ export function getAuction(id) {
       const response = await axios.get(`/auction/${id}`);
       console.log(response.data.data);
       dispatch(slice.actions.getAuctionSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function createAuction(newAuction) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.post('/auction', newAuction);
+      dispatch(slice.actions.postAuctionSuccess());
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

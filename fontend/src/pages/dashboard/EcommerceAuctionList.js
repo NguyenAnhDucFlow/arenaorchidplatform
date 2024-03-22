@@ -1,60 +1,58 @@
 import { paramCase } from 'change-case';
-import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Button,
   Card,
-  Container,
-  DialogTitle,
-  FormControlLabel,
-  IconButton,
-  Switch,
   Table,
+  Switch,
+  Tooltip,
   TableBody,
+  Container,
+  IconButton,
   TableContainer,
   TablePagination,
-  Tooltip,
+  FormControlLabel,
 } from '@mui/material';
 // redux
-import { getProducts } from '../../redux/slices/product';
 import { useDispatch, useSelector } from '../../redux/store';
+import { getAuctionsTable } from '../../redux/slices/product';
 // routes
 import { PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useTable, { emptyRows, getComparator } from '../../hooks/useTable';
+import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
 // components
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
+import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
+import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
+  TableNoData,
+  TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
-  TableNoData,
   TableSelectedActions,
-  TableSkeleton,
 } from '../../components/table';
 // sections
-import AuctionForm from '../../sections/@dashboard/e-commerce/auction/AuctionForm';
-import { DialogAnimate } from '../../components/animate';
-import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
+import { ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
+import AuctionTableRow from '../../sections/@dashboard/e-commerce/auction/AuctionTableRow';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', align: 'left' },
-  { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
-  { id: 'price', label: 'Price', align: 'right' },
+  { id: 'startDate', label: 'Start date', align: 'left' },
+  { id: 'endDate', label: 'End date', align: 'left' },
+  { id: 'currentPrice', label: 'Current price', align: 'center' },
+  { id: 'status', label: 'Review', align: 'center', width: 180 },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceProductList() {
+export default function EcommerceAuctionList() {
   const {
     dense,
     page,
@@ -82,25 +80,21 @@ export default function EcommerceProductList() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { auctions, isLoading } = useSelector((state) => state.product);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
-  const [isOpenModal, setOpenModal] = useState(false);
-
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  useEffect(() => {
+    dispatch(getAuctionsTable(filterName, page, rowsPerPage, orderBy));
+  }, [dispatch, filterName, page, rowsPerPage, orderBy]);
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (auctions.length) {
+      setTableData(auctions);
     }
-  }, [products]);
+  }, [auctions]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -120,7 +114,7 @@ export default function EcommerceProductList() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_PRODUCTOWNER.eCommerce.edit(paramCase(id)));
+    // navigate(PATH_PRODUCTOWNER.eCommerce.edit(paramCase(id)));
   };
 
   const dataFiltered = applySortFilter({
@@ -137,25 +131,15 @@ export default function EcommerceProductList() {
     <Page title="Ecommerce: Product List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Product List"
+          heading="Auction List"
           links={[
             { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
             {
               name: 'E-Commerce',
               href: PATH_PRODUCTOWNER.eCommerce.root,
             },
-            { name: 'Product List' },
+            { name: 'Auction List' },
           ]}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_PRODUCTOWNER.eCommerce.new}
-            >
-              New Product
-            </Button>
-          }
         />
 
         <Card>
@@ -205,18 +189,13 @@ export default function EcommerceProductList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProductTableRow
+                        <AuctionTableRow
                           key={row.id}
                           row={row}
                           selected={selected.includes(row.id)}
                           onSelectRow={() => onSelectRow(row.id)}
                           onDeleteRow={() => handleDeleteRow(row.id)}
                           onEditRow={() => handleEditRow(row.name)}
-                          onSelectForAuction={(p) => {
-                            console.log('onSelectForAuction', p);
-                            setOpenModal(true);
-                            setSelectedProduct(p);
-                          }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -249,11 +228,6 @@ export default function EcommerceProductList() {
             />
           </Box>
         </Card>
-        <DialogAnimate open={isOpenModal} onClose={() => setOpenModal(false)}>
-          <DialogTitle>Start Auction</DialogTitle>
-
-          <AuctionForm product={selectedProduct || {}} onCancel={() => setOpenModal(false)} isCreating />
-        </DialogAnimate>
       </Container>
     </Page>
   );

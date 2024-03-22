@@ -1,12 +1,13 @@
 package com.example.mutantorchidplatform.dto;
 
 
-import com.example.mutantorchidplatform.entity.Rating;
 import com.example.mutantorchidplatform.entity.enums.InventoryType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.List;
 @Data
 public class ProductDTO {
 
-    private long  id;
+    private long id;
 
     @Min(0)
     private int available; // số lượng
@@ -68,7 +69,7 @@ public class ProductDTO {
 
     private double totalReview;
 
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
 
     @JsonIgnore
@@ -76,4 +77,6 @@ public class ProductDTO {
 
     @ManyToOne
     private UserDTO owner;
+
+    private AuctionLooseDTO auction;
 }

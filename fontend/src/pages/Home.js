@@ -18,6 +18,7 @@ import Image from '../components/Image';
 import SocialsButton from '../components/SocialsButton';
 import { ShopProductCard } from '../sections/@dashboard/e-commerce/shop';
 import { getAuctions, getProducts } from '../redux/slices/product';
+import { AuctionCard } from '../sections/@dashboard/e-commerce/auction';
 
 // ----------------------------------------------------------------------
 
@@ -37,13 +38,16 @@ export default function HomePage() {
   const carouselRef = useRef(null);
   const theme = useTheme();
   const products = useSelector((state) => state.product.products);
-  const auctions = useSelector((state) => state.product.products);
+  const auctions = useSelector((state) => state.product.auctions);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getAuctions());
   }, [dispatch]);
+
+  console.log('products', products);
+  console.log('auctions', auctions);
 
   const settings = {
     arrows: false,
@@ -100,7 +104,7 @@ export default function HomePage() {
             <Box maxWidth="lg" position="relative" m="auto">
               <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
                 <Slider ref={carouselRef} {...settings}>
-                  {products.map(
+                  {(products || []).map(
                     (
                       product // Sử dụng dữ liệu từ Redux
                     ) => (
@@ -119,17 +123,23 @@ export default function HomePage() {
               </Typography>
             </m.div>
 
-            <Box maxWidth="lg" position="relative" m="auto">
-              <CarouselArrows filled onNext={handleNext2} onPrevious={handlePrevious2}>
-                <Slider ref={carouselRef2} {...settings}>
-                  {products.map((product) => (
-                    <Box key={product.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
-                      <ShopProductCard key={product.id} product={product} />
-                    </Box>
-                  ))}
-                </Slider>
-              </CarouselArrows>
-            </Box>
+            {auctions && auctions.length > 0 ? (
+              <Box maxWidth="lg" position="relative" m="auto">
+                <CarouselArrows filled onNext={handleNext2} onPrevious={handlePrevious2}>
+                  <Slider ref={carouselRef2} {...settings}>
+                    {auctions.map((auction) => (
+                      <Box key={auction.id} component={m.div} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
+                        <AuctionCard key={auction.id} auction={auction} />
+                      </Box>
+                    ))}
+                  </Slider>
+                </CarouselArrows>
+              </Box>
+            ) : (
+              <Typography variant="body1" sx={{ mb: 3 }}>
+                No auctions available
+              </Typography>
+            )}
           </Container>
           <HomeColorPresets />
         </ContentStyle>

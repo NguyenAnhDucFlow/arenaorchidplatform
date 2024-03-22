@@ -1,6 +1,7 @@
 package com.example.mutantorchidplatform.controller;
 
 import com.example.mutantorchidplatform.dto.ResponseDTO;
+import com.example.mutantorchidplatform.exception.AlreadyExistedException;
 import com.example.mutantorchidplatform.jwt.JwtTokenFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -28,9 +29,9 @@ public class ExceptionController {
 	private final JwtTokenFilter jwtTokenFilter;
 	private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
-	public ExceptionController(JwtTokenFilter jwtTokenFilter) {
-		this.jwtTokenFilter = jwtTokenFilter;
-	}
+    public ExceptionController(JwtTokenFilter jwtTokenFilter) {
+        this.jwtTokenFilter = jwtTokenFilter;
+    }
 
 	@ExceptionHandler({NoResultException.class, EmptyResultDataAccessException.class})
 	@ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -113,5 +114,11 @@ public class ExceptionController {
 	public ResponseDTO<Void> runtimeException(Exception ex) {
 		logger.error("RuntimeException: ", ex);
 		return ResponseDTO.<Void>builder().status(500).msg("Internal Server Error: Runtime Exception").build();
+	}
+
+	@ExceptionHandler({AlreadyExistedException.class})
+	@ResponseStatus(code = HttpStatus.PRECONDITION_FAILED)
+	public ResponseDTO<Void> alreadyExisted(Exception ex) {
+			return ResponseDTO.<Void>builder().status(412).msg(ex.getMessage()).build();
 	}
 }

@@ -20,16 +20,17 @@ public class Auction extends TimeAuditable{
 
     private Date endDate;
 
-    private double startPrice;
+    private String startPrice;
 
-    private double stepPrice;
+    private String stepPrice;
 
-    private double currentPrice;
+    private String currentPrice;
 
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
     @ManyToOne

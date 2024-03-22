@@ -98,6 +98,7 @@ export default function Router() {
             // { path: 'shop', element: <EcommerceShop /> },
             // { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
+            { path: 'auction', element: <EcommerceAuctionList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
             // { path: 'checkout', element: <EcommerceCheckout /> },
@@ -178,6 +179,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/e-commerce/shop" replace />, index: true },
             { path: 'list', element: <EcommerceProductList /> },
+            { path: 'auction', element: <EcommerceAuctionList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
             { path: 'order', element: <Order /> },
@@ -267,6 +269,7 @@ const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceSh
 const Auction = Loadable(lazy(() => import('../pages/dashboard/Auction')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
+const EcommerceAuctionList = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const Order = Loadable(lazy(() => import('../pages/dashboard/Order')));
