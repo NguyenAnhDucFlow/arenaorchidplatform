@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,7 +112,7 @@ class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionMetadata> getLatestAuctions() {
-        return auctionRepository.findTop10ByOrderByStartDateDesc().stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
+        return auctionRepository.findTop10ByOrderByStartDateDesc(new Date()).stream().map(this::convertToAuctionMetadata).collect(Collectors.toList());
     }
 
 

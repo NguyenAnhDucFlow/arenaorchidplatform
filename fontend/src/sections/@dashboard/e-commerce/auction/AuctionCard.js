@@ -27,13 +27,15 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 }));
 
 export default function AuctionCard({ auction }) {
-  const { startDate, endDate, startPrice, currentPrice, product } = auction;
+  const { startDate, endDate, currentPrice, product } = auction;
 
-  if(!product) return null;
+  if (!product) return null;
 
-  const { name, cover, price, status } = product;
+  const { name, cover, status } = product;
 
   const linkTo = PATH_HOME.view(name);
+
+  const isStarted = new Date() > new Date(startDate);
 
   return (
     <Card>
@@ -54,7 +56,15 @@ export default function AuctionCard({ auction }) {
           </Label>
         )}
         <Image alt={name} src={cover} ratio="1/1" />
-        <Countdown date={new Date(endDate).getTime()} intervalDelay={0} precision={3} renderer={CountdownRenderer} />
+        {isStarted ? (
+          <Countdown date={new Date(endDate).getTime()} intervalDelay={0} precision={3} renderer={CountdownRenderer} />
+        ) : (
+          <Card sx={{ position: 'absolute', bottom: 10, left: 15, right: 15, paddingInline: '15px', boxShadow: 3 }}>
+            <Typography variant="body2" sx={{ textAlign: 'center' }}>
+              Auction is not started yet
+            </Typography>
+          </Card>
+        )}
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
@@ -64,9 +74,10 @@ export default function AuctionCard({ auction }) {
           </Typography>
         </Link>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Stack direction="row" spacing={0.5}>
-            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography variant="subtitle1">Current bid: </Typography>
+            <Typography color="red">{fCurrency(currentPrice)}</Typography>
           </Stack>
         </Stack>
       </Stack>

@@ -74,7 +74,7 @@ export default function AuctionForm({ product, onCancel, isCreating }) {
         endDate: data.endDate,
         startPrice: data.startPrice.toString(),
         stepPrice: data.stepPrice.toString(),
-        currentPrice: product.price.toString(),
+        currentPrice: data.startPrice.toString(),
         productId: product.id,
       };
 
