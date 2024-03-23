@@ -131,7 +131,7 @@ export default function HomePage() {
   };
 
   const handleClickGetMore = () => {
-    dispatch(getProductsPageable(products.length / 4));
+    dispatch(getProductsPageable(products.length / 8));
   };
 
   return (

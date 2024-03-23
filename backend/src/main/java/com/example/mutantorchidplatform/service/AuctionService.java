@@ -2,8 +2,11 @@ package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Auction;
+import com.example.mutantorchidplatform.entity.Bid;
 import com.example.mutantorchidplatform.entity.Product;
+import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.entity.enums.AuctionStatus;
+import com.example.mutantorchidplatform.entity.enums.BidStatus;
 import com.example.mutantorchidplatform.exception.AlreadyExistedException;
 import com.example.mutantorchidplatform.repository.AuctionRepository;
 import com.example.mutantorchidplatform.repository.ProductRepository;
@@ -18,13 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface AuctionService {
 
     void create(AuctionCreateDTO auctionDTO);
 
-    AuctionDTO getById(int id);
+    AuctionLooseWithBidsDTO getById(int id);
     Auction getAuctionById(int id);
 
     void update(int id, AuctionCreateDTO auctionDTO);
@@ -36,6 +41,8 @@ public interface AuctionService {
     List<AuctionMetadata> getLatestAuctions();
 
     void delete(List<Integer> ids);
+
+    void endAuction(int id, BidCreateDTO dto);
 }
 
 @Service
@@ -50,6 +57,9 @@ class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     @Transactional
@@ -67,10 +77,9 @@ class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public AuctionDTO getById(int id) {
-
+    public AuctionLooseWithBidsDTO getById(int id) {
         Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
-        return modelMapper.map(auction, AuctionDTO.class);
+        return modelMapper.map(auction, AuctionLooseWithBidsDTO.class);
     }
 
     @Override
@@ -133,6 +142,34 @@ class AuctionServiceImpl implements AuctionService {
     @Override
     public void delete(List<Integer> ids) {
         auctionRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public void endAuction(int id, BidCreateDTO dto) {
+        Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
+        User user = userService.getUserById(dto.getUserId());
+
+        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
+        Bid bid;
+
+        if (existedBid.isPresent()) {
+            bid = existedBid.get();
+            bid.setAmount(dto.getAmount());
+            bid.setStatus(BidStatus.DONE);
+        } else {
+            bid = new Bid();
+            bid.setAmount(dto.getAmount());
+            bid.setUser(user);
+            bid.setAuction(auction);
+            bid.setStatus(BidStatus.DONE);
+            auction.getBids().add(bid);
+        }
+        if (dto.getAuctionEndDate() != null)
+            auction.setEndDate(dto.getAuctionEndDate());
+        auction.setStatus(AuctionStatus.CLOSED);
+        auction.setCurrentPrice(String.valueOf(dto.getAmount()));
+
+        auctionRepository.save(auction);
     }
 
 

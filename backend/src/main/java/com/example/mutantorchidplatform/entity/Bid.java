@@ -16,6 +16,7 @@ public class Bid extends TimeAuditable {
 
     private double amount;
 
+    @Enumerated(EnumType.STRING)
     private BidStatus status;
 
     @ManyToOne

@@ -1,11 +1,26 @@
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
-import { Box, Tab, Card, Grid, Divider, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Tab,
+  Card,
+  Grid,
+  Divider,
+  Container,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Stack,
+} from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { addCart, onGotoStep, getProductById } from '../../redux/slices/product';
+import { addCart, onGotoStep, getProductById, getAuction } from '../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../routes/paths';
 // hooks
@@ -19,24 +34,30 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { ProductDetailsReview, ProductDetailsCarousel } from '../../sections/@dashboard/e-commerce/product-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import AuctionDetailsSummary from '../../sections/@dashboard/e-commerce/auction/AuctionDetailsSummary';
+import Avatar from '../../components/Avatar';
+import createAvatar from '../../utils/createAvatar';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceAuctionDetails() {
   const { themeStretch } = useSettings();
+  const { user } = useAuth();
   const dispatch = useDispatch();
   const [tab, setTab] = useState('bid_rating');
-  const { id = '' } = useParams();
-  const { product, error, checkout } = useSelector((state) => state.product);
+  const { auctionId = '', productId = '' } = useParams();
+  const { product, auction, error, checkout } = useSelector((state) => state.product);
 
   useEffect(() => {
-    // fetch product every 2 seconds
+    dispatch(getProductById(productId));
+
+    // fetch auction details every 2 seconds
     const interval = setInterval(() => {
-      dispatch(getProductById(id));
+      dispatch(getAuction(auctionId));
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [dispatch, id]);
+  }, [dispatch, auctionId, productId]);
 
   const handleAddCart = (product) => {
     dispatch(addCart(product));
@@ -57,13 +78,13 @@ export default function EcommerceAuctionDetails() {
               name: 'Auction',
               href: PATH_HOME.auction,
             },
-            { id },
+            { name: auctionId },
           ]}
         />
 
         <CartWidget />
 
-        {product && (
+        {product && auction ? (
           <>
             <Card>
               <Grid container>
@@ -71,7 +92,7 @@ export default function EcommerceAuctionDetails() {
                   <ProductDetailsCarousel product={product} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
-                  <AuctionDetailsSummary product={product} />
+                  <AuctionDetailsSummary product={product} auction={auction} />
                 </Grid>
               </Grid>
             </Card>
@@ -95,7 +116,48 @@ export default function EcommerceAuctionDetails() {
 
                 <TabPanel value="bid_rating">
                   <Box sx={{ p: 3 }}>
-                    <Markdown children={product.description} />
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>No.</TableCell>
+                          <TableCell align="left">User</TableCell>
+                          <TableCell align="center">Bid amount</TableCell>
+                          <TableCell align="right">Updated at</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {auction.bids.map((row, idx) => (
+                          <TableRow key={row.id}>
+                            <TableCell scope="row">
+                              <Typography variant="subtitle1" color="black">
+                                {idx + 1}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Stack direction="row" gap={1} alignItems="center">
+                                <Avatar
+                                  src={row.user.photoURL}
+                                  alt={row.user.displayName}
+                                  color={row.user.photoURL ? 'default' : createAvatar(row.user.displayName).color}
+                                >
+                                  {createAvatar(row.user.displayName).name}
+                                </Avatar>
+                                <Typography variant="subtitle2">
+                                  {row.user.displayName}{' '}
+                                  {row.user.id === user?.id && <span style={{ color: 'red' }}>(you)</span>}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+                            <TableCell align="center">
+                              <Typography color="red" variant="subtitle2">
+                                ${row.amount}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">{new Date(row.updatedAt).toLocaleString()}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </Box>
                 </TabPanel>
                 <TabPanel value="description">
@@ -109,6 +171,8 @@ export default function EcommerceAuctionDetails() {
               </TabContext>
             </Card>
           </>
+        ) : (
+          <div>Loading...</div>
         )}
 
         {!product && <SkeletonProduct />}

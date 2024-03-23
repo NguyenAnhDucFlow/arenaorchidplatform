@@ -31,9 +31,9 @@ export default function AuctionCard({ auction }) {
 
   if (!product) return null;
 
-  const { name, cover, status, id } = product;
+  const { name, cover, status } = product;
 
-  const linkTo = PATH_HOME.auctionView(id);
+  const linkTo = PATH_HOME.auctionView(product.id, auction.id);
 
   const isStarted = new Date() > new Date(startDate);
 

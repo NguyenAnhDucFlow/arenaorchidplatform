@@ -25,8 +25,8 @@ public class AuctionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseDTO<AuctionDTO> getProduct(@PathVariable int id) {
-        return ResponseDTO.<AuctionDTO>builder()
+    public ResponseDTO<AuctionLooseWithBidsDTO> getProduct(@PathVariable int id) {
+        return ResponseDTO.<AuctionLooseWithBidsDTO>builder()
                 .status(200)
                 .data(auctionService.getById(id))
                 .build();
@@ -72,6 +72,15 @@ public class AuctionController {
         return ResponseDTO.<List<AuctionMetadata>>builder()
                 .status(200)
                 .data(auctionService.getLatestAuctions())
+                .build();
+    }
+
+    @PutMapping("end/{id}")
+    public ResponseDTO<Void> endAuctionByPayout(@PathVariable int id, @RequestBody @Valid BidCreateDTO dto) {
+        auctionService.endAuction(id, dto);
+        return ResponseDTO.<Void>builder()
+                .status(200)
+                .msg("ok")
                 .build();
     }
 }
