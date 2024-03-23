@@ -126,36 +126,45 @@ export default function EcommerceAuctionDetails() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {auction.bids.map((row, idx) => (
-                          <TableRow key={row.id}>
-                            <TableCell scope="row">
-                              <Typography variant="subtitle1" color="black">
-                                {idx + 1}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left">
-                              <Stack direction="row" gap={1} alignItems="center">
-                                <Avatar
-                                  src={row.user.photoURL}
-                                  alt={row.user.displayName}
-                                  color={row.user.photoURL ? 'default' : createAvatar(row.user.displayName).color}
-                                >
-                                  {createAvatar(row.user.displayName).name}
-                                </Avatar>
-                                <Typography variant="subtitle2">
-                                  {row.user.displayName}{' '}
-                                  {row.user.id === user?.id && <span style={{ color: 'red' }}>(you)</span>}
+                        {auction.bids
+                          .slice()
+                          .sort((a, b) => {
+                            console.log(a, b);
+                            // sort by amount desc and updatedAt asc
+                            if (a.amount > b.amount) return -1;
+                            if (a.amount < b.amount) return 1;
+                            return new Date(a.updatedAt).getTime() < new Date(b.updatedAt).getTime() ? -1 : 1;
+                          })
+                          .map((row, idx) => (
+                            <TableRow key={row.id}>
+                              <TableCell scope="row">
+                                <Typography variant="subtitle1" color="black">
+                                  {idx + 1}
                                 </Typography>
-                              </Stack>
-                            </TableCell>
-                            <TableCell align="center">
-                              <Typography color="red" variant="subtitle2">
-                                ${row.amount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">{new Date(row.updatedAt).toLocaleString()}</TableCell>
-                          </TableRow>
-                        ))}
+                              </TableCell>
+                              <TableCell align="left">
+                                <Stack direction="row" gap={1} alignItems="center">
+                                  <Avatar
+                                    src={row.user.photoURL}
+                                    alt={row.user.displayName}
+                                    color={row.user.photoURL ? 'default' : createAvatar(row.user.displayName).color}
+                                  >
+                                    {createAvatar(row.user.displayName).name}
+                                  </Avatar>
+                                  <Typography variant="subtitle2">
+                                    {row.user.displayName}{' '}
+                                    {row.user.id === user?.id && <span style={{ color: 'red' }}>(you)</span>}
+                                  </Typography>
+                                </Stack>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Typography color="red" variant="subtitle2">
+                                  ${row.amount}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="right">{new Date(row.updatedAt).toLocaleString()}</TableCell>
+                            </TableRow>
+                          ))}
                       </TableBody>
                     </Table>
                   </Box>

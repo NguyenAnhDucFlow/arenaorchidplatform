@@ -5,19 +5,16 @@ import {
   Card,
   Table,
   Switch,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   TablePagination,
   FormControlLabel,
-  DialogTitle,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { deleteAuction, deleteAuctions, getAuctionsTable } from '../../redux/slices/product';
+import { cancelBid, endAuction, getBidsByUserId } from '../../redux/slices/product';
 // routes
 import { PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
@@ -25,36 +22,29 @@ import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedActions,
-} from '../../components/table';
+import { TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom } from '../../components/table';
 // sections
 import { ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
-import AuctionTableRow from '../../sections/@dashboard/e-commerce/auction/AuctionTableRow';
-import { DialogAnimate } from '../../components/animate';
-import AuctionEditForm from '../../sections/@dashboard/e-commerce/auction/AuctionEditForm';
+import useAuth from '../../hooks/useAuth';
+import BidTableRow from '../../sections/@dashboard/e-commerce/auction/BidTableRow';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'id', label: 'Auction Id', align: 'center' },
   { id: 'name', label: 'Product', align: 'left' },
-  { id: 'startDate', label: 'Start date', align: 'left' },
-  { id: 'endDate', label: 'End date', align: 'left' },
-  { id: 'currentPrice', label: 'Current price', align: 'center' },
-  { id: 'status', label: 'Review', align: 'center', width: 180 },
+  { id: 'updatedAt', label: 'Bid date', align: 'left' },
+  { id: 'amount', label: 'Your bid', align: 'center' },
+  { id: 'winner', label: 'Winning user', align: 'center' },
+  { id: 'status', label: 'Status', align: 'center', width: 180 },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceAuctionList() {
+export default function EcommerceBidList() {
   const {
     dense,
     page,
@@ -63,11 +53,6 @@ export default function EcommerceAuctionList() {
     rowsPerPage,
     setPage,
     //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
@@ -75,6 +60,7 @@ export default function EcommerceAuctionList() {
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
+  const { user } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -82,50 +68,50 @@ export default function EcommerceAuctionList() {
 
   const dispatch = useDispatch();
 
-  const { auctions, isLoading } = useSelector((state) => state.product);
+  const { isLoading } = useSelector((state) => state.product);
+  const { bids, highestBids } = useSelector((state) => state.product.bidList);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
-  const [isOpenModal, setOpenModal] = useState(false);
-
-  const [selectedAuction, setSelectedAuction] = useState(null);
-
   useEffect(() => {
-    dispatch(getAuctionsTable(filterName, page, rowsPerPage, orderBy));
-  }, [dispatch, filterName, page, rowsPerPage, orderBy]);
-
-  useEffect(() => {
-    if (auctions.length) {
-      setTableData(auctions);
+    if (user?.id) {
+      dispatch(getBidsByUserId(user.id));
     }
-  }, [auctions]);
+  }, [dispatch, user?.id]);
+
+  useEffect(() => {
+    if (bids.length) {
+      setTableData(bids);
+    }
+  }, [bids]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
     setPage(0);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-    enqueueSnackbar('Delete success!');
-    dispatch(deleteAuction(id));
+  const handleCancelRow = async (bidId) => {
+    await dispatch(cancelBid(bidId));
+    await dispatch(getBidsByUserId(user.id));
+    enqueueSnackbar('Cancel success!', { variant: 'success' });
   };
 
-  const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-    enqueueSnackbar('Delete success!');
-    dispatch(deleteAuctions(selected.map((id) => id)));
-  };
+  const handleCheckoutRow = async (bid) => {
+    // TODO: thanh toan
+    // Nhảy qua trang thanh toán ; bid.amount là giá tiền mà user mua sản phẩm
+    // Nếu thanh toán thành công thì chạy dispatch(endAuction());
+    // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
 
-  const handleEditRow = (auction) => {
-    setSelectedAuction(auction);
-    setOpenModal(true);
+    await dispatch(
+      endAuction(bid.auction.id, {
+        amount: bid.amount,
+        userId: bid.user.id,
+        auctionId: bid.auction.id,
+      })
+    );
+    enqueueSnackbar('Checkout success!', { variant: 'success' });
   };
 
   const dataFiltered = applySortFilter({
@@ -138,20 +124,18 @@ export default function EcommerceAuctionList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  console.log(selectedAuction);
-
   return (
-    <Page title="Ecommerce: Auction List">
+    <Page title="Ecommerce: Bid List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Auction List"
+          heading="Bid List"
           links={[
             { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
             {
               name: 'E-Commerce',
               href: PATH_PRODUCTOWNER.eCommerce.root,
             },
-            { name: 'Auction List' },
+            { name: 'Bid List' },
           ]}
         />
 
@@ -160,53 +144,24 @@ export default function EcommerceAuctionList() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-              {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={tableData.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-              )}
-
               <Table size={dense ? 'small' : 'medium'}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
-                  numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
                 />
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
                     row ? (
-                      <AuctionTableRow
-                        key={row.id}
+                      <BidTableRow
+                        key={new Date().toISOString()}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row)}
+                        winningBid={highestBids.find((highestBid) => highestBid.auction.id === row.auction.id)}
+                        onCancelRow={() => handleCancelRow(row.id)}
+                        onCheckoutRow={() => handleCheckoutRow(row)}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -239,15 +194,6 @@ export default function EcommerceAuctionList() {
             />
           </Box>
         </Card>
-        <DialogAnimate open={isOpenModal} onClose={() => setOpenModal(false)}>
-          <DialogTitle>Auction detail</DialogTitle>
-
-          <AuctionEditForm
-            auction={selectedAuction || {}}
-            onCancel={() => setOpenModal(false)}
-            refetchTable={async () => dispatch(getAuctionsTable(filterName, page, rowsPerPage, orderBy))}
-          />
-        </DialogAnimate>
       </Container>
     </Page>
   );

@@ -175,6 +175,7 @@ export default function Router() {
             { element: <Navigate to="/e-commerce/shop" replace />, index: true },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'auction', element: <EcommerceAuctionList /> },
+            { path: 'bid', element: <EcommerceBidList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
             { path: 'order', element: <Order /> },
@@ -264,6 +265,7 @@ const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const EcommerceAuctionDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceAuctionList = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionList')));
+const EcommerceBidList = Loadable(lazy(() => import('../pages/dashboard/EcommerceBidList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const Order = Loadable(lazy(() => import('../pages/dashboard/Order')));

@@ -28,6 +28,7 @@ export const PATH_PRODUCTOWNER = {
     root: path(ROOTS_PRODUCTOWNER, '/e-commerce'),
     list: path(ROOTS_PRODUCTOWNER, '/e-commerce/list'),
     auction: path(ROOTS_PRODUCTOWNER, '/e-commerce/auction'),
+    bid: path(ROOTS_PRODUCTOWNER, '/e-commerce/bid'),
     order: path(ROOTS_PRODUCTOWNER, '/e-commerce/order'),
     checkout: path(ROOTS_PRODUCTOWNER, '/e-commerce/checkout'),
     new: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/new'),

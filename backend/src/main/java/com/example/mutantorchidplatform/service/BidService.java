@@ -4,6 +4,7 @@ import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Auction;
 import com.example.mutantorchidplatform.entity.Bid;
 import com.example.mutantorchidplatform.entity.User;
+import com.example.mutantorchidplatform.entity.enums.BidStatus;
 import com.example.mutantorchidplatform.repository.BidRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
@@ -15,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface BidService {
@@ -30,6 +28,10 @@ public interface BidService {
     PageDTO<BidDTO> search(SearchDTO searchDTO);
 
     List<BidLooseDTO> getAllByAuctionId(int id);
+
+    Map<String, List<BidDetailDTO>> getAllByUserId(int userId);
+
+    void cancelBid(int id);
 }
 
 @Service
@@ -115,11 +117,49 @@ class BidServiceImpl implements BidService {
         return bids.stream().map(this::convertToBidLooseDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Map<String, List<BidDetailDTO>> getAllByUserId(int userId) {
+        // Bid, Auction, Product
+        List<Bid> bids = bidRepository.findAllByUserId(userId);
+
+        // Get all the auctions that the user has bidded on
+        List<Auction> auctions = bids.stream().map(Bid::getAuction).toList();
+
+        // Get all the auctions that the user has bidded on and the highest bid with the earliest updated time. Also, only
+        // bid with status "PENDING" and "DONE" are considered.
+        List<Bid> highestBids = auctions.stream()
+                .map(auction -> auction.getBids().stream()
+                        .filter(bid -> bid.getStatus().equals(BidStatus.PENDING) || bid.getStatus().equals(BidStatus.DONE))
+                        .min((b1, b2) -> {
+                            if (b1.getAmount() == b2.getAmount())
+                                return Date.from(b1.getUpdatedAt().toInstant()).compareTo(Date.from(b2.getUpdatedAt().toInstant()));
+                            return Double.compare(b2.getAmount(), b1.getAmount());
+                        }).orElse(null))
+                .toList();
+
+        Map<String, List<BidDetailDTO>> map = new HashMap<>();
+        map.put("bids", bids.stream().map(this::convertToBidDetailDTO).collect(Collectors.toList()));
+        map.put("highestBids", highestBids.stream().map(this::convertToBidDetailDTO).collect(Collectors.toList()));
+
+        return map;
+    }
+
+    @Override
+    public void cancelBid(int id) {
+        Bid bid = bidRepository.findById(id).orElseThrow(NoResultException::new);
+        bid.setStatus(BidStatus.CANCELLED);
+        bidRepository.save(bid);
+    }
+
     private BidDTO convertToBidDTO(Bid bid) {
         return modelMapper.map(bid, BidDTO.class);
     }
 
     private BidLooseDTO convertToBidLooseDTO(Bid bid) {
         return modelMapper.map(bid, BidLooseDTO.class);
+    }
+
+    private BidDetailDTO convertToBidDetailDTO(Bid bid) {
+        return modelMapper.map(bid, BidDetailDTO.class);
     }
 }

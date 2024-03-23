@@ -14,7 +14,12 @@ const initialState = {
   error: null,
   products: [],
   auctions: [],
+  bidList: {
+    bids: [],
+    highestBids: [],
+  },
   product: null,
+  auction: null,
   sortBy: null,
   filters: {
     gender: [],
@@ -88,6 +93,17 @@ const slice = createSlice({
     getAuctionSuccess(state, action) {
       state.isLoading = false;
       state.auction = action.payload;
+    },
+
+    // GET BIDS
+    getBidsSuccess(state, action) {
+      state.isLoading = false;
+      state.bidList.bids = action.payload.bids;
+      state.bidList.highestBids = action.payload.highestBids.filter((bid) => bid);
+    },
+
+    putBidsSuccess(state) {
+      state.isLoading = false;
     },
 
     // POST AUCTION
@@ -417,6 +433,31 @@ export function endAuction(auctionId, bidData) {
     try {
       await axios.put(`/auction/end/${auctionId}`, bidData);
       dispatch(slice.actions.postAuctionSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function cancelBid(bidId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/bid/${bidId}`);
+      dispatch(slice.actions.putBidsSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getBidsByUserId(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/bid/user/${id}`);
+      console.log('bids', response.data.data);
+      dispatch(slice.actions.getBidsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
