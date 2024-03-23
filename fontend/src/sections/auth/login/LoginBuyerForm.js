@@ -52,10 +52,9 @@ export default function LoginBuyerForm() {
     try {
       await login(data.email, data.password);
     } catch (error) {
-      console.error(error);
       reset();
       if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
+        setError('afterSubmit', { ...error, message: error.msg });
       }
     }
   };
