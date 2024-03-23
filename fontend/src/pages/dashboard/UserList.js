@@ -42,15 +42,11 @@ const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
   'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
+  'admin',
+  'product owner',
+  'staff',
+  'manager',
+  'customer',
 ];
 
 const TABLE_HEAD = [
