@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/bid")
 public class BidController {
@@ -23,10 +25,10 @@ public class BidController {
     }
 
     @GetMapping("/{id}")
-    public ResponseDTO<BidDTO> getById(@PathVariable int id) {
-        return ResponseDTO.<BidDTO>builder()
+    public ResponseDTO<List<BidLooseDTO>> getAllByAuctionId(@PathVariable int id) {
+        return ResponseDTO.<List<BidLooseDTO>>builder()
                 .status(200)
-                .data(bidService.getById(id))
+                .data(bidService.getAllByAuctionId(id))
                 .build();
     }
 

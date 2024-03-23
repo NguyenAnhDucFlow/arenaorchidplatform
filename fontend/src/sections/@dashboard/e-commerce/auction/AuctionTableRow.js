@@ -75,7 +75,11 @@ export default function AuctionTableRow({ row, selected, onEditRow, onSelectRow,
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(status === 'REJECTED' && 'error') || (status === 'PENDING' && 'warning') || 'success'}
+          color={
+            ((status === 'REJECTED' || status === 'CLOSED') && 'error') ||
+            (status === 'PENDING' && 'warning') ||
+            'success'
+          }
           sx={{ textTransform: 'capitalize' }}
         >
           {status ? sentenceCase(status) : ''}

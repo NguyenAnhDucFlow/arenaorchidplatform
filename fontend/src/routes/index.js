@@ -230,7 +230,7 @@ export default function Router() {
         { path: 'shop', element: <EcommerceShop /> },
         { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
-        { path: 'auction/:id', element: <EcommerceAuctionDetails /> },
+        { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },
         { path: 'checkout', element: <EcommerceCheckout /> },
       ],
     },

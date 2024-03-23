@@ -55,13 +55,12 @@ export const PATH_AUTH = {
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
 };
 
-
 export const PATH_HOME = {
   root: ROOTS_HOME,
-  shop: path(ROOTS_HOME, 'shop'),  
-  auction: path(ROOTS_HOME, 'auction'),  
+  shop: path(ROOTS_HOME, 'shop'),
+  auction: path(ROOTS_HOME, 'auction'),
   view: (name) => path(ROOTS_HOME, `product/${name}`),
-  auctionView: (id) => path(ROOTS_HOME, `auction/${id}`),
+  auctionView: (productId, id) => path(ROOTS_HOME, `auction/${productId}/${id}`),
   checkout: path(ROOTS_HOME, 'checkout'),
   loginBuyer: path(ROOTS_HOME, 'buyer/login'),
   loginSeller: path(ROOTS_HOME, 'seller/login'),

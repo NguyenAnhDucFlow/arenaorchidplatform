@@ -260,7 +260,7 @@ export function getProducts() {
   };
 }
 
-export function getProductsPageable(page = 0, size = 4) {
+export function getProductsPageable(page = 0, size = 8) {
   return async () => {
     dispatch(slice.actions.startLoadingPageable(page));
     try {
@@ -299,7 +299,7 @@ export function getProductById(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/product/${id}`);
-      console.log(response.data.data);
+      console.log('product', response.data.data);
       dispatch(slice.actions.getProductSuccess(response.data.data));
     } catch (error) {
       console.error(error);
@@ -338,10 +338,10 @@ export function getAuctionsTable(keyword, currentPage, size, sortedField) {
 
 export function getAuction(id) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/auction/${id}`);
-      console.log(response.data.data);
+      console.log('auction', response.data.data);
       dispatch(slice.actions.getAuctionSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -405,6 +405,18 @@ export function createBid(newBid) {
     try {
       await axios.post('/bid', newBid);
       dispatch(slice.actions.endLoading());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function endAuction(auctionId, bidData) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/auction/end/${auctionId}`, bidData);
+      dispatch(slice.actions.postAuctionSuccess());
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

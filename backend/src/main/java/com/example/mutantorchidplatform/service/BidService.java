@@ -1,9 +1,6 @@
 package com.example.mutantorchidplatform.service;
 
-import com.example.mutantorchidplatform.dto.BidCreateDTO;
-import com.example.mutantorchidplatform.dto.BidDTO;
-import com.example.mutantorchidplatform.dto.PageDTO;
-import com.example.mutantorchidplatform.dto.SearchDTO;
+import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Auction;
 import com.example.mutantorchidplatform.entity.Bid;
 import com.example.mutantorchidplatform.entity.User;
@@ -18,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface BidService {
@@ -27,6 +28,8 @@ public interface BidService {
     BidDTO getById(int id);
 
     PageDTO<BidDTO> search(SearchDTO searchDTO);
+
+    List<BidLooseDTO> getAllByAuctionId(int id);
 }
 
 @Service
@@ -50,10 +53,24 @@ class BidServiceImpl implements BidService {
     public void create(BidCreateDTO bidDTO) {
         User user = userService.getUserById(bidDTO.getUserId());
         Auction auction = auctionService.getAuctionById(bidDTO.getAuctionId());
+        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
+        Bid bid;
 
-        Bid bid = modelMapper.map(bidDTO, Bid.class);
-        bid.setUser(user);
-        bid.setAuction(auction);
+        if (existedBid.isPresent()) {
+            bid = existedBid.get();
+            bid.setAmount(bidDTO.getAmount());
+            bid.setStatus(bidDTO.getStatus());
+        } else {
+            bid = modelMapper.map(bidDTO, Bid.class);
+            bid.setUser(user);
+            bid.setAuction(auction);
+        }
+
+        if (auction.getCurrentPrice().isEmpty())
+            auction.setCurrentPrice(String.valueOf(bidDTO.getAmount()));
+        else if (bidDTO.getAmount() > Double.parseDouble(auction.getCurrentPrice())) {
+            auction.setCurrentPrice(String.valueOf(bidDTO.getAmount()));
+        }
 
         bidRepository.save(bid);
     }
@@ -92,9 +109,17 @@ class BidServiceImpl implements BidService {
                 .build();
     }
 
-    private BidDTO convertToBidDTO(Bid bid) {
+    @Override
+    public List<BidLooseDTO> getAllByAuctionId(int id) {
+        List<Bid> bids = bidRepository.findAllByAuctionId(id);
+        return bids.stream().map(this::convertToBidLooseDTO).collect(Collectors.toList());
+    }
 
+    private BidDTO convertToBidDTO(Bid bid) {
         return modelMapper.map(bid, BidDTO.class);
     }
 
+    private BidLooseDTO convertToBidLooseDTO(Bid bid) {
+        return modelMapper.map(bid, BidLooseDTO.class);
+    }
 }

@@ -1,23 +1,22 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Countdown from 'react-countdown';
+import { useSnackbar } from 'notistack';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
-import { useTheme, styled } from '@mui/material/styles';
-import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, Card } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Stack, Button, Rating, Divider, IconButton, Typography, Card } from '@mui/material';
 // routes
-import { PATH_HOME, PATH_PAGE } from '../../../../routes/paths';
+import { PATH_PAGE } from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import WishListReportButton from '../../../../components/WishListReportButton';
-import { FormProvider, RHFSelect } from '../../../../components/hook-form';
+import { FormProvider } from '../../../../components/hook-form';
 import { useDispatch } from '../../../../redux/store';
-import { createBid } from '../../../../redux/slices/product';
+import { createBid, endAuction } from '../../../../redux/slices/product';
 import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
@@ -47,13 +46,24 @@ AuctionDetailsSummary.propTypes = {
     totalReview: PropTypes.number,
     auction: PropTypes.object,
   }),
+  auction: PropTypes.shape({
+    id: PropTypes.number,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
+    startPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    stepPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    currentPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    bids: PropTypes.arrayOf(PropTypes.object),
+    status: PropTypes.string,
+  }),
 };
 
-export default function AuctionDetailsSummary({ product, ...other }) {
+export default function AuctionDetailsSummary({ product, auction, ...other }) {
   const dispatch = useDispatch();
   const { user } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { name, price, totalRating, totalReview, auction } = product;
+  const { name, price, totalRating, totalReview } = product;
 
   const defaultValues = {
     amount: Number(auction.startPrice),
@@ -67,21 +77,85 @@ export default function AuctionDetailsSummary({ product, ...other }) {
 
   const values = watch();
 
+  if (!product.auction) {
+    return <Navigate to={PATH_PAGE.page404} />;
+  }
+
+  const isStarted = new Date() > new Date(auction.startDate);
+  const isEnded = new Date() > new Date(auction.endDate) || auction.status === 'CLOSED';
+
+  const currentUserBids = auction.bids.filter((bid) => bid.user.id === user?.id);
+  const highestBid = currentUserBids.length > 0 ? currentUserBids.sort((a, b) => b.amount - a.amount)[0].amount : 0;
+
   const onSubmitBid = async (data) => {
-    dispatch(
+    if (isEnded) {
+      enqueueSnackbar('Auction is over', { variant: 'error' });
+      return;
+    }
+    if (!user) {
+      enqueueSnackbar('Please login to bid', { variant: 'error' });
+      return;
+    }
+
+    if (
+      data.amount >= product.price &&
+      // eslint-disable-next-line no-alert
+      window.confirm('Your bid is higher than the Buyout price. Do you want to buyout now?')
+    ) {
+      // TODO: if user bid higher than product price then buy now
+      // Nhảy qua trang thanh toán luôn; data.amount là giá tiền mà user mua sản phẩm
+      // Nếu thanh toán thành công thì chạy dispatch(endAuction());
+      // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+
+      dispatch(
+        endAuction(auction.id, {
+          amount: data.amount,
+          userId: user.id,
+          auctionId: auction.id,
+          auctionEndDate: new Date().toISOString(),
+        })
+      );
+      enqueueSnackbar('Payout success!', { variant: 'success' });
+      return;
+    }
+
+    await dispatch(
       createBid({
         amount: data.amount,
         userId: user.id,
         auctionId: auction.id,
       })
     );
+    enqueueSnackbar('Bid success!');
   };
 
-  if (!auction) {
-    return <Navigate to={PATH_PAGE.page404} />;
-  }
+  const handlePayout = () => {
+    if (isEnded) {
+      enqueueSnackbar('Auction is over', { variant: 'error' });
+      return;
+    }
+    if (!user) {
+      enqueueSnackbar('Please login to buy now', { variant: 'error' });
+      return;
+    }
+    // eslint-disable-next-line no-alert
+    if (!window.confirm('Do you want to buyout now?')) return;
 
-  const isStarted = new Date() > new Date(auction.startDate);
+    // TODO:  buyout
+    // Nhảy qua trang thanh toán luôn; product.price là giá tiền mà user mua sản phẩm
+    // Nếu thanh toán thành công thì chạy dispatch(endAuction());
+    // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+
+    dispatch(
+      endAuction(auction.id, {
+        amount: product.price,
+        userId: user.id,
+        auctionId: auction.id,
+        auctionEndDate: new Date().toISOString(),
+      })
+    );
+    enqueueSnackbar('Payout success!', { variant: 'success' });
+  };
 
   return (
     <RootStyle {...other}>
@@ -141,37 +215,52 @@ export default function AuctionDetailsSummary({ product, ...other }) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" gap={3} alignItems="center" sx={{ mb: 3 }}>
-          <div>
-            <Typography variant="body1" component="div" sx={{ textAlign: 'right' }}>
-              Place your bid:
-            </Typography>
-            <Typography variant="caption" sx={{ mt: 0.5 }} color="gray">
-              Step price: {fCurrency(auction.stepPrice)}
-            </Typography>
-          </div>
+        {highestBid > 0 && (
           <Stack direction="row" gap={1} alignItems="center">
-            <Incrementer
-              name="amount"
-              amount={values.amount}
-              startPrice={auction.startPrice}
-              onIncrementQuantity={() => setValue('amount', values.amount + (Number(auction.stepPrice) || 1))}
-              onDecrementQuantity={() => setValue('amount', values.amount - (Number(auction.stepPrice) || 1))}
-            />
-            <Button size="small" type="submit" variant="contained" sx={{ fontSize: '14px' }}>
-              <Iconify icon={'mingcute:auction-line'} />
-              &nbsp;&nbsp;Bid
-            </Button>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              Your current bid:
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              {fCurrency(highestBid)}
+            </Typography>
           </Stack>
-        </Stack>
+        )}
+
+        {!isEnded && (
+          <Stack direction="row" gap={3} alignItems="center" sx={{ mb: 3 }}>
+            <div>
+              <Typography variant="body1" component="div" sx={{ textAlign: 'right' }}>
+                Place your bid:
+              </Typography>
+              <Typography variant="caption" sx={{ mt: 0.5 }} color="gray">
+                Step price: {fCurrency(auction.stepPrice)}
+              </Typography>
+            </div>
+            <Stack direction="row" gap={1} alignItems="center">
+              <Incrementer
+                name="amount"
+                amount={values.amount}
+                startPrice={auction.startPrice}
+                onIncrementQuantity={() => setValue('amount', values.amount + (Number(auction.stepPrice) || 1))}
+                onDecrementQuantity={() => setValue('amount', values.amount - (Number(auction.stepPrice) || 1))}
+              />
+              <Button size="small" type="submit" variant="contained" sx={{ fontSize: '14px' }}>
+                <Iconify icon={'mingcute:auction-line'} />
+                &nbsp;&nbsp;Bid
+              </Button>
+            </Stack>
+          </Stack>
+        )}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-          <Button fullWidth size="large" type="button" variant="outlined">
-            Buy Now for {fCurrency(price)}
-          </Button>
-        </Stack>
+        {!isEnded && (
+          <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+            <Button fullWidth size="large" type="button" variant="outlined" onClick={handlePayout}>
+              Buy Now for {fCurrency(price)}
+            </Button>
+          </Stack>
+        )}
 
         <Stack alignItems="center" sx={{ mt: 3 }}>
           <WishListReportButton initialColor />
@@ -185,6 +274,7 @@ export default function AuctionDetailsSummary({ product, ...other }) {
 
 Incrementer.propTypes = {
   amount: PropTypes.number,
+  startPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onIncrementQuantity: PropTypes.func,
   onDecrementQuantity: PropTypes.func,
 };

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,4 +36,7 @@ public class Auction extends TimeAuditable{
 
     @ManyToOne
     private User staff;
+
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
+    private List<Bid> bids;
 }
