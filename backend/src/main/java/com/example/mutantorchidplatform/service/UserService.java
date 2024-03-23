@@ -2,10 +2,12 @@ package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.UserDTO;
 import com.example.mutantorchidplatform.entity.Role;
+import com.example.mutantorchidplatform.entity.Shipment;
 import com.example.mutantorchidplatform.entity.User;
+import com.example.mutantorchidplatform.entity.enums.UserStatus;
 import com.example.mutantorchidplatform.repository.RoleRepository;
 import com.example.mutantorchidplatform.repository.UserRepository;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -70,9 +72,22 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
-        modelMapper.map(userDTO, User.class);
-        Role role = roleRepository.findById(userDTO.getRole().getId()).orElseThrow();
-        user.setRole(role);
+        if (userDTO.getRole() != null) {
+            Role role = roleRepository.findById(userDTO.getRole().getId()).orElseThrow(NoResultException::new);
+            user.setRole(role);
+        }
+        user.setAbout(userDTO.getAbout());
+        user.setAddress(userDTO.getAddress());
+        user.setCity(userDTO.getCity());
+        user.setCompany(userDTO.getCompany());
+        user.setCountry(userDTO.getCountry());
+        user.setDisplayName(userDTO.getDisplayName());
+        user.setPassword(userDTO.getPassword());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setPhotoURL(userDTO.getPhotoURL());
+        user.setDefaultShipmentId(userDTO.getDefaultShipmentId());
+        user.setState(userDTO.getState());
+        user.setZipCode(userDTO.getZipCode());
         userRepository.save(user);
     }
 

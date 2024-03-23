@@ -111,7 +111,7 @@ public class UserController {
 
             String photoURL = s3StorageService.uploadFile(newFilename, userDTO.getFile());
 
-            userDTO.setPhotoURL(photoURL);// save to db
+            userDTO.setPhotoURL(photoURL);
         }
         userService.updateUser(userDTO);
         return ResponseDTO.<Void>builder()

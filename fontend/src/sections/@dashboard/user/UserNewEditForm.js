@@ -102,19 +102,25 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      formData.append('id', currentUser.id);
-      formData.append('photoURL', currentUser.photoURL);
+      if (isEdit) {
+        formData.append('id', currentUser?.id);
+      }
       formData.append('displayName', getValues('displayName'));
       formData.append('email', getValues('email'));
       formData.append('phoneNumber', getValues('phoneNumber'));
       formData.append('address', getValues('address'));
       formData.append('country', getValues('country'));
       formData.append('company', getValues('company'));
+      formData.append('zipCode', getValues('zipCode'));
       formData.append('state', getValues('state'));
       formData.append('city', getValues('city'));
       formData.append('role.id', getValues('roles'));
-      const avatarFile = getValues('avatarUrl');
-      formData.append('file', avatarFile);
+      const photoFile = getValues('avatarUrl');
+      if (typeof photoFile !== "string") {
+        formData.append('file', photoFile);
+      } else {
+        formData.append('photoURL', photoFile);
+      }
       formData.append('password', getValues('password'));
       let response;
       if (isEdit) {
@@ -244,7 +250,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="email" label="Email Address" disabled />
+              <RHFTextField name="email" label="Email Address" disabled={isEdit} />
               <RHFTextField name="displayName" label="Full Name" />
               <RHFTextField name="password" label="Password" type="password" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
@@ -264,7 +270,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
               <RHFTextField name="zipCode" label="Zip/Code" />
               <RHFTextField name="company" label="Company" />
               <RHFSelect name="roles" label="Role" placeholder="Role">
-                <option value=""/>
+                <option value="" />
                 {roles.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.label}
