@@ -4,7 +4,9 @@ import com.example.mutantorchidplatform.dto.PageDTO;
 import com.example.mutantorchidplatform.dto.PaymentDTO;
 import com.example.mutantorchidplatform.dto.SearchDTO;
 import com.example.mutantorchidplatform.entity.Payment;
+import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.PaymentRepository;
+import com.example.mutantorchidplatform.repository.UserRepository;
 import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.stream.Collectors;
 
 public interface PaymentService {
 
-    void create(PaymentDTO paymentDTO);
+    void create(int userId, PaymentDTO paymentDTO);
 
     PaymentDTO getById(int id);
 
@@ -33,13 +36,20 @@ class PaymentServiceImpl implements PaymentService {
     private PaymentRepository paymentRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
 
     @Override
     @Transactional
-    public void create(PaymentDTO paymentDTO) {
-        Payment payment = modelMapper.map(paymentDTO, Payment.class);
+    public void create(int userId, PaymentDTO paymentDTO) {
+        User user = userRepository.findById(userId).orElseThrow(NoResultException::new);
+        Payment payment = new Payment();
+        payment.setUser(user);
+        payment.setType(paymentDTO.getType());
+        payment.setAmount(paymentDTO.getAmount());
         paymentRepository.save(payment);
     }
 

@@ -30,7 +30,10 @@ UserNewEditForm.propTypes = {
 };
 
 export default function UserNewEditForm({ isEdit, currentUser }) {
+
   const navigate = useNavigate();
+
+  console.log("currentUser", currentUser);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -58,11 +61,11 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
       state: currentUser?.state || '',
       city: currentUser?.city || '',
       zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || '',
+      avatarUrl: currentUser?.photoURL || '',
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
       company: currentUser?.company || '',
-      roles: currentUser?.roles || '',
+      roles: currentUser?.role || '',
       password: currentUser?.password || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +102,8 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-
+      formData.append('id', currentUser.id);
+      formData.append('photoURL', currentUser.photoURL);
       formData.append('displayName', getValues('displayName'));
       formData.append('email', getValues('email'));
       formData.append('phoneNumber', getValues('phoneNumber'));
@@ -108,24 +112,21 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
       formData.append('company', getValues('company'));
       formData.append('state', getValues('state'));
       formData.append('city', getValues('city'));
-      formData.append('roles[0].id', getValues('roles'));
+      formData.append('role.id', getValues('roles'));
       const avatarFile = getValues('avatarUrl');
       formData.append('file', avatarFile);
       formData.append('password', getValues('password'));
-
       let response;
       if (isEdit) {
-        // Call the API to update the product
-        response = await axios.put(`/users/${currentUser.id}`, formData);
+        response = await axios.put(`/users/`, formData);
       } else {
-        // Call the API to create a new product
         response = await axios.post('/users/register', formData);
       }
       console.log(JSON.stringify(response.data));
 
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.eCommerce.list);
+      navigate(PATH_DASHBOARD.user.list);
     } catch (error) {
       console.error(error);
     }
@@ -243,7 +244,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField name="email" label="Email Address" disabled />
               <RHFTextField name="displayName" label="Full Name" />
               <RHFTextField name="password" label="Password" type="password" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
@@ -263,7 +264,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
               <RHFTextField name="zipCode" label="Zip/Code" />
               <RHFTextField name="company" label="Company" />
               <RHFSelect name="roles" label="Role" placeholder="Role">
-                <option value="" />
+                <option value=""/>
                 {roles.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.label}

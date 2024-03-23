@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseDTO<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseDTO<UserDTO> getUser(@PathVariable int id) {
         return ResponseDTO.<UserDTO>builder()
                 .status(200)
                 .data(userService.getUser(id))
@@ -121,7 +121,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseDTO<Void> deleteUser(@PathVariable Long id) {
+    public ResponseDTO<Void> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
         return ResponseDTO.<Void>builder()
                 .status(200)

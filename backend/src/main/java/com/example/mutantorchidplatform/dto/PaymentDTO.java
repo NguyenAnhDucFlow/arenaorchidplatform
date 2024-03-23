@@ -17,7 +17,7 @@ public class PaymentDTO {
     private Date date;
 
     @NotNull
-    private PaymentType type;
+    private String type;
 
     @NotNull
     private UserDTO user;

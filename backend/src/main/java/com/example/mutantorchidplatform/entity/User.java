@@ -17,7 +17,7 @@ public class User extends TimeAuditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String about;
 

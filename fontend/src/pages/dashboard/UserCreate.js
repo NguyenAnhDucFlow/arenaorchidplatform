@@ -46,7 +46,7 @@ export default function UserCreate() {
   }, []);
   console.log("table", tableData);
 
-  const currentUser = tableData.find((user) => (user.name) === name);
+  const currentUser = tableData.find((user) => (user.displayName) === name);
 
   return (
     <Page title="User: Create a new user">

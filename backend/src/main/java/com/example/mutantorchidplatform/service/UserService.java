@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 public interface UserService {
 
     User createUser(UserDTO userDTO);
-    UserDTO getUser(Long id);
-    User getUserById(Long id);
+    UserDTO getUser(int id);
+    User getUserById(int id);
     void updateUser(UserDTO userDTO);
-    void deleteUser(Long id);
+    void deleteUser(int id);
 
     List<UserDTO> getAllUser();
 }
@@ -56,13 +56,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO getUser(Long id) {
+    public UserDTO getUser(int id) {
         User user =userRepository.findById(id).orElseThrow(NoResultException::new);
         return modelMapper.map(user, UserDTO.class);
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(int id) {
         return userRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
@@ -70,18 +70,16 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
-        modelMapper.map(userDTO, user);
-        if (userDTO.getRole() == null) {
-            Role role = roleRepository.findById(2).orElseThrow(NoResultException::new);
-            user.setRole(role);
-        }
+        modelMapper.map(userDTO, User.class);
+        Role role = roleRepository.findById(userDTO.getRole().getId()).orElseThrow();
+        user.setRole(role);
         userRepository.save(user);
     }
 
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
 

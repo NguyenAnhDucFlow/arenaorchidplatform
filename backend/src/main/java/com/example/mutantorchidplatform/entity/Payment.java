@@ -23,8 +23,7 @@ public class Payment {
     @Column(updatable = false, nullable = false)
     private Date date;
 
-    @Enumerated(EnumType.STRING) // without this, the enum will be persisted as an ordinal value(an integer)
-    private PaymentType type;
+    private String type;
 
     @ManyToOne
     private User user;

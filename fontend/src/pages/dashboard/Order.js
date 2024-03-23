@@ -39,7 +39,7 @@ import { OrderTableToolbar, OrderTableRow } from '../../sections/@dashboard/e-co
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
+const STATUS_OPTIONS = ['all', 'pending', 'confirmed'];
 
 const ROLE_OPTIONS = [
   'all',

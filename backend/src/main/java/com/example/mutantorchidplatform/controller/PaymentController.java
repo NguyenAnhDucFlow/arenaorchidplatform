@@ -13,15 +13,6 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-    @PostMapping("/")
-    public ResponseDTO<Void> create(@RequestBody @Valid PaymentDTO paymentDTO) {
-        paymentService.create(paymentDTO);
-        return ResponseDTO.<Void>builder()
-                .status(200)
-                .msg("ok")
-                .build();
-    }
-
     @GetMapping("/{id}")
     public ResponseDTO<PaymentDTO> getProduct(@PathVariable int id) {
         return ResponseDTO.<PaymentDTO>builder()

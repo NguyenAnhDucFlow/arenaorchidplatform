@@ -12,7 +12,7 @@ public class BidCreateDTO {
 
     private BidStatus status = BidStatus.PENDING;
 
-    private Long userId;
+    private Integer userId;
 
     private int auctionId;
 

@@ -2,6 +2,7 @@ package com.example.mutantorchidplatform;
 
 import com.example.mutantorchidplatform.entity.Role;
 import com.example.mutantorchidplatform.entity.User;
+import com.example.mutantorchidplatform.entity.enums.UserStatus;
 import com.example.mutantorchidplatform.repository.RoleRepository;
 import com.example.mutantorchidplatform.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,7 @@ public class DataInjection implements ApplicationRunner {
 				userAdmin.setEmail("admin@gmail.com");
 				userAdmin.setPassword("admin@gmail.com");
 				userAdmin.setRole(adminRole);
+				userAdmin.setStatus(UserStatus.ACTIVE);
 				userRepository.save(userAdmin);
 			}
 		}
