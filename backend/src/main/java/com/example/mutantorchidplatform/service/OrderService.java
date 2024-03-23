@@ -3,6 +3,7 @@ package com.example.mutantorchidplatform.service;
 import com.example.mutantorchidplatform.dto.*;
 import com.example.mutantorchidplatform.entity.Order;
 import com.example.mutantorchidplatform.entity.OrderDetail;
+import com.example.mutantorchidplatform.entity.Product;
 import com.example.mutantorchidplatform.entity.User;
 import com.example.mutantorchidplatform.repository.OrderRepository;
 import com.example.mutantorchidplatform.repository.ProductRepository;
@@ -64,17 +65,27 @@ class OrderServiceImpl implements OrderService {
         for (OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetails()) {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
-            orderDetail.setProduct(
-                    productRepository.findById(orderDetailDTO.getProduct().getId()).orElseThrow(NoResultException::new));
+            // Tìm sản phẩm dựa trên ID và cập nhật số lượng available và sold
+            Product product = productRepository.findById(orderDetailDTO.getProduct().getId()).orElseThrow(NoResultException::new);
+            // Kiểm tra số lượng sản phẩm đủ để bán
+            if (product.getAvailable() < orderDetailDTO.getQuantity()) {
+                throw new IllegalArgumentException("The number of products is not enough to fulfill the order");
+            }
+            product.setAvailable(product.getAvailable() - orderDetailDTO.getQuantity());
+            product.setSold(product.getSold() + orderDetailDTO.getQuantity());
+            productRepository.save(product);
+
+            orderDetail.setProduct(product);
             orderDetail.setPrice(orderDetailDTO.getPrice());
             orderDetail.setQuantity(orderDetailDTO.getQuantity());
             orderDetails.add(orderDetail);
-       }
+        }
         order.setOrderDetails(orderDetails);
         orderRepository.save(order);
         orderDTO.setId(order.getId());
         orderDTO.getCustomer().setEmail(order.getCustomer().getEmail());
     }
+
 
     @Override
     public OrderDTO getById(int id) {

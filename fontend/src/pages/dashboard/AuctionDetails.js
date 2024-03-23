@@ -81,10 +81,10 @@ export default function AuctionDetails() {
   };
 
   return (
-    <Page title="Product Details">
+    <Page title="Auction Details">
       <Container maxWidth={themeStretch ? false : 'lg'} sx={{ paddingTop: 15, paddingBottom: 10 }}>
         <HeaderBreadcrumbs
-          heading="Product Details"
+          heading="Auction Details"
           links={[
             { name: 'Home', href: PATH_HOME.root },
             {
