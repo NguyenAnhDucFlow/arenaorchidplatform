@@ -10,7 +10,7 @@ import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardSeller from '../layouts/dashboardseller';
 
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN, PATH_AFTER_LOGINSELLER } from '../config';
 // components
@@ -75,9 +75,9 @@ export default function Router() {
     {
       path: 'dashboard',
       element: (
-        // <AuthGuard>
-        <DashboardLayout />
-        // </AuthGuard>
+        // <RoleBasedGuard accessibleRoles={['admin']}>
+          <DashboardLayout />
+        // </RoleBasedGuard>
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },

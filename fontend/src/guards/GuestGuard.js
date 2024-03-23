@@ -12,6 +12,7 @@ GuestGuard.propTypes = {
 };
 
 export default function GuestGuard({ children }) {
+  
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {

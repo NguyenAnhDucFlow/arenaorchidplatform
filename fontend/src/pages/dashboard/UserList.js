@@ -43,10 +43,10 @@ const STATUS_OPTIONS = ['all', 'active', 'banned'];
 const ROLE_OPTIONS = [
   'all',
   'admin',
-  'product owner',
-  'staff',
-  'manager',
   'customer',
+  'product owners',
+  'manager',
+  'staff',
 ];
 
 const TABLE_HEAD = [
