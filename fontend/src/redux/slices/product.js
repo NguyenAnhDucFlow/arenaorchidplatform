@@ -262,6 +262,18 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
+export function getProductByOwnerId(ownerId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/product/owner/${ownerId}`);
+      console.log(response.data.data);
+      dispatch(slice.actions.getProductsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 export function getProducts() {
   return async () => {

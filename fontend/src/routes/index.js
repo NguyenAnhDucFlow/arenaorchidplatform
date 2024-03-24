@@ -76,7 +76,7 @@ export default function Router() {
       path: 'dashboard',
       element: (
         // <RoleBasedGuard accessibleRoles={['admin']}>
-          <DashboardLayout />
+        <DashboardLayout />
         // </RoleBasedGuard>
       ),
       children: [
@@ -92,13 +92,10 @@ export default function Router() {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-            // { path: 'shop', element: <EcommerceShop /> },
-            // { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'auction', element: <EcommerceAuctionList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            // { path: 'checkout', element: <EcommerceCheckout /> },
           ],
         },
         {
@@ -173,7 +170,7 @@ export default function Router() {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/e-commerce/shop" replace />, index: true },
-            { path: 'list', element: <EcommerceProductList /> },
+            { path: 'list', element: <EcommerceProductListProductOwner /> },
             { path: 'auction', element: <EcommerceAuctionList /> },
             { path: 'bid', element: <EcommerceBidList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
@@ -206,7 +203,6 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
-        { path: 'buyer/login', element: <LoginBuyer /> },
         {
           path: 'seller/login',
           element: (
@@ -215,8 +211,7 @@ export default function Router() {
             </SellerGuard>
           ),
         },
-        { path: 'buyer/signup', element: <SignUpBuyer /> },
-        { path: 'seller/signup', element: <SignUpSeller /> },
+
         { path: '*', element: <Navigate to="/404" replace /> },
       ],
     },
@@ -232,10 +227,26 @@ export default function Router() {
         { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
         { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },
-        { path: 'checkout', element: <EcommerceCheckout /> },
+        {
+          path: 'checkout', element: (
+            <AuthGuard>
+              <EcommerceCheckout />
+            </AuthGuard>
+          )
+        },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
+    {
+      path: 'buyer/login', element: (
+        <AuthGuard>
+          <LoginBuyer />
+        </AuthGuard>
+      )
+    },
+    { path: 'buyer/signup', element: <SignUpBuyer /> },
+    { path: 'seller/signup', element: <SignUpSeller /> },
+
   ]);
 }
 
@@ -264,6 +275,7 @@ const Auction = Loadable(lazy(() => import('../pages/dashboard/Auction')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceAuctionDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
+const EcommerceProductListProductOwner = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductListProductOwner')));
 const EcommerceAuctionList = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionList')));
 const EcommerceBidList = Loadable(lazy(() => import('../pages/dashboard/EcommerceBidList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
