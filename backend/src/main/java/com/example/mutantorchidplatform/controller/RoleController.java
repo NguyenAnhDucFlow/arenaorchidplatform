@@ -24,6 +24,7 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public ResponseDTO<RoleDTO> getRole(@PathVariable int id) {
+
         return ResponseDTO.<RoleDTO>builder()
                 .status(200)
                 .data(roleService.getRole(id))

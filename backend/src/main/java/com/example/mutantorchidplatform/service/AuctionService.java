@@ -91,7 +91,6 @@ class AuctionServiceImpl implements AuctionService {
     @Transactional
     public void update(int id, AuctionCreateDTO dto) {
         Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
-
         auction.setStatus(dto.getStatus());
         auction.setStartDate(dto.getStartDate());
         auction.setEndDate(dto.getEndDate());

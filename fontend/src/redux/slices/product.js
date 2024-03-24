@@ -275,6 +275,20 @@ export function getProductByOwnerId(ownerId) {
   };
 }
 
+
+export function getProductsByCategory(category) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/product/by-category/${category}`);
+      console.log(response.data.data);
+      dispatch(slice.actions.getProductsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function getProducts() {
   return async () => {
     dispatch(slice.actions.startLoading());

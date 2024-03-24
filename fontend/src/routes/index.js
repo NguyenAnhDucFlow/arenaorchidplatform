@@ -75,9 +75,9 @@ export default function Router() {
     {
       path: 'dashboard',
       element: (
-        // <RoleBasedGuard accessibleRoles={['admin']}>
-        <DashboardLayout />
-        // </RoleBasedGuard>
+        <RoleBasedGuard accessibleRoles={['Admin', 'Staff', 'Manager']}>
+          <DashboardLayout />
+        </RoleBasedGuard>
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
@@ -223,7 +223,7 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
-        { path: 'shop', element: <EcommerceShop /> },
+        { path: 'shop/:name', element: <EcommerceShop /> },
         { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
         { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },

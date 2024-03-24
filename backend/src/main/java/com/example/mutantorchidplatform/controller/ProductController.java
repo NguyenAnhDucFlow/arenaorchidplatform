@@ -103,6 +103,13 @@ public class ProductController {
                 .build();
     }
 
+    @GetMapping("/by-category/{category}")
+    public ResponseDTO<List<ProductDTO>> getAllProductByCategory(@PathVariable String category) {
+        return ResponseDTO.<List<ProductDTO>>builder()
+                .status(200)
+                .data(productService.getAllProductByCategory(category))
+                .build();
+    }
 
     @PutMapping("/{id}")
     public ResponseDTO<Void> update(@PathVariable long id, @ModelAttribute @Valid ProductDTO productDTO) throws IllegalStateException, IOException, S3Exception {

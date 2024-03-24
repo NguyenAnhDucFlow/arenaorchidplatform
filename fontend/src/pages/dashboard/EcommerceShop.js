@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
@@ -6,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack, Pagination, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts, filterProducts } from '../../redux/slices/product';
+import { getProductsByCategory, filterProducts } from '../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../routes/paths';
 // hooks
@@ -29,9 +30,12 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 const ITEMS_PER_PAGE = 10; // size
 
 export default function EcommerceShop() {
+
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
+
+  const { name = "" } = useParams();
 
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -65,8 +69,8 @@ export default function EcommerceShop() {
     values.category === 'All';
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getProductsByCategory(name));
+  }, [dispatch, name]);
 
   useEffect(() => {
     dispatch(filterProducts(values));

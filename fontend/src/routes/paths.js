@@ -62,6 +62,7 @@ export const PATH_HOME = {
   auction: path(ROOTS_HOME, 'auction'),
   view: (name) => path(ROOTS_HOME, `product/${name}`),
   auctionView: (productId, id) => path(ROOTS_HOME, `auction/${productId}/${id}`),
+  shopView: (name) => path(ROOTS_HOME, `shop/${name}`),
   checkout: path(ROOTS_HOME, 'checkout'),
   loginBuyer: path(ROOTS_HOME, 'buyer/login'),
   loginSeller: path(ROOTS_HOME, 'seller/login'),

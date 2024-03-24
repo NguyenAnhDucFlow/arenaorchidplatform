@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Typography, Button, Card, CardContent } from '@mui/material';
 //
 import { MotivationIllustration } from '../../../../assets';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +23,9 @@ const RootStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function EcommerceWelcome() {
+
+  const { user } = useAuth();
+
   return (
     <RootStyle>
       <CardContent
@@ -33,7 +37,7 @@ export default function EcommerceWelcome() {
       >
         <Typography gutterBottom variant="h4">
           Congratulations,
-          <br /> Fabiana Capmany!
+          <br /> {user?.displayName}
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>

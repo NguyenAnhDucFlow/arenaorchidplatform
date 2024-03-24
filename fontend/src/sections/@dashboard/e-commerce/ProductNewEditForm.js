@@ -36,27 +36,11 @@ const CATEGORY_OPTION = [
   {
     group: 'Mutant Orchid',
     classify: [
-      '5 cánh trắng', 'Shenzhen Nongke', 'Odontoglossum', 'Giant Ansellia', 'bướm Hochstetter'
-      // thêm các classify khác ở đây
+      'Moth Orchid', 'Brassavola', 'Brassia', 'Cattleya', 'Cymbidium', 'Dancing-lady Orchid',
+      'Dendrobium', 'Miltonia', 'Phalaenopsis', 'Vanda Orchids', 'Boat Orchid', 'Cattleya',
     ]
   }
 ];
-
-// const TAGS_OPTION = [
-//   'Toy Story 3',
-//   'Logan',
-//   'Full Metal Jacket',
-//   'Dangal',
-//   'The Sting',
-//   '2001: A Space Odyssey',
-//   "Singin' in the Rain",
-//   'Toy Story',
-//   'Bicycle Thieves',
-//   'The Kid',
-//   'Inglourious Basterds',
-//   'Snatch',
-//   '3 Idiots',
-// ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,

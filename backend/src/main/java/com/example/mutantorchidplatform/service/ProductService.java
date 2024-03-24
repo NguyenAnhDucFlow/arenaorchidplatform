@@ -39,6 +39,7 @@ public interface ProductService {
 
     List<ProductDTO> getAllProductByOwnerId(long id);
 
+    List<ProductDTO> getAllProductByCategory(String category);
 
 }
 
@@ -161,6 +162,14 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getAllProductByOwnerId(long id) {
         List<Product> products = productRepository.findByOwnerId(id);
+        return products.stream()
+                .map(this::convertToProductDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductByCategory(String category) {
+        List<Product> products = productRepository.findAllByCategory(category);
         return products.stream()
                 .map(this::convertToProductDTO)
                 .collect(Collectors.toList());

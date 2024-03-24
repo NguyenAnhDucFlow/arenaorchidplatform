@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
+
 import Slider from 'react-slick';
 import { m } from 'framer-motion';
 import { useSelector, useDispatch } from 'react-redux';
 
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Card, Typography, Container, Grid, Button } from '@mui/material';
+import { Box, Stack, Card, Typography, Container, Grid, Button, Link } from '@mui/material';
 // components
 import { useEffect, useRef } from 'react';
 import Page from '../components/Page';
@@ -18,6 +20,8 @@ import SocialsButton from '../components/SocialsButton';
 import { ShopProductCard } from '../sections/@dashboard/e-commerce/shop';
 import { getAuctions, getProductsPageable } from '../redux/slices/product';
 import { AuctionCard } from '../sections/@dashboard/e-commerce/auction';
+import { PATH_DASHBOARD, PATH_HOME } from '../routes/paths';
+
 
 const categories = [
   {
@@ -249,14 +253,18 @@ CategoryCard.propTypes = {
   }),
 };
 function CategoryCard({ category }) {
+
   const { name, image } = category;
+  const linkTo = PATH_HOME.shopView(name);
 
   return (
     <Card key={name} sx={{ p: 1 }}>
       <Image alt={name} src={image} ratio="1/1" sx={{ borderRadius: 1.5 }} />
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5 }}>
-        {name}
-      </Typography>
+      <Link to={linkTo} color="inherit" component={RouterLink}>
+        <Typography variant="subtitle1" noWrap sx={{ mt: 2, mb: 0.5 }}>
+          {name}
+        </Typography>
+      </Link>
     </Card>
   );
 }
