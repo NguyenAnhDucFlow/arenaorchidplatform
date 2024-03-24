@@ -76,13 +76,14 @@ class ShipmentServiceImpl implements ShipmentService {
     @Override
     @Transactional
     public void delete(int id) {
+        shipmentRepository.findById(id).orElseThrow(NoResultException::new);
         shipmentRepository.deleteById(id);
     }
 
     @Override
     public PageDTO<ShipmentDTO> search(SearchDTO searchDTO) {
 
-        Sort sortBy = Sort.by("date").descending();
+        Sort sortBy = Sort.by("id").descending();
 
         if (StringUtils.hasText(searchDTO.getSortedField()))
             sortBy = Sort.by(searchDTO.getSortedField()).ascending();

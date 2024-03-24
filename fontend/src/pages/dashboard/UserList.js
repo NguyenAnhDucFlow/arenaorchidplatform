@@ -18,7 +18,10 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
 import axios from '../../utils/axios';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -84,6 +87,8 @@ export default function UserList() {
 
   const navigate = useNavigate();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
@@ -113,9 +118,16 @@ export default function UserList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    axios.delete(`/users/${id}`)
+      .then(response => {
+        const updateTableData = tableData.filter(row => row.id !== id);
+        setTableData(updateTableData);
+        enqueueSnackbar('Delete success!');
+        setSelected([]);
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+      });
   };
 
   const handleDeleteRows = (selected) => {
