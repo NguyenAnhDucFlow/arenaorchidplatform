@@ -41,8 +41,6 @@ import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/l
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
 const ROLE_OPTIONS = [
   'all',
   'admin',
@@ -56,7 +54,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'company', label: 'Company', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  { id: 'createdAt', label: 'CreatedAt', align: 'center' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
 ];
@@ -178,19 +176,6 @@ export default function UserList() {
         />
 
         <Card>
-          <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-
           <Divider />
 
           <UserTableToolbar
@@ -305,8 +290,10 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   }
 
   if (filterRole !== 'all') {
-    tableData = tableData.filter((item) => item.role === filterRole);
+    tableData = tableData.filter((item) => item.role.name.toLowerCase() === filterRole);
   }
+
+  console.log("filter role", filterRole)
 
   return tableData;
 }

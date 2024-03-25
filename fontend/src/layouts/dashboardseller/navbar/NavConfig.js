@@ -27,13 +27,6 @@ const ICONS = {
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
-  {
-    subheader: 'general',
-    items: [
-      { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-    ],
-  },
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
@@ -46,36 +39,14 @@ const navConfig = [
         icon: ICONS.cart,
         children: [
           { title: 'list', path: PATH_PRODUCTOWNER.eCommerce.list },
-          { title: 'auction', path: PATH_PRODUCTOWNER.eCommerce.auction },
           { title: 'bid', path: PATH_PRODUCTOWNER.eCommerce.bid },
           { title: 'order', path: PATH_PRODUCTOWNER.eCommerce.order },
-          { title: 'order details', path: PATH_PRODUCTOWNER.eCommerce.order },
         ],
       },
 
-      // INVOICE
-      {
-        title: 'invoice',
-        path: PATH_DASHBOARD.invoice.root,
-        icon: ICONS.invoice,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.invoice.list },
-          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          { title: 'create', path: PATH_DASHBOARD.invoice.new },
-          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-        ],
-      },
     ],
   },
 
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
 ];
 
 export default navConfig;

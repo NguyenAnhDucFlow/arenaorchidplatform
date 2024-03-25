@@ -12,7 +12,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useMatch } from 'react-router';
+import { Navigate, useMatch } from 'react-router';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -107,6 +107,7 @@ export default function EcommerceBidList() {
     // Nhảy qua trang thanh toán ; bid.amount là giá tiền mà user mua sản phẩm
     // Nếu thanh toán thành công thì chạy dispatch(endAuction());
     // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+    <Navigate to={"/checkout"} />
 
     await dispatch(
       endAuction(bid.auction.id, {

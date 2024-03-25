@@ -43,7 +43,6 @@ export default function AccountGeneralSeller() {
     city: user?.city || '',
     zipCode: user?.zipCode || '',
     about: user?.about || '',
-    isPublic: user?.isPublic || false,
   };
 
   const methods = useForm({
@@ -80,7 +79,6 @@ export default function AccountGeneralSeller() {
       formData.append('city', getValues('city'));
       formData.append('zipCode', getValues('zipCode'));
       formData.append('about', getValues('about'));
-      formData.append('isPublic', getValues('isPublic'));
 
       // Replace 'url' with the URL you're posting to.
       const response = await axios.put('/users/', formData);
@@ -140,7 +138,6 @@ export default function AccountGeneralSeller() {
               }
             />
 
-            <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} />
           </Card>
         </Grid>
 
