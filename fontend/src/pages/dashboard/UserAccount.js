@@ -1,4 +1,5 @@
 import { capitalCase } from 'change-case';
+import { matchPath, useMatch } from 'react-router';
 // @mui
 import { Container, Tab, Box, Tabs } from '@mui/material';
 // routes
@@ -25,6 +26,7 @@ import {
 
 export default function UserAccount() {
   const { themeStretch } = useSettings();
+  const customerMatch = useMatch('/account');
 
   const { currentTab, onChangeTab } = useTabs('general');
 
@@ -44,7 +46,7 @@ export default function UserAccount() {
     //   icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
     //   component: <AccountNotifications />,
     // },
-    
+
     {
       value: 'change_password',
       icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
@@ -54,7 +56,12 @@ export default function UserAccount() {
 
   return (
     <Page title="User: Account Settings">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container
+        maxWidth={themeStretch ? false : 'lg'}
+        sx={{
+          marginBlock: customerMatch ? 15 : 0,
+        }}
+      >
         <HeaderBreadcrumbs
           heading="Account"
           links={[

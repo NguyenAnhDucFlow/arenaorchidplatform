@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_HOME } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -16,7 +16,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
+const MENU_OPTIONS = (role) => [
   {
     label: 'Home',
     linkTo: '/',
@@ -27,7 +27,7 @@ const MENU_OPTIONS = [
   },
   {
     label: 'Settings',
-    linkTo: PATH_DASHBOARD.user.account,
+    linkTo: role === 'Customer' ? PATH_HOME.account : PATH_DASHBOARD.user.account,
   },
 ];
 
@@ -114,7 +114,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
+          {MENU_OPTIONS(user.role).map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
               {option.label}
             </MenuItem>
