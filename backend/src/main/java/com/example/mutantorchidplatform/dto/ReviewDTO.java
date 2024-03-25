@@ -11,6 +11,7 @@ import java.util.Date;
 public class ReviewDTO {
 
     private int id;
+    private int userId;
     private String avatarUrl;
     private String comment;
     private int helpful;

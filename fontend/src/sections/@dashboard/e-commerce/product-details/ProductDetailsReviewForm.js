@@ -69,6 +69,7 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
       console.log("ratingData", ratingData);
 
       const reviewData = {
+        userId: user.id,
         avatarUrl: user.photoURL,
         comment: data.review,
         name: user.displayName,

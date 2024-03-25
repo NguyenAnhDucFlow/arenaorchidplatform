@@ -152,22 +152,12 @@ export default function Order() {
     <Page title="Order">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="Order List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Order', href: PATH_DASHBOARD.user.root },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              New User
-            </Button>
-          }
         />
 
         <Card>

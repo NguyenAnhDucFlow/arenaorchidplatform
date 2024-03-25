@@ -18,11 +18,7 @@ const menuConfig = [
     icon: <Iconify icon={'eva:home-fill'} {...ICON_SIZE} />,
     path: '/',
   },
-  {
-    title: 'Shop',
-    icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: PATH_HOME.shop,
-  },
+  
   {
     title: 'Auction',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,

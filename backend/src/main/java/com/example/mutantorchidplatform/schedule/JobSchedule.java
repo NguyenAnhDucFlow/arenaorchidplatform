@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobSchedule {
 
-    @Scheduled(fixedDelay = 500000)
-    public void hello() {
-        log.info("hello anh duc");
-    }
+//    @Scheduled(fixedDelay = 500000)
+//    public void hello() {
+//        log.info("hello anh duc");
+//    }
 }

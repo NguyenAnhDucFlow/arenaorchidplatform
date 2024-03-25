@@ -184,7 +184,7 @@ export default function HomePage() {
             )}
 
             <m.div variants={varFade().inUp}>
-              <Typography variant="h4" sx={{ mb: 3, textAlign: 'start', mt: 10 }}>
+              <Typography variant="h4" sx={{ mb: 3, textAlign: 'start', mt: 10 }} id="product_shop">
                 Discover our latest blossoms
               </Typography>
             </m.div>

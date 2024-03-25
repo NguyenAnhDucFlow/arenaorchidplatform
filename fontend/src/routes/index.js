@@ -234,18 +234,19 @@ export default function Router() {
             </AuthGuard>
           )
         },
+        { path: 'account', element: <UserAccount /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
     {
       path: 'buyer/login', element: (
-        <AuthGuard>
+        <GuestGuard>
           <LoginBuyer />
-        </AuthGuard>
+        </GuestGuard>
       )
-    },
-    { path: 'buyer/signup', element: <SignUpBuyer /> },
-    { path: 'seller/signup', element: <SignUpSeller /> },
+},
+{ path: 'buyer/signup', element: <SignUpBuyer /> },
+{ path: 'seller/signup', element: <SignUpSeller /> },
 
   ]);
 }

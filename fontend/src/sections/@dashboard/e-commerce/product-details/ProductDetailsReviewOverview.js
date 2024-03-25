@@ -7,6 +7,7 @@ import { Grid, Rating, Button, Typography, LinearProgress, Stack, Link } from '@
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,8 @@ export default function ProductDetailsReviewOverview({ product, onOpen }) {
 
   const total = sumBy(ratings, (star) => star.starCount);
 
+  const { user, logout } = useAuth();
+
   return (
     <Grid container>
       <GridStyle item xs={12} md={4}>
@@ -67,13 +70,16 @@ export default function ProductDetailsReviewOverview({ product, onOpen }) {
         </Stack>
       </GridStyle>
 
-      <GridStyle item xs={12} md={4}>
+      
+          {user ? <GridStyle item xs={12} md={4}>
         <Link href="#move_add_review" underline="none">
           <Button size="large" onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
             Write your review
           </Button>
         </Link>
-      </GridStyle>
+      </GridStyle> : null}
+
+      
     </Grid>
   );
 }
