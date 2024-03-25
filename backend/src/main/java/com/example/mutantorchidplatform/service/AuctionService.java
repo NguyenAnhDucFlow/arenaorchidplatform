@@ -43,6 +43,8 @@ public interface AuctionService {
     void delete(List<Integer> ids);
 
     void endAuction(int id, BidCreateDTO dto);
+
+    List<AuctionMetadata> listAuction();
 }
 
 @Service
@@ -169,6 +171,13 @@ class AuctionServiceImpl implements AuctionService {
         auction.setCurrentPrice(String.valueOf(dto.getAmount()));
 
         auctionRepository.save(auction);
+    }
+
+    @Override
+    public List<AuctionMetadata> listAuction() {
+        return auctionRepository.findByOrderByStartDateDesc(AuctionStatus.APPROVED)
+                .stream().map(this::convertToAuctionMetadata)
+                .collect(Collectors.toList());
     }
 
 

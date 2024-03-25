@@ -22,7 +22,7 @@ import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } fro
 
 // ----------------------------------------------------------------------
 
-export default function AccountGeneral() {
+export default function AccountGeneralSeller() {
   
   const { enqueueSnackbar } = useSnackbar();
 
@@ -64,6 +64,7 @@ export default function AccountGeneral() {
 
       // Append each field individually
       formData.append('id', user.id);
+      formData.append('role.id', 3);
       formData.append('displayName', getValues('displayName'));
       formData.append('email', getValues('email'));
       const photoFile = getValues('photoURL');

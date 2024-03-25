@@ -5,15 +5,22 @@ import { Box } from '@mui/material';
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
 import ShopProductCard from './ShopProductCard';
+import { AuctionCard } from '../auction';
 
 // ----------------------------------------------------------------------
 
 ShopProductList.propTypes = {
   products: PropTypes.array.isRequired,
   loading: PropTypes.bool,
+  isAuctions: PropTypes.bool
 };
 
-export default function ShopProductList({ products, loading }) {
+export default function ShopProductList({ products, loading, isAuctions }) {
+
+  const aaaaa = (product) => {
+    return isAuctions ? <AuctionCard key={product.id} auction={product} /> : <ShopProductCard key={product.id} product={product} />
+  }
+
   return (
     <Box
       sx={{
@@ -28,7 +35,7 @@ export default function ShopProductList({ products, loading }) {
       }}
     >
       {(loading ? [...Array(12)] : products).map((product, index) =>
-        product ? <ShopProductCard key={product.id} product={product} /> : <SkeletonProductItem key={index} />
+        product ? aaaaa(product) : <SkeletonProductItem key={index} />
       )}
     </Box>
   );
