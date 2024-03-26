@@ -156,7 +156,10 @@ export default function Router() {
 
     {
       path: 'productowner',
-      element: <DashboardSeller />,
+      element: (
+        <RoleBasedGuard accessibleRoles={['Customer', 'Product Owners']}>
+          <DashboardSeller />
+        </RoleBasedGuard>),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGINSELLER} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
@@ -227,6 +230,7 @@ export default function Router() {
         { path: 'auction', element: <Auction /> },
         { path: 'product/:name', element: <EcommerceProductDetails /> },
         { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },
+        { path: 'bid', element: <EcommerceBidList /> },
         {
           path: 'checkout', element: (
             <AuthGuard>
@@ -235,6 +239,7 @@ export default function Router() {
           )
         },
         { path: 'account', element: <UserAccount /> },
+        { path: 'seller/account', element: <SellerAccount /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -300,6 +305,7 @@ const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const SellerAccount = Loadable(lazy(() => import('../pages/dashboard/SellerAccount')));
 
 // APP
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));

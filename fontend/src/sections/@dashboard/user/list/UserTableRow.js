@@ -3,6 +3,7 @@ import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { fDate } from '../../../../utils/formatTime';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -21,7 +22,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { displayName, photoURL, company, role, isVerified, status } = row;
+  const { displayName, photoURL, company, role, createdAt, status } = row;
   
 
   const [openMenu, setOpenMenuActions] = useState(null);
@@ -53,17 +54,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         {role.name}
       </TableCell>
 
-      <TableCell align="center">
-        <Iconify
-          icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-          sx={{
-            width: 20,
-            height: 20,
-            color: 'success.main',
-            ...(!isVerified && { color: 'warning.main' }),
-          }}
-        />
-      </TableCell>
+      <TableCell align='center'>{fDate(createdAt)}</TableCell>
 
       <TableCell align="left">
         <Label

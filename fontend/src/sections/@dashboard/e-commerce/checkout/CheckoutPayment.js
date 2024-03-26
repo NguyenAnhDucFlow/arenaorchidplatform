@@ -1,13 +1,16 @@
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useLocation } from 'react-router';
+
 // @mui
 import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping } from '../../../../redux/slices/product';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, goCheckoutSuccess } from '../../../../redux/slices/product';
 
 import axios from '../../../../utils/axios';
 
@@ -19,6 +22,7 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -68,14 +72,43 @@ const CARDS_OPTIONS = [
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
 
+  const location = useLocation();
+
+  const { user } = useAuth();
+
   const { checkout } = useSelector((state) => state.product);
 
   const { total, discount, subtotal, shipping } = checkout;
 
-  console.log("checkout", checkout);
-  console.log("address", checkout.billing.id);
-  console.log("customer", checkout.billing.user.id);
-  console.log("orderdetail", checkout.cart)
+
+  useEffect(async () => {
+    const queryParams = new URLSearchParams(location.search)
+    const paymentId = queryParams.get('paymentId')
+    const PayerID = queryParams.get('PayerID')
+
+    const verifyPayment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/paypal/execute?paymentId=${paymentId}&PayerID=${PayerID}&userId=${user?.id}`
+        )
+        const data = await response.json()
+
+        if (response.ok && data.msg === '200') {
+          console.log('Payment: ', data)
+
+          await dispatch(goCheckoutSuccess(data.data))
+        }
+      } catch (error) {
+        console.log("err", error)
+      }
+    }
+
+    if (paymentId && PayerID && user) {
+      await verifyPayment()
+    }
+  }, []);
+
+
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -114,11 +147,10 @@ export default function CheckoutPayment() {
 
   const onSubmit = async (data) => {
     try {
-
       const deliveryOption = DELIVERY_OPTIONS.find(option => option.value === data.delivery);
       const paymentOption = PAYMENT_OPTIONS.find(option => option.value === data.payment);
 
-
+      // Construct the order object
       const order = {
         total,
         customer: { id: checkout.billing.user.id },
@@ -130,18 +162,42 @@ export default function CheckoutPayment() {
         })),
         deliveryOption: deliveryOption.title,
         paymentOption: paymentOption.title,
-      }
-      console.log("order:", order);
-      const response = await axios.post('/order/', order);
-      if (response.status === 200) {
-        handleNextStep();
-      } else {
-        console.error('Error saving the order')
-      }
+      };
+
+      // Check if PayPal is selected
+      if (data.payment === 'paypal') {
+        // Prepare the data for PayPal payment
+        const paymentData = {
+          total: total.toString(), // Ensure this matches your backend's expected format
+          currency: 'USD', // Change as needed
+          method: 'paypal',
+          intent: 'sale',
+          description: 'Order description here', // Customize this
+          cancelUrl: 'http://localhost:3030/checkout?cancel', // URL for canceling payment
+          successUrl: 'http://localhost:3030/checkout?success' // URL for successful payment
+        };
+
+        // If not using PayPal, or to handle other logic
+        console.log("order:", order);
+        const response = await axios.post('/order/', order);
+        
+        // Call your backend to create a PayPal payment
+        const paymentResponse = await axios.post('/paypal/pay', paymentData);
+
+        if (paymentResponse.status === 200 && paymentResponse.data) {
+          // Redirect user to PayPal for payment approval
+          window.location.href = paymentResponse.data.data;
+          return; // Prevent further execution
+        }
+        console.error('Error initiating PayPal payment');
+      } // End of PayPal payment check
+
+
     } catch (error) {
       console.error(error);
     }
   };
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

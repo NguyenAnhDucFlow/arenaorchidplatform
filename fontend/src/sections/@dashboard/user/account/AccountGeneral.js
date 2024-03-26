@@ -23,6 +23,7 @@ import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } fro
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
+  
   const { enqueueSnackbar } = useSnackbar();
 
   const { user } = useAuth();
@@ -78,8 +79,6 @@ export default function AccountGeneral() {
       formData.append('city', getValues('city'));
       formData.append('zipCode', getValues('zipCode'));
       formData.append('about', getValues('about'));
-      formData.append('isPublic', getValues('isPublic'));
-
       // Replace 'url' with the URL you're posting to.
       const response = await axios.put('/users/', formData);
 
@@ -137,8 +136,6 @@ export default function AccountGeneral() {
                 </Typography>
               }
             />
-
-            <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} />
           </Card>
         </Grid>
 

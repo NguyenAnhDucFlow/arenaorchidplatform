@@ -69,6 +69,7 @@ export const PATH_HOME = {
   signupBuyer: path(ROOTS_HOME, 'buyer/signup'),
   signupSeller: path(ROOTS_HOME, 'seller/signup'),
   account: "/account",
+  bid: path(ROOTS_HOME, 'bid'),
 };
 
 export const PATH_PAGE = {

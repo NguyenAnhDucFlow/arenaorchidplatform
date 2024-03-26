@@ -12,6 +12,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useMatch } from 'react-router';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -65,6 +66,8 @@ export default function EcommerceBidList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const customerMatch = useMatch('/bid');
+
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
@@ -104,7 +107,6 @@ export default function EcommerceBidList() {
     // Nhảy qua trang thanh toán ; bid.amount là giá tiền mà user mua sản phẩm
     // Nếu thanh toán thành công thì chạy dispatch(endAuction());
     // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
-    <Navigate to={"/checkout"} />
 
     await dispatch(
       endAuction(bid.auction.id, {
@@ -128,7 +130,10 @@ export default function EcommerceBidList() {
 
   return (
     <Page title="Ecommerce: Bid List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'}
+        sx={{
+          marginBlock: customerMatch ? 15 : 0,
+        }}>
         <HeaderBreadcrumbs
           heading="Bid List"
           links={[

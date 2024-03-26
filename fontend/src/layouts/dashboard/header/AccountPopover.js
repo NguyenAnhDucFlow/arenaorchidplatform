@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH, PATH_HOME } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_HOME, PATH_PRODUCTOWNER } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -28,6 +28,10 @@ const MENU_OPTIONS = (role) => [
   {
     label: 'Settings',
     linkTo: role === 'Customer' ? PATH_HOME.account : PATH_DASHBOARD.user.account,
+  },
+  {
+    label: 'Bid',
+    linkTo: role === 'Customer' ? PATH_HOME.bid : PATH_PRODUCTOWNER.eCommerce.bid,
   },
 ];
 
@@ -112,6 +116,7 @@ export default function AccountPopover() {
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
+        
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS(user.role).map((option) => (
