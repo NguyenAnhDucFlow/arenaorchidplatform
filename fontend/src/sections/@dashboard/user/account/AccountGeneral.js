@@ -23,7 +23,6 @@ import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } fro
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-  
   const { enqueueSnackbar } = useSnackbar();
 
   const { user } = useAuth();

@@ -27,7 +27,7 @@ import {
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
-const ITEMS_PER_PAGE = 12; // size
+const ITEMS_PER_PAGE = 10; // size
 
 export default function EcommerceShop() {
 

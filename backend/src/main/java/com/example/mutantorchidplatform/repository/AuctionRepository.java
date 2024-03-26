@@ -21,7 +21,4 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 
     @Query("SELECT a FROM Auction a WHERE a.product.id = :id")
     Product findByProductId(Long id);
-
-    @Query("SELECT a FROM Auction a WHERE a.status = :status ORDER BY a.createdAt DESC")
-    List<Auction> findByOrderByStartDateDesc(AuctionStatus status);
 }

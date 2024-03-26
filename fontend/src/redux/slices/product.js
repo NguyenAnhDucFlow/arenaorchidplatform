@@ -187,11 +187,6 @@ const slice = createSlice({
       state.checkout.activeStep += 1;
     },
 
-    goCheckoutSuccess(state, action) {
-      state.checkout.activeStep = 3;
-      state.checkout.billing = action.payload;
-    },
-
     onGotoStep(state, action) {
       const goToStep = action.payload;
       state.checkout.activeStep = goToStep;
@@ -264,7 +259,6 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
-  goCheckoutSuccess,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -362,19 +356,6 @@ export function getAuctions() {
     try {
       const response = await axios.get('/auction');
       console.log('auctions', response.data.data);
-      dispatch(slice.actions.getAuctionsSuccess(response.data.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-///
-export function getListAuction() {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/auction/getAllAction');
-      console.log('list   dsds', response.data.data);
       dispatch(slice.actions.getAuctionsSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

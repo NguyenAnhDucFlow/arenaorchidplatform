@@ -36,7 +36,7 @@ class PayPalServiceImpl implements PayPalService{
                                  String successUrl) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
-        amount.setTotal(total.toString());
+        amount.setTotal(String.format("%.2f", total));
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);

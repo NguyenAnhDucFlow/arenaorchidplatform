@@ -75,14 +75,6 @@ public class AuctionController {
                 .build();
     }
 
-    @GetMapping("/getAllAction")
-    public ResponseDTO<List<AuctionMetadata>> getLatestAuctions2() {
-        return ResponseDTO.<List<AuctionMetadata>>builder()
-                .status(200)
-                .data(auctionService.listAuction())
-                .build();
-    }
-
     @PutMapping("end/{id}")
     public ResponseDTO<Void> endAuctionByPayout(@PathVariable int id, @RequestBody @Valid BidCreateDTO dto) {
         auctionService.endAuction(id, dto);

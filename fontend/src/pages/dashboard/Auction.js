@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack, Pagination, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getListAuction, filterProducts } from '../../redux/slices/product';
+import { getProducts, filterProducts } from '../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../routes/paths';
 // hooks
@@ -26,21 +26,17 @@ import {
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
-const ITEMS_PER_PAGE = 12; // size
 
 export default function Auction() {
-  
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
 
   const [openFilter, setOpenFilter] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1); // set currentPage
+  const { products, sortBy, filters } = useSelector((state) => state.product);
 
-  const { auctions, sortBy, filters } = useSelector((state) => state.product);
-
-  const filteredProducts = applyFilter(auctions, sortBy, filters);
+  const filteredProducts = applyFilter(products, sortBy, filters);
 
   const defaultValues = {
     gender: filters.gender,
@@ -66,7 +62,7 @@ export default function Auction() {
     values.category === 'All';
 
   useEffect(() => {
-    dispatch(getListAuction());
+    dispatch(getProducts());
   }, [dispatch]);
 
   useEffect(() => {
@@ -107,15 +103,6 @@ export default function Auction() {
   const handleRemoveRating = () => {
     setValue('rating', '');
   };
-
-  // handel pagination
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const displayedProducts = filteredProducts.slice(startIndex, endIndex);
 
   return (
     <Page title="Auction">
@@ -173,16 +160,11 @@ export default function Auction() {
           )}
         </Stack>
 
-        <ShopProductList isAuctions products={filteredProducts} loading={!auctions.length && isDefault} />
+        <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
         <CartWidget />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
-        <Pagination
-            count={Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)} 
-            page={currentPage}
-            onChange={handlePageChange}
-            size="large"
-          />
+        <Pagination count={10} size="large" />
         </Box>
 
 

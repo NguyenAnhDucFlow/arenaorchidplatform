@@ -1,8 +1,6 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid } from '@mui/material';
-import { Navigate } from 'react-router';
-
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -19,20 +17,13 @@ import {
   EcommerceLatestProducts,
   EcommerceCurrentBalance,
 } from '../../sections/@dashboard/general/e-commerce';
-import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
 export default function GeneralEcommerce() {
-
-  const { user } = useAuth();
   const theme = useTheme();
   const { themeStretch } = useSettings();
-  
-  if ( user.role === 'Customer') {
-    return <Navigate  to={"/seller/account"} />
-  }
-
+ console.log("first")
   return (
     <Page title="General: E-commerce">
       <Container maxWidth={themeStretch ? false : 'xl'}>

@@ -12,7 +12,6 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { Navigate, useMatch } from 'react-router';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -65,8 +64,6 @@ export default function EcommerceBidList() {
   const { user } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
-
-  const customerMatch = useMatch('/bid');
 
   const { themeStretch } = useSettings();
 
@@ -131,10 +128,7 @@ export default function EcommerceBidList() {
 
   return (
     <Page title="Ecommerce: Bid List">
-      <Container maxWidth={themeStretch ? false : 'lg'}
-        sx={{
-          marginBlock: customerMatch ? 15 : 0,
-        }}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Bid List"
           links={[
