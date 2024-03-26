@@ -41,7 +41,9 @@ export default function SellerAccount() {
     <Page title="User: Account Settings">
       <Container
         maxWidth={themeStretch ? false : 'lg'}
-        sx={{ paddingTop: 15, paddingBottom: 10 }}
+        sx={{
+          marginBlock: customerMatch ? 15 : 0,
+        }}
       >
         <HeaderBreadcrumbs
           heading="Account"

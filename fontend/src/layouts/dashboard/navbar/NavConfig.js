@@ -28,6 +28,19 @@ const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
+    subheader: 'general',
+    items: [
+      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+      { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+    ],
+  },
+
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
+  {
     subheader: 'management',
     items: [
       // USER
@@ -47,8 +60,23 @@ const navConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
         children: [
+          { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
           { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'auction', path: PATH_DASHBOARD.eCommerce.auction },
+          { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
+          { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
+        ],
+      },
+
+      // INVOICE
+      {
+        title: 'invoice',
+        path: PATH_DASHBOARD.invoice.root,
+        icon: ICONS.invoice,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.invoice.list },
+          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
+          { title: 'create', path: PATH_DASHBOARD.invoice.new },
+          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
         ],
       },
     ],
@@ -56,6 +84,12 @@ const navConfig = [
 
   // APP
   // ----------------------------------------------------------------------
+  {
+    subheader: 'app',
+    items: [
+      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+    ],
+  },
 ];
 
 export default navConfig;

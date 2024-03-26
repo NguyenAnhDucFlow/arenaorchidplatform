@@ -124,7 +124,6 @@ export const PATH_DASHBOARD = {
     edit: (name) => path(ROOTS_DASHBOARD, `/e-commerce/product/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
     demoView: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-air-force-1-ndestrukt'),
-    auction: path(ROOTS_DASHBOARD, '/e-commerce/auction')
   },
   invoice: {
     root: path(ROOTS_DASHBOARD, '/invoice'),

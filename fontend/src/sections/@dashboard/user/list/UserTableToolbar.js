@@ -48,6 +48,20 @@ export default function UserTableToolbar({ filterName, filterRole, onFilterName,
           </MenuItem>
         ))}
       </TextField>
+
+      <TextField
+        fullWidth
+        value={filterName}
+        onChange={(event) => onFilterName(event.target.value)}
+        placeholder="Search user..."
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+            </InputAdornment>
+          ),
+        }}
+      />
     </Stack>
   );
 }

@@ -21,7 +21,10 @@ const MENU_OPTIONS = (role) => [
     label: 'Home',
     linkTo: '/',
   },
-
+  {
+    label: 'Profile',
+    linkTo: PATH_DASHBOARD.user.profile,
+  },
   {
     label: 'Settings',
     linkTo: role === 'Customer' ? PATH_HOME.account : PATH_DASHBOARD.user.account,
@@ -31,7 +34,6 @@ const MENU_OPTIONS = (role) => [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-
   const navigate = useNavigate();
 
   const { user, logout } = useAuth();

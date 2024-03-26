@@ -142,14 +142,14 @@ export default function EcommerceShop() {
           <ShopProductSearch />
 
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            {/* <FormProvider methods={methods}>
+            <FormProvider methods={methods}>
               <ShopFilterSidebar
                 onResetAll={handleResetFilter}
                 isOpen={openFilter}
                 onOpen={handleOpenFilter}
                 onClose={handleCloseFilter}
               />
-            </FormProvider> */}
+            </FormProvider>
 
             <ShopProductSort />
           </Stack>

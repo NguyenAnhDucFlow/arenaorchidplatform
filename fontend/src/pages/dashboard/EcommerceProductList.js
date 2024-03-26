@@ -41,7 +41,6 @@ import {
 import AuctionForm from '../../sections/@dashboard/e-commerce/auction/AuctionForm';
 import { DialogAnimate } from '../../components/animate';
 import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
-import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -82,8 +81,6 @@ export default function EcommerceProductList() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
-  const { user } = useAuth();
 
   const { products, isLoading } = useSelector((state) => state.product);
 
@@ -150,16 +147,14 @@ export default function EcommerceProductList() {
             { name: 'Product List' },
           ]}
           action={
-            user.role === 'productowner' && (
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-                component={RouterLink}
-                to={PATH_PRODUCTOWNER.eCommerce.new}
-              >
-                New Product
-              </Button>
-            )
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              component={RouterLink}
+              to={PATH_PRODUCTOWNER.eCommerce.new}
+            >
+              New Product
+            </Button>
           }
         />
 

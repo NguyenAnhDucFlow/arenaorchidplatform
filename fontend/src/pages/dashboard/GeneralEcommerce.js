@@ -66,6 +66,10 @@ export default function GeneralEcommerce() {
             />
           </Grid>
 
+          <Grid item xs={12} md={6} lg={4}>
+            <EcommerceSaleByGender />
+          </Grid>
+
           <Grid item xs={12} md={6} lg={8}>
             <EcommerceYearlySales />
           </Grid>

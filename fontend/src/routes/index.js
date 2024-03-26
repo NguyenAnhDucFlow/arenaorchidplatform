@@ -245,11 +245,7 @@ export default function Router() {
         </GuestGuard>
       )
     },
-    {
-      path: 'buyer/signup', element: (<GuestGuard>
-        <SignUpBuyer />
-      </GuestGuard>)
-    },
+    { path: 'buyer/signup', element: <SignUpBuyer /> },
     { path: 'seller/signup', element: <SignUpSeller /> },
 
   ]);

@@ -40,8 +40,7 @@ class RatingServiceImpl implements RatingService {
 
         Product product = modelMapper.map(ratingDTO.getProduct(), Product.class);
         rating.setProduct(product);
-        product.setTotalRating(rating.getStarCount());
-        product.setTotalReview(rating.getReviewCount());
+
         ratingRepository.save(rating);
     }
 
