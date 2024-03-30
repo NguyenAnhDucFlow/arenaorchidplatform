@@ -29,20 +29,6 @@ const Loadable = (Component) => (props) => {
   );
 };
 
-// {
-//   path: 'dashboard',
-//   element: (
-//     <RoleBasedGuard accessibleRoles={['admin']}>
-//       <AuthGuard>
-//         <DashboardLayout />
-//       </AuthGuard>
-//     </RoleBasedGuard>
-//   ),
-//   children: [
-//     // ...children routes here...
-//   ],
-// }
-
 export default function Router() {
   return useRoutes([
     {
@@ -110,45 +96,6 @@ export default function Router() {
             { path: 'account', element: <UserAccount /> },
           ],
         },
-        {
-          path: 'invoice',
-          children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
-          ],
-        },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
-          ],
-        },
-        {
-          path: 'mail',
-          children: [
-            { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
-          ],
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat />, index: true },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> },
-          ],
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> },
       ],
     },
 
@@ -179,17 +126,6 @@ export default function Router() {
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
             { path: 'order', element: <Order /> },
-          ],
-        },
-
-        {
-          path: 'invoice',
-          children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
           ],
         },
       ],
@@ -288,17 +224,6 @@ const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/Ec
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const Order = Loadable(lazy(() => import('../pages/dashboard/Order')));
 
-// INVOICE
-const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
-const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
-const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
-const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
-
-// BLOG
-const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
-const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
-const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
-
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
@@ -306,12 +231,6 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const SellerAccount = Loadable(lazy(() => import('../pages/dashboard/SellerAccount')));
-
-// APP
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
-const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));

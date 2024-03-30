@@ -26,12 +26,6 @@ export default function ProductTableToolbar({ filterName, onFilterName }) {
           ),
         }}
       />
-
-      <Tooltip title="Filter list">
-        <IconButton>
-          <Iconify icon={'ic:round-filter-list'} />
-        </IconButton>
-      </Tooltip>
     </Stack>
   );
 }

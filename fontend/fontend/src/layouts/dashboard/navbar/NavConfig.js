@@ -57,17 +57,9 @@ const navConfig = [
         icon: ICONS.cart,
         children: [
           { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
+          { title: 'auction', path: PATH_DASHBOARD.eCommerce.auction },
         ],
       },
-    ],
-  },
-
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },
 ];

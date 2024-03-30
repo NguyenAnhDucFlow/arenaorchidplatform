@@ -17,6 +17,9 @@ import {
   TablePagination,
   Tooltip,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
+import axios from '../../utils/axios';
 // redux
 import { getProductByOwnerId } from '../../redux/slices/product';
 import { useDispatch, useSelector } from '../../redux/store';
@@ -79,6 +82,8 @@ export default function EcommerceProductListProductOwner() {
 
   const { themeStretch } = useSettings();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { user } = useAuth();
 
   const navigate = useNavigate();
@@ -113,9 +118,16 @@ export default function EcommerceProductListProductOwner() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    axios.delete(`/product/${id}`)
+      .then(response => {
+        const updateTableData = tableData.filter(row => row.id !== id);
+        setTableData(updateTableData);
+        enqueueSnackbar('Delete success!');
+        setSelected([]);
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+      });
   };
 
   const handleDeleteRows = (selected) => {
