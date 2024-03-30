@@ -144,11 +144,7 @@ export default function EcommerceProductListProductOwner() {
         <HeaderBreadcrumbs
           heading="Product List"
           links={[
-            { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_PRODUCTOWNER.eCommerce.root,
-            },
+            { name: 'Home', href: "/" },
             { name: 'Product List' },
           ]}
           action={
