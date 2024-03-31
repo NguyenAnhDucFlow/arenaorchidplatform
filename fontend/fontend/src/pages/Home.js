@@ -99,8 +99,8 @@ export default function HomePage() {
     dispatch(getAuctions());
   }, [dispatch]);
 
-  console.log('products', products);
-  console.log('auctions', auctions);
+  // console.log('products', products);
+  // console.log('auctions', auctions);
 
   const settings = {
     arrows: false,

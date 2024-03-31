@@ -154,7 +154,8 @@ const slice = createSlice({
           if (isExisted) {
             return {
               ..._product,
-              quantity: _product.quantity + 1,
+              // subtotal: _product.price * (_product.quantity + product.quantity),
+              quantity: product.quantity,
             };
           }
           return _product;
@@ -315,7 +316,7 @@ export function getProductsPageable(page = 0, size = 8) {
       const response = await axios.get('/product/pageable', {
         params: { currentPage: page, size },
       });
-      console.log(response.data.data);
+      // console.log(response.data.data);
       dispatch(slice.actions.getProductsPageableSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -329,11 +330,11 @@ export function getProduct(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(name);
+      // console.log(name);
       const response = await axios.get('/product/name', {
         params: { name },
       });
-      console.log(response.data.data);
+      // console.log(response.data.data);
       dispatch(slice.actions.getProductSuccess(response.data.data));
     } catch (error) {
       console.error(error);

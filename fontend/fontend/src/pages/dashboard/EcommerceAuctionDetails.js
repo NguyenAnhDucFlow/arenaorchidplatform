@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import {
@@ -14,13 +14,12 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
   Stack,
 } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { addCart, onGotoStep, getProductById, getAuction } from '../../redux/slices/product';
+import { onGotoStep, getProductById, getAuction } from '../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../routes/paths';
 // hooks
@@ -58,10 +57,6 @@ export default function EcommerceAuctionDetails() {
 
     return () => clearInterval(interval);
   }, [dispatch, auctionId, productId]);
-
-  const handleAddCart = (product) => {
-    dispatch(addCart(product));
-  };
 
   const handleGotoStep = (step) => {
     dispatch(onGotoStep(step));

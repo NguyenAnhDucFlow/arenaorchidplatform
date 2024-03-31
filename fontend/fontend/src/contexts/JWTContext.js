@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
+import { persistor, useDispatch } from '../redux/store';
+import { resetCart } from '../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +67,7 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const mainDispatch = useDispatch();
 
   useEffect(() => {
     const initialize = async () => {
@@ -82,8 +85,8 @@ function AuthProvider({ children }) {
             payload: {
               isAuthenticated: true,
               user: {
-                ...user, 
-                role: user.role.name
+                ...user,
+                role: user.role.name,
               },
             },
           });
@@ -128,7 +131,6 @@ function AuthProvider({ children }) {
   };
 
   const register = async (email, password, firstName, lastName, displayName) => {
-
     const formData = new FormData();
     formData.append('email', email);
     formData.append('password', password);
@@ -138,8 +140,8 @@ function AuthProvider({ children }) {
 
     const response = await axios.post('/users/register', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
     const { accessToken, user } = response.data.data;
     console.log(user);
@@ -155,6 +157,12 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+
+    // Clear cart
+    // persistor.pause();
+    await persistor.flush().then(() => persistor.purge());
+    mainDispatch(resetCart());
+
     dispatch({ type: 'LOGOUT' });
   };
 

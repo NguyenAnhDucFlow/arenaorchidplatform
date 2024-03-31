@@ -50,7 +50,6 @@ ProductDetailsSummary.propTypes = {
 
 export default function ProductDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
-
   const navigate = useNavigate();
 
   const {
@@ -68,7 +67,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     inventoryType,
   } = product;
 
-  const alreadyProduct = cart.map((item) => item.id).includes(id);
+  const alreadyProduct = cart.filter((item) => item.id === id)[0];
+  const isAlreadyProduct = alreadyProduct !== undefined;
 
   const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
@@ -80,7 +80,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     price,
     color: colors[0],
     size: sizes[4],
-    quantity: available < 1 ? 0 : 1,
+    // eslint-disable-next-line no-nested-ternary
+    quantity: isAlreadyProduct ? alreadyProduct.quantity : available < 1 ? 0 : 1,
   };
 
   const methods = useForm({
@@ -93,7 +94,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   const onSubmit = async (data) => {
     try {
-      if (!alreadyProduct) {
+      if (!isAlreadyProduct) {
         onAddCart({
           ...data,
           subtotal: data.price * data.quantity,
