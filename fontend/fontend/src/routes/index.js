@@ -126,7 +126,7 @@ export default function Router() {
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
             { path: 'order', element: <Order /> },
-            { path: 'orderDetails', element: <OrderDetails /> },
+            { path: 'orderDetails/:id', element: <OrderDetails /> },
           ],
         },
       ],

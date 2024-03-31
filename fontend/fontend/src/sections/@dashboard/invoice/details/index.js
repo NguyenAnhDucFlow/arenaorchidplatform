@@ -11,12 +11,17 @@ import {
   Divider,
   IconButton,
   Box,
+  ListItemAvatar,
+  Avatar,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PersonIcon from '@mui/icons-material/Person';
 
-const OrderDetails = () => {
-  // Your data fetching and state management would go here
+const OrderDetails = ({ order }) => {
+
+  console.log("ssssss", order)
+  const { customer } = order
 
   return (
     <Box p={3}>
@@ -24,13 +29,8 @@ const OrderDetails = () => {
         {/* Details Section */}
         <Grid item xs={12} md={8}>
           <Card>
-            <CardHeader 
-              title="Details" 
-              action={
-                <IconButton aria-label="settings">
-                  <EditIcon />
-                </IconButton>
-              } 
+            <CardHeader
+              title="Details"
             />
             <CardContent>
               {/* Product Details, History, etc. would go here */}
@@ -41,27 +41,45 @@ const OrderDetails = () => {
         {/* Customer Info, Delivery, Shipping, Payment */}
         <Grid item xs={12} md={4}>
           <Card>
-            <CardHeader 
-              title="Customer Info" 
-              action={
-                <IconButton aria-label="settings">
-                  <EditIcon />
-                </IconButton>
-              }
+            <CardHeader
+              title="Customer Info"
+
             />
             <CardContent>
-              {/* Customer Info fields */}
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar src={customer.photoURL}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={customer.displayName}
+                    secondary={customer.email}
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+                <ListItem>
+                  <ListItemText
+                    primary="Phone Number"
+                    secondary={customer.phoneNumber}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Address"
+                    secondary={`${customer.address}, ${customer.city}, ${customer.state}, ${customer.country}, ZIP: ${customer.zipCode}`}
+                  />
+                </ListItem>
+                {/* Add more customer details if needed */}
+              </List>
             </CardContent>
           </Card>
           <Box mt={3}>
             <Card>
-              <CardHeader 
-                title="Delivery" 
-                action={
-                  <IconButton aria-label="settings">
-                    <EditIcon />
-                  </IconButton>
-                }
+              <CardHeader
+                title="Delivery"
+
               />
               <CardContent>
                 {/* Delivery fields */}
@@ -70,13 +88,9 @@ const OrderDetails = () => {
           </Box>
           <Box mt={3}>
             <Card>
-              <CardHeader 
-                title="Shipping" 
-                action={
-                  <IconButton aria-label="settings">
-                    <EditIcon />
-                  </IconButton>
-                }
+              <CardHeader
+                title="Shipping"
+
               />
               <CardContent>
                 {/* Shipping fields */}
@@ -85,13 +99,9 @@ const OrderDetails = () => {
           </Box>
           <Box mt={3}>
             <Card>
-              <CardHeader 
-                title="Payment" 
-                action={
-                  <IconButton aria-label="settings">
-                    <EditIcon />
-                  </IconButton>
-                }
+              <CardHeader
+                title="Payment"
+
               />
               <CardContent>
                 {/* Payment fields */}

@@ -29,7 +29,7 @@ export const PATH_PRODUCTOWNER = {
     list: path(ROOTS_PRODUCTOWNER, '/e-commerce/list'),
     bid: path(ROOTS_PRODUCTOWNER, '/e-commerce/bid'),
     order: path(ROOTS_PRODUCTOWNER, '/e-commerce/order'),
-    orderDetails: path(ROOTS_PRODUCTOWNER, '/e-commerce/orderDetails'),
+    orderDetails: (id) => path(ROOTS_PRODUCTOWNER, `/e-commerce/orderDetails/${id}`),
     checkout: path(ROOTS_PRODUCTOWNER, '/e-commerce/checkout'),
     new: path(ROOTS_PRODUCTOWNER, '/e-commerce/product/new'),
     view: (name) => path(ROOTS_PRODUCTOWNER, `/e-commerce/product/${name}`),
