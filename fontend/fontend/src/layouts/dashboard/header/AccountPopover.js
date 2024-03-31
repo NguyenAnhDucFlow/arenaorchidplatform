@@ -15,7 +15,6 @@ import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
-
 const MENU_OPTIONS = (role) => [
   {
     label: 'Home',
@@ -30,7 +29,6 @@ const MENU_OPTIONS = (role) => [
     linkTo: role === 'Customer' ? PATH_HOME.bid : PATH_PRODUCTOWNER.eCommerce.bid,
   },
 ];
-
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
@@ -112,11 +110,10 @@ export default function AccountPopover() {
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-        
 
         <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS(user.role).map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+          {MENU_OPTIONS(user?.role.name).map((option) => (
+            <MenuItem key={option.linkTo} to={option.linkTo} component={RouterLink} onClick={handleClose}>
               {option.label}
             </MenuItem>
           ))}

@@ -115,7 +115,9 @@ class BidServiceImpl implements BidService {
     @Override
     public Map<String, List<BidDetailDTO>> getAllByUserId(int userId) {
         // Bid, Auction, Product
-        List<Bid> bids = bidRepository.findAllByUserId(userId);
+        List<Bid> bids = bidRepository.findAllByUserId(userId).stream().sorted(
+                (b1, b2) -> Date.from(b2.getCreatedAt().toInstant()).compareTo(Date.from(b1.getCreatedAt().toInstant()))
+        ).toList();
 
         // Get all the auctions that the user has bidded on
         List<Auction> auctions = bids.stream().map(Bid::getAuction).toList();
@@ -124,10 +126,9 @@ class BidServiceImpl implements BidService {
         // bid with status "PENDING" and "DONE" are considered.
         List<Bid> highestBids = auctions.stream()
                 .map(auction -> auction.getBids().stream()
-                        .filter(bid -> bid.getStatus().equals(BidStatus.PENDING) || bid.getStatus().equals(BidStatus.DONE))
                         .min((b1, b2) -> {
                             if (b1.getAmount() == b2.getAmount())
-                                return Date.from(b1.getUpdatedAt().toInstant()).compareTo(Date.from(b2.getUpdatedAt().toInstant()));
+                                return Date.from(b1.getCreatedAt().toInstant()).compareTo(Date.from(b2.getCreatedAt().toInstant()));
                             return Double.compare(b2.getAmount(), b1.getAmount());
                         }).orElse(null))
                 .toList();

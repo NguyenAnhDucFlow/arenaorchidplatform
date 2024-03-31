@@ -14,7 +14,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   const { user } = useContext(AuthContext); 
 
   
-  const currentRole = user?.role; 
+  const currentRole = user?.role.name; 
   console.log("currentRole", currentRole)
 
   if (!accessibleRoles.includes(currentRole)) {

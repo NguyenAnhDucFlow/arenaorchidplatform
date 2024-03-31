@@ -163,7 +163,7 @@ export default function EcommerceProductList() {
             { name: 'Product List' },
           ]}
           action={
-            user.role === 'productowner' && (
+            user.role.name === 'productowner' && (
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
