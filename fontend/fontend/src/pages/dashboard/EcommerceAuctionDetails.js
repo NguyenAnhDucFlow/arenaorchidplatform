@@ -50,10 +50,10 @@ export default function EcommerceAuctionDetails() {
   useEffect(() => {
     dispatch(getProductById(productId));
 
-    // fetch auction details every 2 seconds
+    // fetch auction details every 1 seconds
     const interval = setInterval(() => {
       dispatch(getAuction(auctionId));
-    }, 2000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [dispatch, auctionId, productId]);
@@ -157,7 +157,7 @@ export default function EcommerceAuctionDetails() {
                                   ${row.amount}
                                 </Typography>
                               </TableCell>
-                              <TableCell align="right">{new Date(row.updatedAt).toLocaleString()}</TableCell>
+                              <TableCell align="right">{new Date(row.createdAt).toLocaleString()}</TableCell>
                             </TableRow>
                           ))}
                       </TableBody>

@@ -55,18 +55,13 @@ class BidServiceImpl implements BidService {
     public void create(BidCreateDTO bidDTO) {
         User user = userService.getUserById(bidDTO.getUserId());
         Auction auction = auctionService.getAuctionById(bidDTO.getAuctionId());
-        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
-        Bid bid;
 
-        if (existedBid.isPresent()) {
-            bid = existedBid.get();
-            bid.setAmount(bidDTO.getAmount());
-            bid.setStatus(bidDTO.getStatus());
-        } else {
-            bid = modelMapper.map(bidDTO, Bid.class);
-            bid.setUser(user);
-            bid.setAuction(auction);
-        }
+        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
+        existedBid.ifPresent(value -> value.setStatus(BidStatus.CANCELLED));
+
+        Bid bid = modelMapper.map(bidDTO, Bid.class);
+        bid.setUser(user);
+        bid.setAuction(auction);
 
         if (auction.getCurrentPrice().isEmpty())
             auction.setCurrentPrice(String.valueOf(bidDTO.getAmount()));
