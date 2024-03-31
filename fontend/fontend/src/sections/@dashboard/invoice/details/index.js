@@ -35,11 +35,11 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-InvoiceDetails.propTypes = {
+OrderDetail.propTypes = {
   invoice: PropTypes.object.isRequired,
 };
 
-export default function InvoiceDetails({ invoice }) {
+export default function OrderDetail({ invoice }) {
   const theme = useTheme();
 
   if (!invoice) {
