@@ -1,5 +1,6 @@
 package com.example.mutantorchidplatform.dto;
 
+import com.example.mutantorchidplatform.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,4 +23,5 @@ public class ReviewDTO {
     private double rating;
     @JsonBackReference //được đặt trên "bên ngược lại" (nơi có tham chiếu đến "bên chủ").
     private ProductDTO product;
+    private UserDTO user;
 }

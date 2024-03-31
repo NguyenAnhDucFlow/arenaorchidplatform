@@ -111,6 +111,14 @@ public class ProductController {
                 .build();
     }
 
+    @GetMapping("/findTop5NewProducts/")
+    public ResponseDTO<List<ProductDTO>> findTop5NewProducts() {
+        return ResponseDTO.<List<ProductDTO>>builder()
+                .status(200)
+                .data(productService.findTop5NewProducts())
+                .build();
+    }
+
     @PutMapping("/{id}")
     public ResponseDTO<Void> update(@PathVariable long id, @ModelAttribute @Valid ProductDTO productDTO) throws IllegalStateException, IOException, S3Exception {
 

@@ -41,6 +41,8 @@ public interface ProductService {
 
     List<ProductDTO> getAllProductByCategory(String category);
 
+    List<ProductDTO> findTop5NewProducts();
+
 }
 
 @Service
@@ -170,6 +172,14 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getAllProductByCategory(String category) {
         List<Product> products = productRepository.findAllByCategory(category);
+        return products.stream()
+                .map(this::convertToProductDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> findTop5NewProducts() {
+        List<Product> products = productRepository.findTop5NewProducts();
         return products.stream()
                 .map(this::convertToProductDTO)
                 .collect(Collectors.toList());

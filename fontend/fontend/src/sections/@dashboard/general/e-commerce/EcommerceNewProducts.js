@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import { Link as RouterLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // @mui
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Button, CardContent, Typography } from '@mui/material';
-// _mock_
-import { _ecommerceNewProducts } from '../../../../_mock';
+import axios from '../../../../utils/axios';
 // components
 import Image from '../../../../components/Image';
 import { CarouselDots } from '../../../../components/carousel';
@@ -38,10 +38,24 @@ export default function EcommerceNewProducts() {
     ...CarouselDots({ position: 'absolute', right: 24, bottom: 24 }),
   };
 
+  const [productArr, setProduct] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/product/findTop5NewProducts/');
+        setProduct(response.data.data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+    fetchData();
+  }, [])
+
   return (
     <Card>
       <Slider {...settings}>
-        {_ecommerceNewProducts.map((item) => (
+        {productArr.map((item) => (
           <CarouselItem key={item.name} item={item} />
         ))}
       </Slider>
@@ -59,7 +73,9 @@ CarouselItem.propTypes = {
 };
 
 function CarouselItem({ item }) {
-  const { image, name } = item;
+  const { cover, name } = item;
+
+  console.log("item ", item);
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -84,7 +100,7 @@ function CarouselItem({ item }) {
         </Button>
       </CardContent>
       <OverlayStyle />
-      <Image alt={name} src={image} sx={{ height: { xs: 280, xl: 320 } }} />
+      <Image alt={name} src={cover} sx={{ height: { xs: 280, xl: 320 } }} />
     </Box>
   );
 }

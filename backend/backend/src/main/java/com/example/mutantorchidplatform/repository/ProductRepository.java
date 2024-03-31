@@ -17,4 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByOwnerId(long ownerId);
     Optional<Product> findByName(String name);
     List<Product> findAllByCategory(String name);
+
+    @Query(value = "SELECT * FROM product ORDER BY created_at DESC LIMIT 5", nativeQuery = true)
+    List<Product> findTop5NewProducts();
 }
