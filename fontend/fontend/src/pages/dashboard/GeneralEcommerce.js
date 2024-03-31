@@ -24,7 +24,7 @@ export default function GeneralEcommerce() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
   
-  if ( user.role === 'Customer') {
+  if ( user.role.name === 'Customer') {
     return <Navigate  to={"/seller/account"} />
   }
 

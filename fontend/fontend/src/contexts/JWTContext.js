@@ -86,7 +86,7 @@ function AuthProvider({ children }) {
               isAuthenticated: true,
               user: {
                 ...user,
-                role: user.role.name,
+                role: user.role,
               },
             },
           });

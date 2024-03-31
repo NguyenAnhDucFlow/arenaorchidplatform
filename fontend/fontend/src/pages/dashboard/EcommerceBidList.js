@@ -164,7 +164,7 @@ export default function EcommerceBidList() {
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
                     row ? (
                       <BidTableRow
-                        key={new Date().toISOString()}
+                        key={row.id}
                         row={row}
                         winningBid={highestBids.find((highestBid) => highestBid.auction.id === row.auction.id)}
                         onCancelRow={() => handleCancelRow(row.id)}
