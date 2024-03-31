@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // @mui
 import { Container } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PRODUCTOWNER } from '../../routes/paths';
 // _mock_
 import { _invoices } from '../../_mock';
 // hooks
@@ -24,14 +24,14 @@ export default function OrderDetails() {
 
   const invoice = _invoices.find((invoice) => invoice.id === id);
 
-  const [order, setOrder] = useState([]);
+  const [orderArr, setOrder] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/order/');
-        setOrder(response.data)
-        console.log("orderrrr", response.data);
+        setOrder(response.data.data)
+        console.log("orderrrr", response.data.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
@@ -45,16 +45,16 @@ export default function OrderDetails() {
         <HeaderBreadcrumbs
           heading="Invoice Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
             {
-              name: 'Invoices',
-              href: PATH_DASHBOARD.invoice.root,
+              name: 'Order',
+              href: PATH_PRODUCTOWNER.eCommerce.order,
             },
-            { name: invoice?.invoiceNumber || '' },
+            { name: 'Order Details' },
           ]}
         />
 
-        <OrderDetail invoice={invoice} />
+        <OrderDetail orderArr={orderArr} />
       </Container>
     </Page>
   );
