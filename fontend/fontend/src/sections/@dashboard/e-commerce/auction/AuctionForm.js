@@ -21,8 +21,8 @@ const getInitialValues = (product) => {
   const _event = {
     startDate: new Date(),
     endDate: new Date(),
-    startPrice: 0,
-    stepPrice: 0,
+    startPrice: 1,
+    stepPrice: 1,
   };
 
   if (product) {
@@ -47,8 +47,8 @@ export default function AuctionForm({ product, onCancel }) {
   const EventSchema = Yup.object().shape({
     startDate: Yup.date().required('Start date is required'),
     endDate: Yup.date().required('End date is required'),
-    startPrice: Yup.number().min(0, "Can't not be a negative number").required('Start price is required'),
-    stepPrice: Yup.number().min(0, "Can't not be a negative number").required('Step price is required'),
+    startPrice: Yup.number().min(1, "Can't not less than 1").required('Start price is required'),
+    stepPrice: Yup.number().min(1, "Can't not less than 1").required('Step price is required'),
   });
 
   const methods = useForm({

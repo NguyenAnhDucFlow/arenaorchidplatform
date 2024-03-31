@@ -106,37 +106,38 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
 
     setLoading(true);
 
-    if (
-      data.amount >= product.price &&
-      // eslint-disable-next-line no-alert
-      window.confirm('Your bid is higher than the Buyout price. Do you want to buyout now?')
-    ) {
-      // TODO: if user bid higher than product price then buy now
-      // Nhảy qua trang thanh toán luôn; data.amount là giá tiền mà user mua sản phẩm
-      // Nếu thanh toán thành công thì chạy dispatch(endAuction());
-      // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+    if (data.amount >= product.price) {
+      if (
+        // eslint-disable-next-line no-alert
+        window.confirm('Your bid is higher than the Buyout price. Do you want to buyout now?')
+      ) {
+        // TODO: if user bid higher than product price then buy now
+        // Nhảy qua trang thanh toán luôn; data.amount là giá tiền mà user mua sản phẩm
+        // Nếu thanh toán thành công thì chạy dispatch(endAuction());
+        // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
 
-      dispatch(
-        endAuction(auction.id, {
+        dispatch(
+          endAuction(auction.id, {
+            amount: data.amount,
+            userId: user.id,
+            auctionId: auction.id,
+            auctionEndDate: new Date().toISOString(),
+          })
+        );
+        enqueueSnackbar('Payout success!', { variant: 'success' });
+      }
+    } else {
+      await dispatch(
+        createBid({
           amount: data.amount,
           userId: user.id,
           auctionId: auction.id,
-          auctionEndDate: new Date().toISOString(),
         })
       );
-      enqueueSnackbar('Payout success!', { variant: 'success' });
-      return;
+      enqueueSnackbar('Bid success!');
     }
 
-    await dispatch(
-      createBid({
-        amount: data.amount,
-        userId: user.id,
-        auctionId: auction.id,
-      })
-    );
     setLoading(false);
-    enqueueSnackbar('Bid success!');
   };
 
   const handlePayout = () => {
@@ -149,7 +150,11 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
       return;
     }
     // eslint-disable-next-line no-alert
-    if (!window.confirm('Do you want to buyout now?')) return;
+    if (!window.confirm('Do you want to buyout now?')) {
+      console.log('cancel');
+      return;
+    }
+    console.log('buyout');
 
     // TODO:  buyout
     // Nhảy qua trang thanh toán luôn; product.price là giá tiền mà user mua sản phẩm

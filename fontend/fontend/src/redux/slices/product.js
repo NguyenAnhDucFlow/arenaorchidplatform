@@ -403,7 +403,7 @@ export function getAuction(id) {
     // dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/auction/${id}`);
-      console.log('auction', response.data.data);
+      // console.log('auction', response.data.data);
       dispatch(slice.actions.getAuctionSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
