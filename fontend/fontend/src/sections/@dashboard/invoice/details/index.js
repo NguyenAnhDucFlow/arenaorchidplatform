@@ -1,102 +1,115 @@
 import React from 'react';
-import { 
-  Card, 
-  Typography, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  ListItemAvatar, 
-  Avatar, 
-  Divider, 
-  Box 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  IconButton,
+  Box,
+  ListItemAvatar,
+  Avatar,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PersonIcon from '@mui/icons-material/Person';
 
-const OrderDetails = () => {
-  // Giả định rằng bạn đã có dữ liệu này từ API hoặc state management
-  const orderDetails = {
-    product: {
-      name: 'Nike Air Force 1 NDESTRUKT',
-      sku: '16HU9R0',
-      quantity: 1,
-      price: '83.74',
-      imageUrl: '/path/to/image.jpg', // Đường dẫn tới ảnh sản phẩm
-    },
-    customer: {
-      name: 'Lucian Obrien',
-      email: 'ashlynn_ohara62@gmail.com',
-      ip: '192.158.1.38',
-    },
-    delivery: {
-      shipBy: 'DHL',
-      speed: 'Standard',
-      trackingNo: 'SPX037739199373',
-    },
-    shipping: {
-      address: '19034 Verna Unions Apt. 164 - Honolulu, RI / 87535',
-      phone: '365-374-4961',
-    },
-    payment: {
-      method: 'Credit Card',
-      lastFourDigits: '5678',
-    },
-    history: [
-      { status: 'Delivery successful', date: '30 Mar 2024 10:50 AM' },
-      // ... các bước khác của lịch sử
-    ],
-  };
+const OrderDetails = ({ order }) => {
+
+  console.log("ssssss", order)
+  const { customer } = order
 
   return (
-    <Box display="flex" justifyContent="space-between" p={3}>
-      {/* Details */}
-      <Card sx={{ maxWidth: 345 }}>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar alt={orderDetails.product.name} src={orderDetails.product.imageUrl} />
-          </ListItemAvatar>
-          <ListItemText 
-            primary={orderDetails.product.name} 
-            secondary={`SKU: ${orderDetails.product.sku}`} 
-          />
-          <Typography variant="subtitle1">{`x${orderDetails.product.quantity}`}</Typography>
-          <Typography variant="subtitle1">{`$${orderDetails.product.price}`}</Typography>
-        </ListItem>
-        {/* Thêm các chi tiết về giá ở đây */}
-      </Card>
+    <Box p={3}>
+      <Grid container spacing={3}>
+        {/* Details Section */}
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardHeader
+              title="Details"
+            />
+            <CardContent>
+              {/* Product Details, History, etc. would go here */}
+            </CardContent>
+          </Card>
+        </Grid>
 
-      {/* Customer Info */}
-      <Card>
-        <List>
-          <ListItem>
-            <ListItemText primary="Customer Info" secondary={orderDetails.customer.name} />
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="Email" secondary={orderDetails.customer.email} />
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="IP Address" secondary={orderDetails.customer.ip} />
-          </ListItem>
-          {/* Thêm nút "Add to Blacklist" nếu cần */}
-        </List>
-      </Card>
+        {/* Customer Info, Delivery, Shipping, Payment */}
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardHeader
+              title="Customer Info"
 
-      {/* History */}
-      <Card>
-        <List>
-          <ListItem>
-            <ListItemText primary="History" />
-          </ListItem>
-          {orderDetails.history.map((item, index) => (
-            <React.Fragment key={index}>
-              <ListItem>
-                <ListItemText primary={item.status} secondary={item.date} />
-              </ListItem>
-              {index < orderDetails.history.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-        </List>
-      </Card>
+            />
+            <CardContent>
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar src={customer.photoURL}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={customer.displayName}
+                    secondary={customer.email}
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+                <ListItem>
+                  <ListItemText
+                    primary="Phone Number"
+                    secondary={customer.phoneNumber}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Address"
+                    secondary={`${customer.address}, ${customer.city}, ${customer.state}, ${customer.country}, ZIP: ${customer.zipCode}`}
+                  />
+                </ListItem>
+                {/* Add more customer details if needed */}
+              </List>
+            </CardContent>
+          </Card>
+          <Box mt={3}>
+            <Card>
+              <CardHeader
+                title="Delivery"
 
-      {/* Thêm các phần khác như Delivery, Shipping và Payment tương tự */}
+              />
+              <CardContent>
+                {/* Delivery fields */}
+              </CardContent>
+            </Card>
+          </Box>
+          <Box mt={3}>
+            <Card>
+              <CardHeader
+                title="Shipping"
+
+              />
+              <CardContent>
+                {/* Shipping fields */}
+              </CardContent>
+            </Card>
+          </Box>
+          <Box mt={3}>
+            <Card>
+              <CardHeader
+                title="Payment"
+
+              />
+              <CardContent>
+                {/* Payment fields */}
+              </CardContent>
+            </Card>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

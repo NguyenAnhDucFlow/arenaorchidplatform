@@ -24,14 +24,14 @@ export default function OrderDetails() {
 
   const invoice = _invoices.find((invoice) => invoice.id === id);
 
-  const [orderArr, setOrder] = useState([]);
+  const [orderArr, setOrder] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/order/');
+        const response = await axios.get(`/order/${id}`);
+        console.log("orderrrsssssssssssr", response.data.data);
         setOrder(response.data.data)
-        console.log("orderrrr", response.data.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
@@ -53,8 +53,10 @@ export default function OrderDetails() {
             { name: 'Order Details' },
           ]}
         />
+        {
+          orderArr && <OrderDetail order={orderArr} />
+        }
 
-        <OrderDetail orderArr={orderArr} />
       </Container>
     </Page>
   );
