@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import Countdown from 'react-countdown';
+import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
@@ -62,6 +63,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
 
   const { name, price, totalRating, totalReview } = product;
 
@@ -88,6 +90,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
   const highestBid = currentUserBids.length > 0 ? currentUserBids.sort((a, b) => b.amount - a.amount)[0].amount : 0;
 
   const onSubmitBid = async (data) => {
+    if (loading) return;
     if (isEnded) {
       enqueueSnackbar('Auction is over', { variant: 'error' });
       return;
@@ -96,6 +99,12 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
       enqueueSnackbar('Please login to bid', { variant: 'error' });
       return;
     }
+    if (data.amount <= auction.currentPrice) {
+      enqueueSnackbar('Your bid must be higher than the current highest bid', { variant: 'error' });
+      return;
+    }
+
+    setLoading(true);
 
     if (
       data.amount >= product.price &&
@@ -126,6 +135,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
         auctionId: auction.id,
       })
     );
+    setLoading(false);
     enqueueSnackbar('Bid success!');
   };
 
@@ -244,7 +254,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
                 onIncrementQuantity={() => setValue('amount', values.amount + (Number(auction.stepPrice) || 1))}
                 onDecrementQuantity={() => setValue('amount', values.amount - (Number(auction.stepPrice) || 1))}
               />
-              <Button size="small" type="submit" variant="contained" sx={{ fontSize: '14px' }}>
+              <Button size="small" type="submit" variant="contained" sx={{ fontSize: '14px' }} disabled={loading}>
                 <Iconify icon={'mingcute:auction-line'} />
                 &nbsp;&nbsp;Bid
               </Button>
@@ -256,7 +266,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
 
         {!isEnded && (
           <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-            <Button fullWidth size="large" type="button" variant="outlined" onClick={handlePayout}>
+            <Button fullWidth size="large" type="button" variant="outlined" onClick={handlePayout} disabled={loading}>
               Buy Now for {fCurrency(price)}
             </Button>
           </Stack>
