@@ -150,25 +150,23 @@ class AuctionServiceImpl implements AuctionService {
         Auction auction = auctionRepository.findById(id).orElseThrow(NoResultException::new);
         User user = userService.getUserById(dto.getUserId());
 
-        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
-        Bid bid;
+        auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).forEach(
+                b -> {
+                    if (!b.getStatus().equals(BidStatus.CANCELLED))
+                        b.setStatus(BidStatus.CANCELLED);
+                }
+        );
 
-        if (existedBid.isPresent()) {
-            bid = existedBid.get();
-            bid.setAmount(dto.getAmount());
-            bid.setStatus(BidStatus.DONE);
-        } else {
-            bid = new Bid();
-            bid.setAmount(dto.getAmount());
-            bid.setUser(user);
-            bid.setAuction(auction);
-            bid.setStatus(BidStatus.DONE);
-            auction.getBids().add(bid);
-        }
-        if (dto.getAuctionEndDate() != null)
-            auction.setEndDate(dto.getAuctionEndDate());
+        Bid bid = modelMapper.map(dto, Bid.class);
+        bid.setUser(user);
+        bid.setAuction(auction);
+        bid.setStatus(BidStatus.DONE);
+        auction.getBids().add(bid);
         auction.setStatus(AuctionStatus.CLOSED);
         auction.setCurrentPrice(String.valueOf(dto.getAmount()));
+
+        if (dto.getAuctionEndDate() != null)
+            auction.setEndDate(dto.getAuctionEndDate());
 
         auctionRepository.save(auction);
     }

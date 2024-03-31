@@ -56,8 +56,12 @@ class BidServiceImpl implements BidService {
         User user = userService.getUserById(bidDTO.getUserId());
         Auction auction = auctionService.getAuctionById(bidDTO.getAuctionId());
 
-        Optional<Bid> existedBid = auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).findFirst();
-        existedBid.ifPresent(value -> value.setStatus(BidStatus.CANCELLED));
+        auction.getBids().stream().filter(b -> Objects.equals(b.getUser().getId(), user.getId())).forEach(
+                b -> {
+                    if (!b.getStatus().equals(BidStatus.CANCELLED))
+                        b.setStatus(BidStatus.CANCELLED);
+                }
+        );
 
         Bid bid = modelMapper.map(bidDTO, Bid.class);
         bid.setUser(user);
@@ -126,6 +130,7 @@ class BidServiceImpl implements BidService {
         // bid with status "PENDING" and "DONE" are considered.
         List<Bid> highestBids = auctions.stream()
                 .map(auction -> auction.getBids().stream()
+                        .filter(bid -> bid.getStatus().equals(BidStatus.PENDING) || bid.getStatus().equals(BidStatus.DONE))
                         .min((b1, b2) -> {
                             if (b1.getAmount() == b2.getAmount())
                                 return Date.from(b1.getCreatedAt().toInstant()).compareTo(Date.from(b2.getCreatedAt().toInstant()));
