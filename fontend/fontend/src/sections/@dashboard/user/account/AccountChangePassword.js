@@ -8,20 +8,21 @@ import { Stack, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
+import useAuth from '../../../../hooks/useAuth';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
+  const { user } = useAuth();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
     newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
   });
 
   const defaultValues = {
-    oldPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   };
@@ -31,19 +32,26 @@ export default function AccountChangePassword() {
     defaultValues,
   });
 
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const { reset, handleSubmit, formState: { isSubmitting } } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const formData = new FormData();
+      formData.append('id', user.id);
+      formData.append('password', data.newPassword);
+
+      // Ensure your API can handle multipart/form-data content type
+      await axios.put('/users/update-password', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       reset();
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('Password updated successfully!');
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Failed to update password', { variant: 'error' });
     }
   };
 
@@ -51,8 +59,6 @@ export default function AccountChangePassword() {
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
-          <RHFTextField name="oldPassword" type="password" label="Old Password" />
-
           <RHFTextField name="newPassword" type="password" label="New Password" />
 
           <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />

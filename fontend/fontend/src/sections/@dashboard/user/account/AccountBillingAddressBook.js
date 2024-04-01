@@ -28,43 +28,17 @@ export default function AccountBillingAddressBook({ addressBook }) {
             }}
           >
             <Typography variant="subtitle1" gutterBottom>
-              {address.name}
+              {address.receiver}
             </Typography>
 
             <Typography variant="body2" gutterBottom>
               <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
-                Address: &nbsp;
-              </Typography>
-              {`${address.street}, ${address.city}, ${address.state}, ${address.country} ${address.zipCode}`}
-            </Typography>
-
-            <Typography variant="body2" gutterBottom>
-              <Typography variant="body2" component="span" sx={{ color: 'text.secondary' }}>
-                Phone: &nbsp;
+                Phone: 
               </Typography>
               {address.phone}
             </Typography>
-
-            <Box sx={{ mt: 1 }}>
-              <Button
-                color="error"
-                size="small"
-                startIcon={<Iconify icon={'eva:trash-2-outline'} />}
-                onClick={() => {}}
-                sx={{ mr: 1 }}
-              >
-                Delete
-              </Button>
-              <Button size="small" startIcon={<Iconify icon={'eva:edit-fill'} />} onClick={() => {}}>
-                Edit
-              </Button>
-            </Box>
           </Paper>
         ))}
-
-        <Button size="small" startIcon={<Iconify icon={'eva:plus-fill'} />}>
-          Add new address
-        </Button>
       </Stack>
     </Card>
   );

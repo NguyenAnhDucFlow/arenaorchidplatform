@@ -35,6 +35,7 @@ public interface OrderService {
     PageDTO<OrderDTO> search(SearchDTO searchDTO);
 
     List<OrderDTO> getAllUser();
+
 }
 @Service
 class OrderServiceImpl implements OrderService {
@@ -149,5 +150,6 @@ class OrderServiceImpl implements OrderService {
 
         return modelMapper.map(order, OrderDTO.class);
     }
+
 }
 

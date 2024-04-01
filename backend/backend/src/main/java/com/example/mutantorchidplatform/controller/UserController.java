@@ -74,6 +74,15 @@ public class UserController {
                 .build();
     }
 
+    @PutMapping("/update-password")
+    public ResponseDTO<Void> updatePassword(@ModelAttribute UserDTO userDTO) {
+        userService.updatePassword(userDTO);
+        return ResponseDTO.<Void>builder()
+                .status(200)
+                .msg("ok")
+                .build();
+    }
+
     @GetMapping("/my-account")
     public ResponseDTO<Map<String, UserDTO>> getMyAccount(@RequestHeader("Authorization") String token) {
         String email = jwtTokenService.getUsername(token.replace("Bearer ", ""));

@@ -30,6 +30,8 @@ public interface UserService {
     void deleteUser(int id);
 
     List<UserDTO> getAllUser();
+
+    void updatePassword(UserDTO userDTO);
 }
 
 @Service
@@ -103,6 +105,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::convertToUserDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updatePassword(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getId()).orElseThrow(NoResultException::new);
+            user.setPassword(userDTO.getPassword());
+            userRepository.save(user);
     }
 
     private UserDTO convertToUserDTO(User user) {

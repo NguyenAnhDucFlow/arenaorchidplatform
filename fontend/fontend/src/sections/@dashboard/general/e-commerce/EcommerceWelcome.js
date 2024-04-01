@@ -1,5 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
+import { format } from 'date-fns';
 import { Typography, Button, Card, CardContent } from '@mui/material';
 //
 import { MotivationIllustration } from '../../../../assets';
@@ -23,8 +24,20 @@ const RootStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function EcommerceWelcome() {
-
   const { user } = useAuth();
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+  let greeting;
+
+  if (currentHour < 12) {
+    greeting = "Good morning";
+  } else if (currentHour < 18) {
+    greeting = "Good afternoon";
+  } else {
+    greeting = "Good evening";
+  }
+
+  const formattedDate = format(currentTime, 'MMMM dd, yyyy');
 
   return (
     <RootStyle>
@@ -36,15 +49,15 @@ export default function EcommerceWelcome() {
         }}
       >
         <Typography gutterBottom variant="h4">
-          Congratulations,
+          {greeting},
           <br /> {user?.displayName}
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Best seller of the month You have done 57.6% more sales today.
+          Here's to a fantastic {formattedDate}! May your day be as productive as your most successful moments.
         </Typography>
 
-        <Button variant="contained">Go Now</Button>
+        <Button variant="contained">Discover More</Button>
       </CardContent>
 
       <MotivationIllustration

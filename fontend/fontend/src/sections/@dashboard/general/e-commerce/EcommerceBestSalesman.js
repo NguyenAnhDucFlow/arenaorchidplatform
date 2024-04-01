@@ -1,5 +1,7 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+
 import {
   Box,
   Card,
@@ -21,11 +23,26 @@ import { _ecommerceBestSalesman } from '../../../../_mock';
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import Scrollbar from '../../../../components/Scrollbar';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceBestSalesman() {
   const theme = useTheme();
+  const [bestSalesmen, setBestSalesmen] = useState([]);
+
+  useEffect(() => {
+    const fetchBestSalesmen = async () => {
+      try {
+        const response = await axios.get('/order-detail/top-sellers'); 
+        setBestSalesmen(response.data.data);
+      } catch (error) {
+        console.error("Error fetching best salesmen:", error);
+      }
+    };
+
+    fetchBestSalesmen();
+  }, []);
 
   return (
     <Card>
@@ -43,24 +60,22 @@ export default function EcommerceBestSalesman() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {_ecommerceBestSalesman.map((row) => (
-                <TableRow key={row.name}>
+              {bestSalesmen.map((row) => (
+                <TableRow key={row.id}> {/* Make sure 'row.id' is unique */}
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Avatar alt={row.name} src={row.avatar} />
                       <Box sx={{ ml: 2 }}>
-                        <Typography variant="subtitle2"> {row.name}</Typography>
+                        <Typography variant="subtitle2">{row.name}</Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                           {row.email}
                         </Typography>
                       </Box>
                     </Box>
                   </TableCell>
-                  <TableCell>{row.category}</TableCell>
-                  <TableCell>
-                    <Image src={row.flag} alt="country flag" sx={{ maxWidth: 28 }} />
-                  </TableCell>
-                  <TableCell>{fCurrency(row.total)}</TableCell>
+                  <TableCell>{row.productName}</TableCell>
+                  <TableCell>{row.country}</TableCell>
+                  <TableCell>{fCurrency(row.totalSales)}</TableCell>
                   <TableCell align="right">
                     <Label
                       variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -72,7 +87,7 @@ export default function EcommerceBestSalesman() {
                         'error'
                       }
                     >
-                      {row.rank}
+                      {`Top ${row.rank}`}
                     </Label>
                   </TableCell>
                 </TableRow>
