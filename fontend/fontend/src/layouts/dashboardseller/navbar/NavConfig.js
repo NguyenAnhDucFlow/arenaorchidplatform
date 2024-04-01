@@ -30,8 +30,7 @@ const navConfig = [
   {
     subheader: 'general',
     items: [
-      { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      { title: 'e-commerce', path: PATH_PRODUCTOWNER.general.ecommerce, icon: ICONS.ecommerce },
     ],
   },
 
