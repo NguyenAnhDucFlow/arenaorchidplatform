@@ -78,40 +78,54 @@ export default function BidTableRow({ row, onCheckoutRow, onCancelRow, winningBi
       <TableCell align="center">{fCurrency(amount)}</TableCell>
       <TableCell align="center">{user.displayName}</TableCell>
 
-      {isEnded && !isWinner && (
+      {status === 'CANCELLED' ? (
         <TableCell align="center">
           <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color="error"
-            sx={{ textTransform: 'capitalize' }}
-          >
-            Lost bid
-          </Label>
-        </TableCell>
-      )}
-
-      {isEnded && isWinner && (
-        <TableCell align="center">
-          <Label
-            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color="success"
-            sx={{ textTransform: 'capitalize' }}
-          >
-            Won bid
-          </Label>
-        </TableCell>
-      )}
-
-      {!isEnded && (
-        <TableCell align="center">
-          <Label
-            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color={(status === 'CANCELLED' && 'error') || (status === 'PENDING' && 'warning') || 'success'}
+            color={'error'}
             sx={{ textTransform: 'capitalize' }}
           >
             {status ? sentenceCase(status) : ''}
           </Label>
         </TableCell>
+      ) : (
+        <>
+          {isEnded && !isWinner && (
+            <TableCell align="center">
+              <Label
+                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                color="error"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                Lost bid
+              </Label>
+            </TableCell>
+          )}
+
+          {isEnded && isWinner && (
+            <TableCell align="center">
+              <Label
+                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                color="success"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                Won bid
+              </Label>
+            </TableCell>
+          )}
+
+          {!isEnded && (
+            <TableCell align="center">
+              <Label
+                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                color={(status === 'CANCELLED' && 'error') || (status === 'PENDING' && 'warning') || 'success'}
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {status ? sentenceCase(status) : ''}
+              </Label>
+            </TableCell>
+          )}
+        </>
       )}
 
       <TableCell align="right">
@@ -120,7 +134,7 @@ export default function BidTableRow({ row, onCheckoutRow, onCancelRow, winningBi
           onOpen={handleOpenMenu}
           onClose={handleCloseMenu}
           actions={(() => {
-            if (isEnded && isWinner) {
+            if (isEnded && isWinner && status !== 'CANCELLED') {
               if (status === 'DONE') return <MenuItem disabled>Already paid</MenuItem>;
               return (
                 <>

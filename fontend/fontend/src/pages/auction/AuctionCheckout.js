@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling, getAuctionCart, createAuctionBilling } from '../../redux/slices/product';
+import { getAuctionCart, createAuctionBilling } from '../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../routes/paths';
 // hooks
@@ -16,11 +16,9 @@ import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import {
-  CheckoutPayment,
-  CheckoutOrderComplete,
-  CheckoutBillingAddress,
-} from '../../sections/@dashboard/e-commerce/checkout';
+import { CheckoutOrderComplete } from '../../sections/@dashboard/e-commerce/checkout';
+import AuctionCheckoutBillingAddress from '../../sections/@dashboard/e-commerce/auction/AuctionCheckoutBillingAddress';
+import AuctionCheckoutPayment from '../../sections/@dashboard/e-commerce/auction/AuctionCheckoutPayment';
 
 // ----------------------------------------------------------------------
 
@@ -91,7 +89,7 @@ export default function AuctionCheckout() {
   }, [dispatch, isMountedRef, product]);
 
   useEffect(() => {
-    if (activeStep === 1) {
+    if (activeStep === 0) {
       dispatch(createAuctionBilling(null));
     }
   }, [dispatch, activeStep]);
@@ -135,11 +133,11 @@ export default function AuctionCheckout() {
 
         {!isComplete ? (
           <>
-            {activeStep === 0 && <CheckoutBillingAddress />}
-            {activeStep === 1 && billing && <CheckoutPayment />}
+            {activeStep === 0 && <AuctionCheckoutBillingAddress />}
+            {activeStep === 1 && billing && <AuctionCheckoutPayment />}
           </>
         ) : (
-          <CheckoutOrderComplete open={isComplete} />
+          <CheckoutOrderComplete open={isComplete} isAuctionCheckout />
         )}
       </Container>
     </Page>

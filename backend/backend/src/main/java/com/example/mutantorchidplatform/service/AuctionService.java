@@ -71,9 +71,13 @@ class AuctionServiceImpl implements AuctionService {
         if (product.getAuction() != null)
             throw new AlreadyExistedException("Product already has an auction");
 
+        if (product.getAvailable() < 1)
+            throw new AlreadyExistedException("Product is out of stock");
+
         Auction auction = modelMapper.map(dto, Auction.class);
         auction.setProduct(product);
         auction.setStatus(AuctionStatus.PENDING);
+        product.setAvailable(product.getAvailable() - 1);
 
         auctionRepository.save(auction);
     }
