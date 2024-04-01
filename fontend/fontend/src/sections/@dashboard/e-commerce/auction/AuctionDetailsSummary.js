@@ -277,9 +277,6 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
           </Stack>
         )}
 
-        <Stack alignItems="center" sx={{ mt: 3 }}>
-          <WishListReportButton initialColor />
-        </Stack>
       </FormProvider>
     </RootStyle>
   );

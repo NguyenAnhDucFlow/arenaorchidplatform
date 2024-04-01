@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
+import StoreIcon from '@mui/icons-material/Store';
 // routes
 import { PATH_HOME } from '../../../../routes/paths';
 // utils
@@ -45,6 +46,9 @@ ProductDetailsSummary.propTypes = {
     status: PropTypes.string,
     totalRating: PropTypes.number,
     totalReview: PropTypes.number,
+    owner: PropTypes.shape({
+      displayName: PropTypes.string,
+    }),
   }),
 };
 
@@ -65,6 +69,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     totalRating,
     totalReview,
     inventoryType,
+    owner,
   } = product;
 
   const alreadyProduct = cart.filter((item) => item.id === id)[0];
@@ -228,8 +233,21 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
               Available: {available}
             </Typography>
           </div>
+
         </Stack>
 
+
+        {owner && owner.displayName && (
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, mb: 3 }}>
+            <StoreIcon sx={{ mr: 1, color: theme.palette.text.secondary }} />
+            <Typography variant="subtitle" component="span">
+              Sold by:&nbsp;
+            </Typography>
+            <Typography variant="subtitle" component="span" sx={{ fontWeight: 'bold' }}>
+              {owner.displayName}
+            </Typography>
+          </Box>
+        )}
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
@@ -257,9 +275,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
           </Button>
         </Stack>
 
-        <Stack alignItems="center" sx={{ mt: 3 }}>
-          <WishListReportButton initialColor />
-        </Stack>
+
       </FormProvider>
     </RootStyle>
   );
