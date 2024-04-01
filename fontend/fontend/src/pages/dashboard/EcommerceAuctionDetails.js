@@ -45,7 +45,7 @@ export default function EcommerceAuctionDetails() {
   const dispatch = useDispatch();
   const [tab, setTab] = useState('bid_rating');
   const { auctionId = '', productId = '' } = useParams();
-  const { product, auction, error, checkout } = useSelector((state) => state.product);
+  const { product, auction, error } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getProductById(productId));

@@ -12,13 +12,13 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useMatch } from 'react-router';
+import { useMatch, useNavigate } from 'react-router';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { cancelBid, endAuction, getBidsByUserId } from '../../redux/slices/product';
+import { AUCTION_CHECKOUT_INFO, addAuctionCart, cancelBid, getBidsByUserId, onAuctionGotoStep } from '../../redux/slices/product';
 // routes
-import { PATH_PRODUCTOWNER } from '../../routes/paths';
+import { PATH_HOME, PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
@@ -63,20 +63,14 @@ export default function EcommerceBidList() {
     defaultOrderBy: 'createdAt',
   });
   const { user } = useAuth();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const customerMatch = useMatch('/bid');
-
   const { themeStretch } = useSettings();
-
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { isLoading } = useSelector((state) => state.product);
   const { bids, highestBids } = useSelector((state) => state.product.bidList);
-
   const [tableData, setTableData] = useState([]);
-
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -103,19 +97,29 @@ export default function EcommerceBidList() {
   };
 
   const handleCheckoutRow = async (bid) => {
-    // TODO: thanh toan
-    // Nhảy qua trang thanh toán ; bid.amount là giá tiền mà user mua sản phẩm
-    // Nếu thanh toán thành công thì chạy dispatch(endAuction());
-    // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+    if (!bid) return;
 
-    await dispatch(
-      endAuction(bid.auction.id, {
+    await dispatch(addAuctionCart(bid.auction.product));
+    await dispatch(onAuctionGotoStep(0));
+
+    localStorage.setItem(
+      AUCTION_CHECKOUT_INFO,
+      JSON.stringify({
+        auctionId: bid.auction.id,
         amount: bid.amount,
         userId: bid.user.id,
-        auctionId: bid.auction.id,
       })
     );
-    enqueueSnackbar('Checkout success!', { variant: 'success' });
+
+    navigate(PATH_HOME.auctionCheckout);
+
+    // await dispatch(
+    //   endAuction(bid.auction.id, {
+    //     amount: bid.amount,
+    //     userId: bid.user.id,
+    //     auctionId: bid.auction.id,
+    //   })
+    // );
   };
 
   const dataFiltered = applySortFilter({
@@ -130,10 +134,12 @@ export default function EcommerceBidList() {
 
   return (
     <Page title="Ecommerce: Bid List">
-      <Container maxWidth={themeStretch ? false : 'lg'}
+      <Container
+        maxWidth={themeStretch ? false : 'lg'}
         sx={{
           marginBlock: customerMatch ? 15 : 0,
-        }}>
+        }}
+      >
         <HeaderBreadcrumbs
           heading="Bid List"
           links={[

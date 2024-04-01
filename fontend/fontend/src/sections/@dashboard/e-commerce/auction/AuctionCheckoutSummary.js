@@ -9,7 +9,7 @@ import Iconify from '../../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 AuctionCheckoutSummary.propTypes = {
-  total: PropTypes.number,
+  total: PropTypes.number || PropTypes.string,
   shipping: PropTypes.number,
   onEdit: PropTypes.func,
   enableEdit: PropTypes.bool,

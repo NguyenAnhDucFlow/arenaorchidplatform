@@ -7,6 +7,7 @@ import axios from '../../utils/axios';
 import { dispatch } from '../store';
 
 // ----------------------------------------------------------------------
+export const AUCTION_CHECKOUT_INFO = 'auction-checkout-info';
 
 const initialState = {
   isLoading: false,
@@ -255,8 +256,8 @@ const slice = createSlice({
     getAuctionCart(state, action) {
       const product = action.payload;
 
-      const shipping = product ? 0 : state.auctionCheckout.shipping;
-      const billing = product ? null : state.auctionCheckout.billing;
+      const shipping = !product ? 0 : state.auctionCheckout.shipping;
+      const billing = !product ? null : state.auctionCheckout.billing;
 
       state.auctionCheckout.product = product;
       state.auctionCheckout.shipping = shipping;

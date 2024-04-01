@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Countdown from 'react-countdown';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -9,15 +9,14 @@ import { useForm } from 'react-hook-form';
 import { styled } from '@mui/material/styles';
 import { Box, Stack, Button, Rating, Divider, IconButton, Typography, Card } from '@mui/material';
 // routes
-import { PATH_PAGE } from '../../../../routes/paths';
+import { PATH_HOME, PATH_PAGE } from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
-import WishListReportButton from '../../../../components/WishListReportButton';
 import { FormProvider } from '../../../../components/hook-form';
 import { useDispatch } from '../../../../redux/store';
-import { createBid, endAuction } from '../../../../redux/slices/product';
+import { AUCTION_CHECKOUT_INFO, addAuctionCart, createBid, onAuctionGotoStep } from '../../../../redux/slices/product';
 import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
@@ -61,6 +60,7 @@ AuctionDetailsSummary.propTypes = {
 
 export default function AuctionDetailsSummary({ product, auction, ...other }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -111,20 +111,30 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
         // eslint-disable-next-line no-alert
         window.confirm('Your bid is higher than the Buyout price. Do you want to buyout now?')
       ) {
-        // TODO: if user bid higher than product price then buy now
-        // Nhảy qua trang thanh toán luôn; data.amount là giá tiền mà user mua sản phẩm
-        // Nếu thanh toán thành công thì chạy dispatch(endAuction());
-        // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+        await dispatch(addAuctionCart(product));
+        await dispatch(onAuctionGotoStep(0));
 
-        dispatch(
-          endAuction(auction.id, {
+        localStorage.setItem(
+          AUCTION_CHECKOUT_INFO,
+          JSON.stringify({
+            auctionId: auction.id,
             amount: data.amount,
             userId: user.id,
-            auctionId: auction.id,
             auctionEndDate: new Date().toISOString(),
           })
         );
-        enqueueSnackbar('Payout success!', { variant: 'success' });
+
+        navigate(PATH_HOME.auctionCheckout);
+
+        // dispatch(
+        //   endAuction(auction.id, {
+        //     amount: data.amount,
+        //     userId: user.id,
+        //     auctionId: auction.id,
+        //     auctionEndDate: new Date().toISOString(),
+        //   })
+        // );
+        // enqueueSnackbar('Payout success!', { variant: 'success' });
       }
     } else {
       await dispatch(
@@ -140,7 +150,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
     setLoading(false);
   };
 
-  const handlePayout = () => {
+  const handlePayout = async () => {
     if (isEnded) {
       enqueueSnackbar('Auction is over', { variant: 'error' });
       return;
@@ -156,20 +166,30 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
     }
     console.log('buyout');
 
-    // TODO:  buyout
-    // Nhảy qua trang thanh toán luôn; product.price là giá tiền mà user mua sản phẩm
-    // Nếu thanh toán thành công thì chạy dispatch(endAuction());
-    // Nếu thanh toán thất bại thì hiện thông báo lỗi và không chạy dispatch(endAuction());
+    await dispatch(addAuctionCart(product));
+    await dispatch(onAuctionGotoStep(0));
 
-    dispatch(
-      endAuction(auction.id, {
+    localStorage.setItem(
+      AUCTION_CHECKOUT_INFO,
+      JSON.stringify({
+        auctionId: auction.id,
         amount: product.price,
         userId: user.id,
-        auctionId: auction.id,
         auctionEndDate: new Date().toISOString(),
       })
     );
-    enqueueSnackbar('Payout success!', { variant: 'success' });
+
+    navigate(PATH_HOME.auctionCheckout);
+
+    // dispatch(
+    //   endAuction(auction.id, {
+    //     amount: product.price,
+    //     userId: user.id,
+    //     auctionId: auction.id,
+    //     auctionEndDate: new Date().toISOString(),
+    //   })
+    // );
+    // enqueueSnackbar('Payout success!', { variant: 'success' });
   };
 
   return (
@@ -276,7 +296,6 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
             </Button>
           </Stack>
         )}
-
       </FormProvider>
     </RootStyle>
   );

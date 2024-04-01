@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router';
 
@@ -10,7 +10,9 @@ import { LoadingButton } from '@mui/lab';
 import { Button, Grid } from '@mui/material';
 // redux
 import {
+  AUCTION_CHECKOUT_INFO,
   applyAuctionShipping,
+  endAuction,
   goAuctionCheckoutSuccess,
   onAuctionBackStep,
   onAuctionGotoStep,
@@ -79,6 +81,7 @@ const CARDS_OPTIONS = [
 const ORDER_CHECKOUT_PENDING = 'auction-order-checkout-pending';
 
 export default function AuctionCheckoutPayment() {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const location = useLocation();
@@ -96,6 +99,8 @@ export default function AuctionCheckoutPayment() {
 
     const verifyPayment = async () => {
       try {
+        console.log('PaymentId: ', paymentId);
+        setLoading(true);
         const response = await axios.get('/paypal/execute', {
           params: {
             paymentId,
@@ -106,16 +111,21 @@ export default function AuctionCheckoutPayment() {
 
         console.log('Payment: ', response.data);
 
-        // Save the order to the database
+        // Save the order to the database and end the auction
         const order = JSON.parse(localStorage.getItem(ORDER_CHECKOUT_PENDING));
+        const auctionData = JSON.parse(localStorage.getItem(AUCTION_CHECKOUT_INFO));
+
+        await dispatch(endAuction(auctionData.auctionId, auctionData));
         await axios.post('/order/', order);
 
         localStorage.removeItem(ORDER_CHECKOUT_PENDING);
+        localStorage.removeItem(AUCTION_CHECKOUT_INFO);
 
         dispatch(goAuctionCheckoutSuccess(response.data));
       } catch (error) {
         console.log('err', error);
       }
+      setLoading(false);
     };
 
     if (paymentId && PayerID && user) {
@@ -232,7 +242,7 @@ export default function AuctionCheckoutPayment() {
           <AuctionCheckoutBillingInfo onBackStep={handleBackStep} />
 
           <AuctionCheckoutSummary enableEdit total={total} shipping={shipping} onEdit={() => handleGotoStep(0)} />
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting || loading}>
             Complete Order
           </LoadingButton>
         </Grid>
