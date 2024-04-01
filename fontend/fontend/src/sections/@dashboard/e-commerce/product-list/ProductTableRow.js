@@ -76,15 +76,17 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
-                onClick={() => {
-                  onSelectForAuction(row);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'mingcute:auction-line'} />
-                Start Auction
-              </MenuItem>
+              {row.available > 0 && (
+                <MenuItem
+                  onClick={() => {
+                    onSelectForAuction(row);
+                    handleCloseMenu();
+                  }}
+                >
+                  <Iconify icon={'mingcute:auction-line'} />
+                  Start Auction
+                </MenuItem>
+              )}
               <MenuItem
                 onClick={() => {
                   onDeleteRow();

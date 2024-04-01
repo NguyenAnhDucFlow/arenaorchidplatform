@@ -106,7 +106,8 @@ export default function Router() {
       element: (
         <RoleBasedGuard accessibleRoles={['Customer', 'Product Owners']}>
           <DashboardSeller />
-        </RoleBasedGuard>),
+        </RoleBasedGuard>
+      ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGINSELLER} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
@@ -169,11 +170,22 @@ export default function Router() {
         { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },
         { path: 'bid', element: <EcommerceBidList /> },
         {
-          path: 'checkout', element: (
+          path: 'checkout',
+          element: (
             <AuthGuard>
               <EcommerceCheckout />
             </AuthGuard>
-          )
+          ),
+          children: [
+            {
+              path: 'auction',
+              element: (
+                <AuthGuard>
+                  <AuctionCheckout />
+                </AuthGuard>
+              ),
+            },
+          ],
         },
         { path: 'account', element: <UserAccount /> },
         { path: 'seller/account', element: <SellerAccount /> },
@@ -181,15 +193,15 @@ export default function Router() {
     },
     { path: '*', element: <Navigate to="/404" replace /> },
     {
-      path: 'buyer/login', element: (
+      path: 'buyer/login',
+      element: (
         <GuestGuard>
           <LoginBuyer />
         </GuestGuard>
-      )
+      ),
     },
     { path: 'buyer/signup', element: <SignUpBuyer /> },
     { path: 'seller/signup', element: <SignUpSeller /> },
-
   ]);
 }
 
@@ -215,10 +227,13 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const Auction = Loadable(lazy(() => import('../pages/dashboard/Auction')));
+const AuctionCheckout = Loadable(lazy(() => import('../pages/auction/AuctionCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceAuctionDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
-const EcommerceProductListProductOwner = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductListProductOwner')));
+const EcommerceProductListProductOwner = Loadable(
+  lazy(() => import('../pages/dashboard/EcommerceProductListProductOwner'))
+);
 const EcommerceAuctionList = Loadable(lazy(() => import('../pages/dashboard/EcommerceAuctionList')));
 const EcommerceBidList = Loadable(lazy(() => import('../pages/dashboard/EcommerceBidList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));

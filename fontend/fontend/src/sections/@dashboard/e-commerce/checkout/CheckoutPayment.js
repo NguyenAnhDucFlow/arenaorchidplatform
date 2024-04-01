@@ -10,7 +10,14 @@ import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping, goCheckoutSuccess } from '../../../../redux/slices/product';
+import {
+  onGotoStep,
+  onBackStep,
+  onNextStep,
+  applyShipping,
+  goCheckoutSuccess,
+  resetCart,
+} from '../../../../redux/slices/product';
 
 import axios from '../../../../utils/axios';
 
@@ -23,6 +30,7 @@ import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import useAuth from '../../../../hooks/useAuth';
+import { HOST_URL } from '../../../../config';
 
 // ----------------------------------------------------------------------
 
@@ -69,6 +77,8 @@ const CARDS_OPTIONS = [
   { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
 ];
 
+const ORDER_CHECKOUT_PENDING = 'order-checkout-pending';
+
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
 
@@ -80,35 +90,43 @@ export default function CheckoutPayment() {
 
   const { total, discount, subtotal, shipping } = checkout;
 
-
-  useEffect(async () => {
-    const queryParams = new URLSearchParams(location.search)
-    const paymentId = queryParams.get('paymentId')
-    const PayerID = queryParams.get('PayerID')
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const paymentId = queryParams.get('paymentId');
+    const PayerID = queryParams.get('PayerID');
 
     const verifyPayment = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8080/paypal/execute?paymentId=${paymentId}&PayerID=${PayerID}&userId=${user?.id}`
-        )
-        const data = await response.json()
+        // const response = await fetch(
+        //   `http://localhost:8080/paypal/execute?paymentId=${paymentId}&PayerID=${PayerID}&userId=${user?.id}`
+        // )
 
-        if (response.ok && data.msg === '200') {
-          console.log('Payment: ', data)
+        const response = await axios.get('/paypal/execute', {
+          params: {
+            paymentId,
+            PayerID,
+            userId: user?.id,
+          },
+        });
 
-          await dispatch(goCheckoutSuccess(data.data))
-        }
+        console.log('Payment: ', response.data);
+
+        // Save the order to the database
+        const order = JSON.parse(localStorage.getItem(ORDER_CHECKOUT_PENDING));
+        await axios.post('/order/', order);
+
+        localStorage.removeItem(ORDER_CHECKOUT_PENDING);
+
+        dispatch(goCheckoutSuccess(response.data));
       } catch (error) {
-        console.log("err", error)
+        console.log('err', error);
       }
-    }
+    };
 
     if (paymentId && PayerID && user) {
-      await verifyPayment()
+      verifyPayment();
     }
-  }, []);
-
-
+  }, [user, location.search, dispatch]);
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -147,18 +165,18 @@ export default function CheckoutPayment() {
 
   const onSubmit = async (data) => {
     try {
-      const deliveryOption = DELIVERY_OPTIONS.find(option => option.value === data.delivery);
-      const paymentOption = PAYMENT_OPTIONS.find(option => option.value === data.payment);
+      const deliveryOption = DELIVERY_OPTIONS.find((option) => option.value === data.delivery);
+      const paymentOption = PAYMENT_OPTIONS.find((option) => option.value === data.payment);
 
       // Construct the order object
       const order = {
         total,
         customer: { id: checkout.billing.user.id },
         shipment: { id: checkout.billing.id },
-        orderDetails: checkout.cart.map(item => ({
+        orderDetails: checkout.cart.map((item) => ({
           product: { id: item.id },
           price: parseInt(item.price, 10),
-          quantity: item.quantity
+          quantity: item.quantity,
         })),
         deliveryOption: deliveryOption.title,
         paymentOption: paymentOption.title,
@@ -173,14 +191,15 @@ export default function CheckoutPayment() {
           method: 'paypal',
           intent: 'sale',
           description: 'Order description here', // Customize this
-          cancelUrl: 'http://localhost:3030/checkout?cancel', // URL for canceling payment
-          successUrl: 'http://localhost:3030/checkout?success' // URL for successful payment
+          cancelUrl: `${HOST_URL}/checkout?cancel`, // URL for canceling payment
+          successUrl: `${HOST_URL}/checkout?success`, // URL for successful payment
         };
 
-        // If not using PayPal, or to handle other logic
-        console.log("order:", order);
-        const response = await axios.post('/order/', order);
-        
+        console.log('order:', order);
+
+        // Save the order to the localStorage to be used later when the payment is successful
+        localStorage.setItem(ORDER_CHECKOUT_PENDING, JSON.stringify(order));
+
         // Call your backend to create a PayPal payment
         const paymentResponse = await axios.post('/paypal/pay', paymentData);
 
@@ -191,13 +210,10 @@ export default function CheckoutPayment() {
         }
         console.error('Error initiating PayPal payment');
       } // End of PayPal payment check
-
-
     } catch (error) {
       console.error(error);
     }
   };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
