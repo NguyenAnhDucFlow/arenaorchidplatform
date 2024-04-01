@@ -176,16 +176,14 @@ export default function Router() {
               <EcommerceCheckout />
             </AuthGuard>
           ),
-          children: [
-            {
-              path: 'auction',
-              element: (
-                <AuthGuard>
-                  <AuctionCheckout />
-                </AuthGuard>
-              ),
-            },
-          ],
+        },
+        {
+          path: 'checkout/auction',
+          element: (
+            <AuthGuard>
+              <AuctionCheckout />
+            </AuthGuard>
+          ),
         },
         { path: 'account', element: <UserAccount /> },
         { path: 'seller/account', element: <SellerAccount /> },

@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
+import { Box, Button, Divider, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { resetCart } from '../../../../redux/slices/product';
+import { resetAuctionCart, resetCart } from '../../../../redux/slices/product';
 // routes
 import { PATH_HOME } from '../../../../routes/paths';
 // components
@@ -26,13 +27,20 @@ const DialogStyle = styled(DialogAnimate)(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
+CheckoutOrderComplete.propTypes = {
+  isAuctionCheckout: PropTypes.bool,
+};
 
-export default function CheckoutOrderComplete({ ...other }) {
+export default function CheckoutOrderComplete({ isAuctionCheckout, ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleResetStep = () => {
-    dispatch(resetCart());
+    if (isAuctionCheckout) {
+      dispatch(resetAuctionCart());
+    } else {
+      dispatch(resetCart());
+    }
     navigate(PATH_HOME.root);
   };
 

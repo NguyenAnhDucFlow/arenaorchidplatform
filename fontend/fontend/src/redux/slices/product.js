@@ -261,7 +261,7 @@ const slice = createSlice({
       state.auctionCheckout.product = product;
       state.auctionCheckout.shipping = shipping;
       state.auctionCheckout.billing = billing;
-      state.auctionCheckout.total = product.price;
+      state.auctionCheckout.total = product ? product.price : 0;
     },
 
     addAuctionCart(state, action) {
