@@ -111,7 +111,7 @@ export default function CheckoutCart() {
           size="large"
           type="submit"
           variant="contained"
-          disabled={cart.length === 0}
+          disabled={isEmptyCart || totalItems === 0}
           onClick={handleNextStep}
         >
           Check Out

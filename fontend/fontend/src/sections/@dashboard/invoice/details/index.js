@@ -14,8 +14,6 @@ import {
   ListItemAvatar,
   Avatar,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PersonIcon from '@mui/icons-material/Person';
 
 const OrderDetails = ({ order }) => {

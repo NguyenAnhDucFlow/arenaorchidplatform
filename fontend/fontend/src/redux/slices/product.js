@@ -37,6 +37,13 @@ const initialState = {
     shipping: 0,
     billing: null,
   },
+  auctionCheckout: {
+    activeStep: 0,
+    product: null,
+    total: 0,
+    shipping: 0,
+    billing: null,
+  },
 };
 
 const slice = createSlice({
@@ -243,6 +250,64 @@ const slice = createSlice({
       state.checkout.shipping = shipping;
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
+
+    // AUCTION CHECKOUT
+    getAuctionCart(state, action) {
+      const product = action.payload;
+
+      const shipping = product ? 0 : state.auctionCheckout.shipping;
+      const billing = product ? null : state.auctionCheckout.billing;
+
+      state.auctionCheckout.product = product;
+      state.auctionCheckout.shipping = shipping;
+      state.auctionCheckout.billing = billing;
+      state.auctionCheckout.total = product.price;
+    },
+
+    addAuctionCart(state, action) {
+      const product = action.payload;
+      state.auctionCheckout.product = product;
+    },
+
+    deleteAuctionCart(state) {
+      state.auctionCheckout.product = null;
+    },
+
+    resetAuctionCart(state) {
+      state.auctionCheckout.activeStep = 0;
+      state.auctionCheckout.product = null;
+      state.auctionCheckout.total = 0;
+      state.auctionCheckout.shipping = 0;
+      state.auctionCheckout.billing = null;
+    },
+
+    onAuctionBackStep(state) {
+      state.auctionCheckout.activeStep -= 1;
+    },
+
+    onAuctionNextStep(state) {
+      state.auctionCheckout.activeStep += 1;
+    },
+
+    goAuctionCheckoutSuccess(state, action) {
+      state.auctionCheckout.activeStep = 2;
+      state.auctionCheckout.billing = action.payload;
+    },
+
+    onAuctionGotoStep(state, action) {
+      const goToStep = action.payload;
+      state.auctionCheckout.activeStep = goToStep;
+    },
+
+    createAuctionBilling(state, action) {
+      state.auctionCheckout.billing = action.payload;
+    },
+
+    applyAuctionShipping(state, action) {
+      const shipping = action.payload;
+      state.auctionCheckout.shipping = shipping;
+      state.auctionCheckout.total += shipping;
+    },
   },
 });
 
@@ -266,6 +331,16 @@ export const {
   sortByProducts,
   filterProducts,
   goCheckoutSuccess,
+  getAuctionCart,
+  addAuctionCart,
+  deleteAuctionCart,
+  resetAuctionCart,
+  onAuctionBackStep,
+  onAuctionNextStep,
+  goAuctionCheckoutSuccess,
+  onAuctionGotoStep,
+  createAuctionBilling,
+  applyAuctionShipping,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -281,7 +356,6 @@ export function getProductByOwnerId(ownerId) {
     }
   };
 }
-
 
 export function getProductsByCategory(category) {
   return async () => {
