@@ -249,7 +249,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         {available > 0 && isExceededMaxQuantity && (
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Typography variant="subtitle2" sx={{ mt: 0.5 }} color="error">
-              You have reached the maximum quantity available for this product
+              You have reached the maximum quantity available for this product (Already added {foundedProduct?.quantity || 0} in cart).
             </Typography>
           </Stack>
         )}
