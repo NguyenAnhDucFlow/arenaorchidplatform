@@ -3,25 +3,22 @@ package com.example.mutantorchidplatform.entity;
 import com.example.mutantorchidplatform.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "Orders")
-@EntityListeners(AuditingEntityListener.class)
-public class Order {
+public class Order extends TimeAuditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private Date date;
 
     private double total;
 
