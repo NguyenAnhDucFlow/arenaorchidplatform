@@ -1,6 +1,7 @@
-package com.example.mutantorchidplatform.repository;
+package com.example.mutantorchidplatform.service;
 
 import com.example.mutantorchidplatform.dto.TopSellerDTO;
+import com.example.mutantorchidplatform.repository.OrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

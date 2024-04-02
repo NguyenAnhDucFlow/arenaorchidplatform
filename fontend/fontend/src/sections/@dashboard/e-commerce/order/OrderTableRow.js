@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
+
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -24,7 +24,7 @@ OrderTableRow.propTypes = {
 export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { id, customer, total, date, paymentOption, status } = row;
+  const { id, customer, total, createdAt, paymentOption, status } = row;
 
   const name = customer?.displayName;
   const avatar = customer?.photoURL;
@@ -56,7 +56,7 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
         </Typography>
       </TableCell>
 
-      <TableCell>{date}</TableCell>
+      <TableCell>{createdAt}</TableCell>
 
       <TableCell align="center">
             {paymentOption === 'Cash on CheckoutDelivery' ? 'CheckoutDelivery' : 'Paypal'}
