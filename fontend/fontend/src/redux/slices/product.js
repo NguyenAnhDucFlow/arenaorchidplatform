@@ -54,7 +54,6 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
-      state.product = null;
     },
     startLoadingPageable(state, action) {
       state.isLoading = true;
@@ -90,6 +89,10 @@ const slice = createSlice({
     getProductSuccess(state, action) {
       state.isLoading = false;
       state.product = action.payload;
+    },
+
+    resetProduct(state) {
+      state.product = null;
     },
 
     // GET AUCTIONS
@@ -342,6 +345,7 @@ export const {
   onAuctionGotoStep,
   createAuctionBilling,
   applyAuctionShipping,
+  resetProduct,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -404,6 +408,7 @@ export function getProductsPageable(page = 0, size = 8) {
 export function getProduct(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.resetProduct());
     try {
       // console.log(name);
       const response = await axios.get('/product/name', {

@@ -72,7 +72,6 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   } = product;
 
   const foundedProduct = cart.filter((item) => item.id === id)[0];
-  const isExistedProduct = foundedProduct !== undefined;
 
   const defaultValues = {
     id,

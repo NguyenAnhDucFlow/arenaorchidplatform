@@ -111,6 +111,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
         // eslint-disable-next-line no-alert
         window.confirm('Your bid is higher than the Buyout price. Do you want to buyout now?')
       ) {
+        setLoading(false);
         await dispatch(addAuctionCart(product));
         await dispatch(onAuctionGotoStep(0));
 
@@ -145,9 +146,8 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
         })
       );
       enqueueSnackbar('Bid success!');
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handlePayout = async () => {
