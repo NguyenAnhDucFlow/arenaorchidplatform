@@ -28,6 +28,10 @@ const MENU_OPTIONS = (role) => [
     label: 'Bid',
     linkTo: role === 'Customer' ? PATH_HOME.bid : PATH_PRODUCTOWNER.eCommerce.bid,
   },
+  {
+    label: 'Order',
+    linkTo: role === 'Customer' ? PATH_HOME.order : PATH_PRODUCTOWNER.eCommerce.order,
+  }
 ];
 // ----------------------------------------------------------------------
 

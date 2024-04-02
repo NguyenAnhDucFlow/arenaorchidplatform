@@ -71,6 +71,8 @@ export const PATH_HOME = {
   signupSeller: path(ROOTS_HOME, 'seller/signup'),
   account: "/account",
   bid: path(ROOTS_HOME, 'bid'),
+  order: path(ROOTS_HOME, 'order'),
+  orderDetails: (id) => path(ROOTS_HOME, `order/${id}`),
 };
 
 export const PATH_PAGE = {

@@ -1,6 +1,8 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useMatch } from 'react-router';
+
 import { useSnackbar } from 'notistack';
 
 // @mui
@@ -38,6 +40,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
 // sections
 import { OrderTableToolbar, OrderTableRow } from '../../sections/@dashboard/e-commerce/order';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -89,9 +92,14 @@ export default function Order() {
 
   const { themeStretch } = useSettings();
 
+  const { user } = useAuth();
+  console.log("role", user.role.name)
+
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
+
+  const customerMatch = useMatch('/order');
 
   const [tableData, setTableData] = useState([]);
 
@@ -102,14 +110,18 @@ export default function Order() {
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
   useEffect(() => {
-    axios.get('/order/')
+    // Xác định xem API nào sẽ được gọi dựa trên role của người dùng
+    const endpoint = user.role.name === 'Product Owners' ? `/order/owner/${user.id}` : `/order/customer/${user.id}`;
+  
+    axios.get(endpoint)
       .then((response) => {
         setTableData(response.data.data);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-  }, []);
+  }, [user.id, user.role.name]);  // Đảm bảo useEffect chạy lại khi user.id hoặc user.role.name thay đổi
+  
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -167,7 +179,12 @@ export default function Order() {
 
   return (
     <Page title="Order">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container
+        maxWidth={themeStretch ? false : 'lg'}
+        sx={{
+          marginBlock: customerMatch ? 15 : 0,
+        }}
+      >
         <HeaderBreadcrumbs
           heading="Order List"
           links={[

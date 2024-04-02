@@ -37,6 +37,10 @@ public interface OrderService {
 
     List<OrderDTO> getAllUser();
 
+    List<OrderDTO> findOrdersByOwner(int ownerId);
+
+    List<OrderDTO> findOrdersByCustomer(Integer customerId);
+
 }
 @Service
 class OrderServiceImpl implements OrderService {
@@ -149,6 +153,20 @@ class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getAllUser() {
         List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDTO> findOrdersByOwner(int ownerId) {
+        List<Order> orders = orderRepository.findOrdersByOwner(ownerId);
+        return orders.stream().map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDTO> findOrdersByCustomer(Integer customerId) {
+        List<Order> orders = orderRepository.findByCustomerId(customerId);
         return orders.stream().map(this::convertToOrderDTO)
                 .collect(Collectors.toList());
     }

@@ -169,6 +169,8 @@ export default function Router() {
         { path: 'product/:name', element: <EcommerceProductDetails /> },
         { path: 'auction/:productId/:auctionId', element: <EcommerceAuctionDetails /> },
         { path: 'bid', element: <EcommerceBidList /> },
+        { path: 'order', element: <Order /> },
+        { path: 'orderDetails/:id', element: <OrderDetails /> },
         {
           path: 'checkout',
           element: (

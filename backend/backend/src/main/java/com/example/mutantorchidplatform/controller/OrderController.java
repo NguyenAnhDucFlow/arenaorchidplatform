@@ -65,4 +65,22 @@ public class OrderController {
                 .data(orderService.search(searchDTO))
                 .build();
     }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseDTO<List<OrderDTO>> getOrdersByCustomer(@PathVariable Integer customerId) {
+        List<OrderDTO> orders = orderService.findOrdersByCustomer(customerId);
+        return ResponseDTO.<List<OrderDTO>>builder()
+                .status(200)
+                .data(orders)
+                .build();
+    }
+
+    @GetMapping("/owner/{ownerId}")
+    public ResponseDTO<List<OrderDTO>> getOrdersByOwner(@PathVariable int ownerId) {
+        List<OrderDTO> orders = orderService.findOrdersByOwner(ownerId);
+        return ResponseDTO.<List<OrderDTO>>builder()
+                .status(200)
+                .data(orders)
+                .build();
+    }
 }
