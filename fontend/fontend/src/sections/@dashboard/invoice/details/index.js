@@ -12,7 +12,12 @@ import {
   useTheme,
   styled,
   alpha,
+  ListItemIcon,
 } from '@mui/material';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+
 import { useNavigate } from 'react-router-dom';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -21,6 +26,51 @@ import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
 import PhoneIcon from '@mui/icons-material/Phone';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import UpdateIcon from '@mui/icons-material/Update';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+
+const getStatusIcon = (status) => {
+  switch (status) {
+    case 'CONFIRMED':
+      return <CheckCircleOutlineIcon style={{ color: 'green' }} />;
+    case 'CANCELLED':
+      return <HighlightOffIcon style={{ color: 'red' }} />;
+    case 'DELIVERED':
+      return <LocalShippingIcon style={{ color: 'blue' }} />;
+    case 'PENDING':
+    default:
+      return <HourglassEmptyIcon style={{ color: 'orange' }} />;
+  }
+};
+
+const getStatusText = (status) => {
+  if (typeof status !== 'string') {
+    return ''; // or any default value you prefer
+  }
+  return (
+    <Typography component="span" variant="body2" style={{ fontWeight: 'bold' }}>
+      {status}
+    </Typography>
+  );
+};
+
+
+
+const SimpleHistoryItem = ({ status, date }) => (
+  <ListItem>
+    <ListItemIcon>
+      {getStatusIcon(status)}
+    </ListItemIcon>
+    <ListItemText
+      primary={<><span>Status Updated - </span>{getStatusText(status)}</>}
+      secondary={new Date(date).toLocaleString()}
+    />
+  </ListItem>
+);
 
 // Enhanced SectionBox with a subtle background gradient
 const SectionBox = styled(Box)(({ theme }) => ({
@@ -104,7 +154,7 @@ const ShippingInfo = ({ shipment }) => (
     </Typography>
     <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
       <HomeIcon sx={{ mr: 1 }} fontSize="small" />
-      Address: {`${shipment.address}, ${shipment.city}, ${shipment.state}, ${shipment.country}`}
+      Address: {shipment.address}
     </Typography>
     <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
       <PhoneIcon sx={{ mr: 1 }} fontSize="small" />
@@ -126,10 +176,36 @@ const PaymentInfo = ({ paymentOption }) => (
   </SectionBox>
 );
 
+const SimpleHistory = ({ createdAt, updatedAt, status }) => {
+  const statusIcon = getStatusIcon(status);
+  return (
+    <SectionBox>
+      <Typography variant="h6" gutterBottom>
+        Order History
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemIcon>
+            <AssignmentTurnedInIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Order Created"
+            secondary={new Date(createdAt).toLocaleString()}
+          />
+        </ListItem>
+        {(updatedAt && updatedAt !== createdAt) && (
+          <SimpleHistoryItem status={status} date={updatedAt} />
+        )}
+      </List>
+    </SectionBox>
+  );
+};
+
+
 // Main OrderDetails component with updated children components
 const OrderDetails = ({ order }) => {
   const navigate = useNavigate();
-  const { customer, orderDetails, shipment, deliveryOption, paymentOption, total } = order;
+  const { customer, orderDetails, shipment, deliveryOption, paymentOption, total, subtotal, shipping } = order;
 
   const handleBack = () => {
     navigate(-1);
@@ -152,15 +228,20 @@ const OrderDetails = ({ order }) => {
                   Summary
                 </Typography>
                 <Typography variant="subtitle1" textAlign="right">
-                  Subtotal: ${total.toFixed(2)}
+                  Subtotal: ${subtotal.toFixed(2)}
                 </Typography>
                 <Typography variant="subtitle1" textAlign="right">
-                  Shipping: {shipment.cost >= 0 ? `+${shipment.cost.toFixed(2)}` : `-${Math.abs(shipment.cost).toFixed(2)}`}
+                  Shipping: {shipping.toFixed(2)}
                 </Typography>
                 <Typography variant="h6" textAlign="right" color="error">
                   Total: ${total.toFixed(2)}
                 </Typography>
               </SectionBox>
+              <SimpleHistory
+                createdAt={order.createdAt}
+                updatedAt={order.updatedAt}
+                status={order.status}
+              />
               <Button variant="contained" onClick={handleBack} sx={{ mt: 2 }}>
                 Back
               </Button>

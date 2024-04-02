@@ -1,6 +1,8 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 // @mui
 import {
   Box,
@@ -21,7 +23,7 @@ import {
 } from '@mui/material';
 import axios from '../../utils/axios';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
@@ -39,7 +41,7 @@ import { OrderTableToolbar, OrderTableRow } from '../../sections/@dashboard/e-co
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'pending', 'confirmed'];
+const STATUS_OPTIONS = ['all', 'confirmed', 'delivered', 'cancelled'];
 
 const ROLE_OPTIONS = [
   'all',
@@ -55,13 +57,12 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Order', align: 'left' },
-  { id: 'company', label: 'Customer', align: 'left' },
-  { id: 'role', label: 'Date', align: 'left' },
-  { id: 'isVerified', label: 'Item', align: 'center' },
-  { id: 'isVerified', label: 'Price', align: 'center' },
+  { id: 'id', label: 'Order', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'createdAt', label: 'Date', align: 'left' },
+  { id: 'paymentMethod', label: 'Payment method', align: 'center' },
+  { id: 'total', label: 'Price', align: 'center' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -88,9 +89,11 @@ export default function Order() {
 
   const { themeStretch } = useSettings();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -118,9 +121,16 @@ export default function Order() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    axios.delete(`/order/${id}`)
+      .then(response => {
+        const updateTableData = tableData.filter(row => row.id !== id);
+        setTableData(updateTableData);
+        enqueueSnackbar('Delete success!');
+        setSelected([]);
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+      });
   };
 
   const handleDeleteRows = (selected) => {
@@ -130,7 +140,7 @@ export default function Order() {
   };
 
   const handleEditRow = (name) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(name)));
+    navigate(PATH_PRODUCTOWNER.user.edit(paramCase(name)));
   };
 
   const dataFiltered = applySortFilter({
@@ -143,6 +153,13 @@ export default function Order() {
 
   const denseHeight = dense ? 52 : 72;
 
+  const handleUpdateRow = (id, newData) => {
+    setTableData((prevData) =>
+      prevData.map((data) => (data.id === id ? { ...data, ...newData } : data))
+    );
+  };
+
+
   const isNotFound =
     (!dataFiltered.length && !!filterName) ||
     (!dataFiltered.length && !!filterRole) ||
@@ -154,9 +171,8 @@ export default function Order() {
         <HeaderBreadcrumbs
           heading="Order List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Order', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
+            { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
+            { name: 'Order', href: PATH_PRODUCTOWNER.eCommerce.order },
           ]}
         />
 
@@ -232,6 +248,7 @@ export default function Order() {
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
                       onEditRow={() => handleEditRow(row.name)}
+                      onUpdateRow={handleUpdateRow}
                     />
                   ))}
 
@@ -271,6 +288,8 @@ export default function Order() {
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
   const stabilizedThis = tableData.map((el, index) => [el, index]);
 
+  console.log("filter status", filterStatus)
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -280,11 +299,11 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((item) => item.customer.displayName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   if (filterStatus !== 'all') {
-    tableData = tableData.filter((item) => item.status === filterStatus);
+    tableData = tableData.filter((item) => item.status.toLowerCase() === filterStatus);
   }
 
   if (filterRole !== 'all') {

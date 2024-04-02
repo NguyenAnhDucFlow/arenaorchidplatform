@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import {
+  Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem,
+  Dialog, DialogTitle, DialogContent, DialogActions, Button, Select, DialogContentText
+} from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { styled } from '@mui/system';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 
@@ -10,6 +16,9 @@ import { fDate } from '../../../../utils/formatTime';
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import axios from '../../../../utils/axios'
+import useAuth from '../../../../hooks/useAuth';
+import { PATH_PRODUCTOWNER } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -19,10 +28,29 @@ OrderTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onUpdateRow: PropTypes.func,
 };
 
-export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+const StyledSelect = styled(Select)({
+  color: 'white',
+  backgroundColor: 'blue',
+  '&:hover': {
+    backgroundColor: 'darkblue',
+  },
+  '& .MuiSelect-icon': {
+    color: 'white',
+  },
+});
+
+export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onUpdateRow }) {
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const navigate = useNavigate();
+
   const theme = useTheme();
+
+  const { user } = useAuth();
 
   const { id, customer, total, createdAt, paymentOption, status } = row;
 
@@ -39,6 +67,32 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
 
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
+  };
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState(status);
+
+  const handleOpenEditDialog = () => {
+    setNewStatus(status);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleSaveEditDialog = () => {
+    axios.put('/order/', { id, status: newStatus, staff: { id: user.id }, customer })
+      .then((response) => {
+        enqueueSnackbar('Order status updated successfully', { variant: 'success' });
+        setEditDialogOpen(false);
+        onUpdateRow(id, { status: newStatus }); // Cập nhật row
+      })
+      .catch((error) => {
+        enqueueSnackbar('Failed to update order status', { variant: 'error' });
+        setEditDialogOpen(false);
+      });
+
   };
 
   return (
@@ -59,7 +113,7 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
       <TableCell>{createdAt}</TableCell>
 
       <TableCell align="center">
-            {paymentOption === 'Cash on CheckoutDelivery' ? 'CheckoutDelivery' : 'Paypal'}
+        {paymentOption === 'Cash on CheckoutDelivery' ? 'CheckoutDelivery' : 'Paypal'}
       </TableCell>
 
 
@@ -68,14 +122,9 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
 
 
       <TableCell align="left">
-        <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(status === 'banned' && 'error') || 'success'}
-          sx={{ textTransform: 'capitalize' }}
-        >
-          {status}
-        </Label>
+        <StatusLabel status={status} />
       </TableCell>
+
 
       <TableCell align="right">
         <TableMoreMenu
@@ -96,17 +145,86 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onEditRow();
+                  handleOpenEditDialog();
                   handleCloseMenu();
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
               </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  navigate(PATH_PRODUCTOWNER.eCommerce.orderDetails(id));
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:eye-outline'} />
+                Details
+              </MenuItem>
+
             </>
           }
         />
       </TableCell>
+      <Dialog
+        open={editDialogOpen}
+        onClose={handleCloseEditDialog}
+        PaperProps={{
+          style: { borderRadius: 8 }
+        }}
+      >
+        <DialogTitle>{"Edit Status"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            Update the status of the order.
+          </DialogContentText>
+          <StyledSelect
+            value={newStatus}
+            onChange={(event) => setNewStatus(event.target.value)}
+            displayEmpty
+            fullWidth
+            inputProps={{ 'aria-label': 'Without label' }}
+          >
+            <MenuItem value="PENDING">Pending</MenuItem>
+            <MenuItem value="CONFIRMED">Confirmed</MenuItem>
+            <MenuItem value="CANCELLED">Cancelled</MenuItem>
+            <MenuItem value="DELIVERED">Delivered</MenuItem>
+          </StyledSelect>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveEditDialog} variant="contained" color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </TableRow>
+  );
+}
+
+
+function StatusLabel({ status }) {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'PENDING':
+        return 'warning';
+      case 'CONFIRMED':
+        return 'success';
+      case 'CANCELLED':
+        return 'error';
+      case 'DELIVERED':
+        return 'info';
+      default:
+        return 'default';
+    }
+  };
+
+  return (
+    <Label color={getStatusColor(status)} sx={{ textTransform: 'capitalize' }}>
+      {status.toLowerCase()}
+    </Label>
   );
 }

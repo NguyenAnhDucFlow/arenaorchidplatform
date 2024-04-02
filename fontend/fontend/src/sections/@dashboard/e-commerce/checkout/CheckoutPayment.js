@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useLocation } from 'react-router';
 
 // @mui
-import { Grid, Button } from '@mui/material';
+import { Grid, Button, Modal, Box, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -54,15 +54,6 @@ const PAYMENT_OPTIONS = [
     description: 'You will be redirected to PayPal website to complete your purchase securely.',
     icons: ['https://minimal-assets-api.vercel.app/assets/icons/ic_paypal.svg'],
   },
-  // {
-  //   value: 'credit_card',
-  //   title: 'Credit / Debit Card',
-  //   description: 'We support Mastercard, Visa, Discover and Stripe.',
-  //   icons: [
-  //     'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
-  //     'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
-  //   ],
-  // },
   {
     value: 'cash',
     title: 'Cash on CheckoutDelivery',
@@ -80,6 +71,7 @@ const CARDS_OPTIONS = [
 const ORDER_CHECKOUT_PENDING = 'order-checkout-pending';
 
 export default function CheckoutPayment() {
+
   const dispatch = useDispatch();
 
   const location = useLocation();
@@ -90,7 +82,7 @@ export default function CheckoutPayment() {
 
   const { total, discount, subtotal, shipping } = checkout;
 
-  console.log("subtotal", subtotal )
+  console.log("subtotal", subtotal)
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -180,6 +172,8 @@ export default function CheckoutPayment() {
           price: parseInt(item.price, 10),
           quantity: item.quantity,
         })),
+        subtotal,
+        shipping,
         deliveryOption: deliveryOption.title,
         paymentOption: paymentOption.title,
       };
@@ -192,7 +186,7 @@ export default function CheckoutPayment() {
           currency: 'USD', // Change as needed
           method: 'paypal',
           intent: 'sale',
-          description: 'Order description here', // Customize this
+          description: 'Pay with Paypal', // Customize this
           cancelUrl: `${HOST_URL}/checkout?cancel`, // URL for canceling payment
           successUrl: `${HOST_URL}/checkout?success`, // URL for successful payment
         };
@@ -212,6 +206,11 @@ export default function CheckoutPayment() {
         }
         console.error('Error initiating PayPal payment');
       } // End of PayPal payment check
+
+      if (data.payment === 'cash') {
+        const response = await axios.post('/order/', order);
+        dispatch(goCheckoutSuccess(response.data));
+      }
     } catch (error) {
       console.error(error);
     }
@@ -247,6 +246,7 @@ export default function CheckoutPayment() {
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Complete Order
           </LoadingButton>
+
         </Grid>
       </Grid>
     </FormProvider>

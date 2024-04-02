@@ -47,7 +47,6 @@ const navConfig = [
           { title: 'list', path: PATH_PRODUCTOWNER.eCommerce.list },
           { title: 'bid', path: PATH_PRODUCTOWNER.eCommerce.bid },
           { title: 'order', path: PATH_PRODUCTOWNER.eCommerce.order },
-          { title: 'order details', path: PATH_PRODUCTOWNER.eCommerce.order },
         ],
       },
     ],

@@ -70,7 +70,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
         fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipcode}`,
         addressType: data.addressType,
         isDefault: data.isDefault,
-        address: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipcode}`,
+        address: `${data.address}, ${data.city}, ${data.country}`,
         city: data.city,
         state: data.state,
         country: data.country,

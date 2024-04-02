@@ -36,6 +36,8 @@ export default function AccountPopover() {
 
   const { user, logout } = useAuth();
 
+  console.log("role", user.role.name)
+
   const isMountedRef = useIsMountedRef();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -53,16 +55,22 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate(PATH_AUTH.login, { replace: true });
 
-      if (isMountedRef.current) {
-        handleClose();
+      // Only navigate to the login page if the user is an Admin, Staff, or Manager.
+      if (isMountedRef.current && ['Admin', 'Staff', 'Manager'].includes(user.role.name)) {
+        navigate(PATH_HOME.loginBuyer, { replace: true });
       }
+
+      // Always close the popover menu after logging out.
+      handleClose();
+
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
+
+
 
   return (
     <>

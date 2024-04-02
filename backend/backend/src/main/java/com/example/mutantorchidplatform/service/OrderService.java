@@ -5,6 +5,7 @@ import com.example.mutantorchidplatform.entity.Order;
 import com.example.mutantorchidplatform.entity.OrderDetail;
 import com.example.mutantorchidplatform.entity.Product;
 import com.example.mutantorchidplatform.entity.User;
+import com.example.mutantorchidplatform.entity.enums.InventoryType;
 import com.example.mutantorchidplatform.repository.OrderRepository;
 import com.example.mutantorchidplatform.repository.ProductRepository;
 import com.example.mutantorchidplatform.repository.UserRepository;
@@ -74,6 +75,13 @@ class OrderServiceImpl implements OrderService {
             }
             product.setAvailable(product.getAvailable() - orderDetailDTO.getQuantity());
             product.setSold(product.getSold() + orderDetailDTO.getQuantity());
+            if (product.getAvailable() == 0) {
+                product.setInventoryType(InventoryType.out_of_stock);
+            } else if (product.getAvailable() < 5) {
+                product.setInventoryType(InventoryType.low_stock);
+            } else {
+                product.setInventoryType(InventoryType.in_stock);
+            }
             productRepository.save(product);
 
             orderDetail.setProduct(product);
@@ -99,11 +107,10 @@ class OrderServiceImpl implements OrderService {
     @Transactional
     public void update(OrderDTO orderDTO) {
 
-        User user = userRepository.findById(orderDTO.getCustomer().getId()).orElseThrow(NoResultException::new);
-
+        User user = userRepository.findById(orderDTO.getStaff().getId()).orElseThrow(NoResultException::new);
         Order order = orderRepository.findById(orderDTO.getId()).orElseThrow(NoResultException::new);
-        order.setCustomer(user);
-
+        order.setStatus(orderDTO.getStatus());
+        order.setStaff(user);
         orderRepository.save(order);
     }
 
