@@ -93,14 +93,33 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   const values = watch();
 
+  const isExceededMaxQuantity = available < 1 || (foundedProduct?.quantity || 0) + values.quantity > available;
+
+  // number of product's quantity can be added more to cart.
+  const canAddQuantity = available - (foundedProduct?.quantity || 0);
+
   const onSubmit = async (data) => {
     try {
-      if (!isExistedProduct) {
-        onAddCart({
-          ...data,
-          subtotal: data.price * data.quantity,
-        });
-      }
+      // if user want to add more quantity to cart but the combined quantity exceeds the available quantity.
+      // ask user if they want to add the maximum quantity available to cart.
+      // if user click cancel, do nothing.
+      if (
+        canAddQuantity < values.quantity &&
+        // eslint-disable-next-line no-alert
+        !window.confirm(
+          `You can only add ${canAddQuantity} more to cart. Do you want to add maximum quantity available?`
+        )
+      )
+        return;
+
+      // if user want to add more quantity to cart but the combined quantity exceeds the available quantity.
+      // only add the maximum quantity available to cart.
+      onAddCart({
+        ...data,
+        quantity: Math.min(data.quantity, canAddQuantity),
+        subtotal: data.price * Math.min(data.quantity, canAddQuantity),
+      });
+
       onGotoStep(0);
       navigate(PATH_HOME.checkout);
     } catch (error) {
@@ -118,8 +137,6 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
       console.error(error);
     }
   };
-
-  const isExceededMaxQuantity = available < 1 || (foundedProduct?.quantity || 0) + values.quantity > available;
 
   return (
     <RootStyle {...other}>
@@ -223,7 +240,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             <Incrementer
               name="quantity"
               quantity={values.quantity}
-              available={available}
+              available={canAddQuantity}
               onIncrementQuantity={() => setValue('quantity', values.quantity + 1)}
               onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
             />
@@ -246,32 +263,49 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         )}
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {available > 0 && isExceededMaxQuantity && (
-          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+        {available > 0 && isExceededMaxQuantity && canAddQuantity > 0 && (
+          <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
             <Typography variant="subtitle2" sx={{ mt: 0.5 }} color="error">
-              You have reached the maximum quantity available for this product (Already added {foundedProduct?.quantity || 0} in cart).
+              Already have {foundedProduct?.quantity || 0} in cart. Unable to add selected quantity it exceeds the
+              available quantity.
             </Typography>
           </Stack>
         )}
 
-        <Stack direction="row" spacing={2} sx={{ mt: available > 0 && isExceededMaxQuantity ? 2 : 5 }}>
-          <Button
-            fullWidth
-            disabled={isExceededMaxQuantity}
-            size="large"
-            color="warning"
-            variant="contained"
-            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={handleAddCart}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            Add to Cart
-          </Button>
+        {available > 0 && canAddQuantity <= 0 && (
+          <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" sx={{ mt: 0.5 }} color="error">
+              You have reached the maximum quantity available for this product.
+            </Typography>
+          </Stack>
+        )}
 
-          <Button fullWidth size="large" type="submit" variant="contained" disabled={isExceededMaxQuantity}>
-            Buy Now
-          </Button>
-        </Stack>
+        {available < 1 ? (
+          <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+            <Typography variant="subtitle2" sx={{ mt: 0.5 }} color="error">
+              This product is out of stock
+            </Typography>
+          </Stack>
+        ) : (
+          <Stack direction="row" spacing={2} sx={{ mt: available > 0 && isExceededMaxQuantity ? 2 : 5 }}>
+            <Button
+              fullWidth
+              disabled={isExceededMaxQuantity}
+              size="large"
+              color="warning"
+              variant="contained"
+              startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+              onClick={handleAddCart}
+              sx={{ whiteSpace: 'nowrap' }}
+            >
+              Add to Cart
+            </Button>
+
+            <Button fullWidth size="large" type="submit" variant="contained" disabled={canAddQuantity <= 0}>
+              Buy Now
+            </Button>
+          </Stack>
+        )}
       </FormProvider>
     </RootStyle>
   );
