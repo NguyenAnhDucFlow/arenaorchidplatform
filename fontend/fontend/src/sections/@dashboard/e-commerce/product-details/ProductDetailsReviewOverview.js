@@ -39,6 +39,8 @@ ProductDetailsReviewOverview.propTypes = {
 export default function ProductDetailsReviewOverview({ product, onOpen }) {
   const { totalRating, totalReview, ratings } = product;
 
+  console.log("totalRating", totalRating)
+
   const total = sumBy(ratings, (star) => star.starCount);
 
   const { user, logout } = useAuth();

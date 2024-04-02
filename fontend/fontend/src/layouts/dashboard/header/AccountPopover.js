@@ -60,19 +60,24 @@ export default function AccountPopover() {
     try {
       await logout();
 
-      // Only navigate to the login page if the user is an Admin, Staff, or Manager.
-      if (isMountedRef.current && ['Admin', 'Staff', 'Manager'].includes(user.role.name)) {
-        navigate(PATH_HOME.loginBuyer, { replace: true });
+      if (isMountedRef.current) {
+        // Điều hướng người dùng dựa trên role sau khi đăng xuất
+        if (['Admin', 'Staff', 'Manager'].includes(user.role.name)) {
+          // Điều hướng đến trang đăng nhập cho Admin, Staff, và Manager
+          navigate(PATH_HOME.loginBuyer, { replace: true });
+        } else {
+          // Điều hướng tất cả các role khác đến trang chủ
+          navigate(PATH_HOME.root, { replace: true });
+        }
       }
 
-      // Always close the popover menu after logging out.
       handleClose();
-
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
+
 
 
 

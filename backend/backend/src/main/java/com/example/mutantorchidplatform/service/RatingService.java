@@ -3,7 +3,9 @@ package com.example.mutantorchidplatform.service;
 import com.example.mutantorchidplatform.dto.RatingDTO;
 import com.example.mutantorchidplatform.entity.Product;
 import com.example.mutantorchidplatform.entity.Rating;
+import com.example.mutantorchidplatform.repository.ProductRepository;
 import com.example.mutantorchidplatform.repository.RatingRepository;
+import jakarta.persistence.NoResultException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,27 +24,37 @@ class RatingServiceImpl implements RatingService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ProductRepository productRepository;  // Giả sử bạn có ProductService để quản lý sản phẩm
+
     @Override
     @Transactional
     public void create(RatingDTO ratingDTO) {
-
-        Rating rating = ratingRepository.findByRatingName(ratingDTO.getRatingName());
+        // Tìm kiếm hoặc tạo mới Rating dựa trên RatingName và Product
+        Rating rating = ratingRepository.findByRatingNameAndProductId(ratingDTO.getRatingName(), ratingDTO.getProduct().getId());
 
         if (rating == null) {
-            rating = new Rating();
-            rating.setRatingName(ratingDTO.getRatingName());
-            rating.setStarCount(0);
-            rating.setReviewCount(0);
+            rating = modelMapper.map(ratingDTO, Rating.class);
+            rating.setStarCount(ratingDTO.getStarCount());
+            rating.setReviewCount(1); // Vì là rating mới, count là 1
+        } else {
+            // Cập nhật thông tin cho rating đã tồn tại
+            rating.setStarCount(rating.getStarCount() + ratingDTO.getStarCount());
+            rating.setReviewCount(rating.getReviewCount() + 1);
         }
 
-        rating.setStarCount(rating.getStarCount() + 1);
-        rating.setReviewCount(rating.getReviewCount() + 1);
-
-        Product product = modelMapper.map(ratingDTO.getProduct(), Product.class);
+        // Lấy sản phẩm và cập nhật thông tin rating
+        Product product = productRepository.findById(ratingDTO.getProduct().getId()).orElseThrow(NoResultException::new);
         rating.setProduct(product);
-        product.setTotalRating(rating.getStarCount());
-        product.setTotalReview(rating.getReviewCount());
-        ratingRepository.save(rating);
-    }
 
+        // Cập nhật tổng số rating và review cho sản phẩm
+        product.updateTotalRating();
+        product.incrementReviewCount();
+
+        // Lưu cập nhật
+        ratingRepository.save(rating);
+        product.updateTotalRating();  // Tính toán lại totalRating sau khi tất cả updates hoàn tất
+        productRepository.save(product);
+    }
 }

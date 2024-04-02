@@ -40,15 +40,15 @@ export default function OrderDetails() {
   }, [])
 
   return (
-    <Page title="Invoice: View">
+    <Page title="Order details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Invoice Details"
           links={[
-            { name: 'Dashboard', href: PATH_PRODUCTOWNER.root },
+            { name: 'Home', href: '/' },
             {
               name: 'Order',
-              href: PATH_PRODUCTOWNER.eCommerce.order,
+              href: '/order'
             },
             { name: 'Order Details' },
           ]}

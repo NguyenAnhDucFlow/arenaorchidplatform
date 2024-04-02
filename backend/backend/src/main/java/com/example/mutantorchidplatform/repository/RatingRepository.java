@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
-    Rating findByRatingName(String ratingName);
+    Rating findByRatingNameAndProductId(String ratingName, Long productId);
 }

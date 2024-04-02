@@ -79,4 +79,23 @@ public class Product extends TimeAuditable{
 
     @OneToOne(mappedBy = "product")
     private Auction auction;
+
+    public void incrementReviewCount() {
+        this.totalReview = this.reviews.size();  // Cập nhật totalReview dựa trên số lượng reviews
+    }
+
+    public void updateTotalRating() {
+        double sum = 0;
+        int totalReviews = 0; // Tổng số lượt đánh giá
+
+        for (Rating rating : this.ratings) {
+            sum += rating.getStarCount() * rating.getReviewCount();  // Nhân số sao với số lần đánh giá
+            totalReviews += rating.getReviewCount(); // Tính tổng số lượt đánh giá
+        }
+
+        this.totalRating = totalReviews > 0 ? (float) sum / totalReviews : 0; // Tính trung bình
+        this.totalReview = totalReviews; // Cập nhật tổng số lượt đánh giá
+    }
+
+
 }

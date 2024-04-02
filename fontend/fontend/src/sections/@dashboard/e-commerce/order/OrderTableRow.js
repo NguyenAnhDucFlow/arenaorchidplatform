@@ -18,7 +18,7 @@ import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import axios from '../../../../utils/axios'
 import useAuth from '../../../../hooks/useAuth';
-import { PATH_PRODUCTOWNER } from '../../../../routes/paths';
+import { PATH_PRODUCTOWNER, PATH_HOME } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +51,8 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
   const theme = useTheme();
 
   const { user } = useAuth();
+
+  const userRole = user.role.name;
 
   const { id, customer, total, createdAt, paymentOption, status } = row;
 
@@ -133,28 +135,32 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
-                onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
+              {userRole !== 'Customer' && (
+                <MenuItem
+                  onClick={() => {
+                    onDeleteRow();
+                    handleCloseMenu();
+                  }}
+                  sx={{ color: 'error.main' }}
+                >
+                  <Iconify icon={'eva:trash-2-outline'} />
+                  Delete
+                </MenuItem>
+              )}
+              {userRole !== 'Customer' && (
+                <MenuItem onClick={() => {
                   handleOpenEditDialog();
                   handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
-              </MenuItem>
+                }}>
+                  <Iconify icon={'eva:edit-fill'} />
+                  Edit
+                </MenuItem>
+              )}
+
               <MenuItem
                 onClick={() => {
-                  navigate(PATH_PRODUCTOWNER.eCommerce.orderDetails(id));
+                  const detailPath = userRole === 'Customer' ? PATH_HOME.orderDetails(id) : PATH_PRODUCTOWNER.eCommerce.orderDetails(id);
+                  navigate(detailPath);
                   handleCloseMenu();
                 }}
               >
