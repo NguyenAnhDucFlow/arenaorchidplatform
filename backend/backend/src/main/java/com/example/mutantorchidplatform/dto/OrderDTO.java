@@ -24,6 +24,10 @@ public class OrderDTO {
     @NotNull
     private double total;
 
+    private double subtotal;
+
+    private double shipping;
+
     private OrderStatus status = OrderStatus.PENDING;
 
     private String deliveryOption;

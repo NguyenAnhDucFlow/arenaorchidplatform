@@ -90,6 +90,8 @@ export default function CheckoutPayment() {
 
   const { total, discount, subtotal, shipping } = checkout;
 
+  console.log("subtotal", subtotal )
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const paymentId = queryParams.get('paymentId');

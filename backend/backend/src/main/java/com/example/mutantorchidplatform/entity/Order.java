@@ -22,6 +22,10 @@ public class Order extends TimeAuditable{
 
     private double total;
 
+    private double subtotal;
+
+    private double shipping;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
