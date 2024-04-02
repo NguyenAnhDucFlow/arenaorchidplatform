@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import { persistor, useDispatch } from '../redux/store';
-import { resetCart } from '../redux/slices/product';
+import { resetAuctionCart, resetCart } from '../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -161,7 +161,8 @@ function AuthProvider({ children }) {
     // Clear cart
     // persistor.pause();
     await persistor.flush().then(() => persistor.purge());
-    mainDispatch(resetCart());
+    await mainDispatch(resetCart());
+    await mainDispatch(resetAuctionCart());
 
     dispatch({ type: 'LOGOUT' });
   };

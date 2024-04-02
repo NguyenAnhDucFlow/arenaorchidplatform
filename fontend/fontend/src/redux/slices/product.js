@@ -54,6 +54,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.product = null;
     },
     startLoadingPageable(state, action) {
       state.isLoading = true;
@@ -162,8 +163,7 @@ const slice = createSlice({
           if (isExisted) {
             return {
               ..._product,
-              // subtotal: _product.price * (_product.quantity + product.quantity),
-              quantity: product.quantity,
+              quantity: _product.quantity + product.quantity,
             };
           }
           return _product;

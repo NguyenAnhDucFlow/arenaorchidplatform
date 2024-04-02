@@ -14,7 +14,6 @@ import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-import WishListReportButton from '../../../../components/WishListReportButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 
@@ -72,10 +71,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     owner,
   } = product;
 
-  const alreadyProduct = cart.filter((item) => item.id === id)[0];
-  const isAlreadyProduct = alreadyProduct !== undefined;
-
-  const isExceededMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] > available;
+  const foundedProduct = cart.filter((item) => item.id === id)[0];
+  const isExistedProduct = foundedProduct !== undefined;
 
   const defaultValues = {
     id,
@@ -85,8 +82,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     price,
     color: colors[0],
     size: sizes[4],
-    // eslint-disable-next-line no-nested-ternary
-    quantity: isAlreadyProduct ? alreadyProduct.quantity : available < 1 ? 0 : 1,
+    quantity: available < 1 ? 0 : 1,
   };
 
   const methods = useForm({
@@ -99,7 +95,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   const onSubmit = async (data) => {
     try {
-      if (!isAlreadyProduct) {
+      if (!isExistedProduct) {
         onAddCart({
           ...data,
           subtotal: data.price * data.quantity,
@@ -122,6 +118,8 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
       console.error(error);
     }
   };
+
+  const isExceededMaxQuantity = available < 1 || (foundedProduct?.quantity || 0) + values.quantity > available;
 
   return (
     <RootStyle {...other}>
@@ -233,9 +231,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
               Available: {available}
             </Typography>
           </div>
-
         </Stack>
-
 
         {owner && owner.displayName && (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, mb: 3 }}>
@@ -250,10 +246,18 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         )}
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+        {available > 0 && isExceededMaxQuantity && (
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" sx={{ mt: 0.5 }} color="error">
+              You have reached the maximum quantity available for this product
+            </Typography>
+          </Stack>
+        )}
+
+        <Stack direction="row" spacing={2} sx={{ mt: available > 0 && isExceededMaxQuantity ? 2 : 5 }}>
           <Button
             fullWidth
-            disabled={isExceededMaxQuantity || available < 1}
+            disabled={isExceededMaxQuantity}
             size="large"
             color="warning"
             variant="contained"
@@ -264,18 +268,10 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             Add to Cart
           </Button>
 
-          <Button
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            disabled={isExceededMaxQuantity || available < 1}
-          >
+          <Button fullWidth size="large" type="submit" variant="contained" disabled={isExceededMaxQuantity}>
             Buy Now
           </Button>
         </Stack>
-
-
       </FormProvider>
     </RootStyle>
   );
