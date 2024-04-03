@@ -137,6 +137,7 @@ export default function AuctionDetailsSummary({ product, auction, ...other }) {
         // );
         // enqueueSnackbar('Payout success!', { variant: 'success' });
       }
+      setLoading(false);
     } else {
       await dispatch(
         createBid({
