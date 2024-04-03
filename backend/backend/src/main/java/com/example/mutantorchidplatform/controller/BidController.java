@@ -42,6 +42,14 @@ public class BidController {
                 .build();
     }
 
+    @GetMapping("auctions-owner/{ownerId}")
+    public ResponseDTO<Map<String, List<BidDetailDTO>>> getAllBidsOfAllAuctionByOwner(@PathVariable int ownerId) {
+        return ResponseDTO.<Map<String, List<BidDetailDTO>>>builder()
+                .status(200)
+                .data(bidService.getAllBidsOfAllAuctionByOwner(ownerId))
+                .build();
+    }
+
     @GetMapping("/{id}")
     public ResponseDTO<List<BidLooseDTO>> getAllByAuctionId(@PathVariable int id) {
         return ResponseDTO.<List<BidLooseDTO>>builder()

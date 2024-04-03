@@ -16,7 +16,14 @@ import { useMatch, useNavigate } from 'react-router';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { AUCTION_CHECKOUT_INFO, addAuctionCart, cancelBid, getBidsByUserId, onAuctionGotoStep } from '../../redux/slices/product';
+import {
+  AUCTION_CHECKOUT_INFO,
+  addAuctionCart,
+  cancelBid,
+  getBidsByProductOwnerId,
+  getBidsByUserId,
+  onAuctionGotoStep,
+} from '../../redux/slices/product';
 // routes
 import { PATH_HOME, PATH_PRODUCTOWNER } from '../../routes/paths';
 // hooks
@@ -34,15 +41,31 @@ import BidTableRow from '../../sections/@dashboard/e-commerce/auction/BidTableRo
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'id', label: 'Auction Id', align: 'center' },
-  { id: 'name', label: 'Product', align: 'left' },
-  { id: 'updatedAt', label: 'Bid date', align: 'left' },
-  { id: 'amount', label: 'Your bid', align: 'center' },
-  { id: 'winner', label: 'Winning user', align: 'center' },
-  { id: 'status', label: 'Status', align: 'center', width: 180 },
-  { id: '' },
-];
+const TABLE_HEAD = (role) => {
+  let head;
+  if (role === 'Customer') {
+    head = [
+      { id: 'id', label: 'Auction Id', align: 'center' },
+      { id: 'name', label: 'Product', align: 'left' },
+      { id: 'updatedAt', label: 'Bid date', align: 'left' },
+      { id: 'amount', label: 'Your bid', align: 'center' },
+      { id: 'winner', label: 'Winning user', align: 'center' },
+      { id: 'status', label: 'Status', align: 'center', width: 180 },
+      { id: '' },
+    ];
+  } else {
+    head = [
+      { id: 'id', label: 'Auction Id', align: 'center' },
+      { id: 'name', label: 'Product', align: 'left' },
+      { id: 'updatedAt', label: 'Bid date', align: 'left' },
+      { id: 'amount', label: 'Bid', align: 'center' },
+      { id: 'bidder', label: 'Bidder', align: 'center' },
+      { id: 'status', label: 'Status', align: 'center', width: 180 },
+      { id: '' },
+    ];
+  }
+  return head;
+};
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +98,8 @@ export default function EcommerceBidList() {
 
   useEffect(() => {
     if (user?.id) {
-      dispatch(getBidsByUserId(user.id));
+      if (user.role.name === 'Customer') dispatch(getBidsByUserId(user.id));
+      else dispatch(getBidsByProductOwnerId(user.id));
     }
   }, [dispatch, user?.id]);
 
@@ -161,7 +185,7 @@ export default function EcommerceBidList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD(user.role.name)}
                   rowCount={tableData.length}
                   onSort={onSort}
                 />
@@ -170,11 +194,12 @@ export default function EcommerceBidList() {
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
                     row ? (
                       <BidTableRow
-                        key={row.id}
+                        key={`${row.id}-${index}`}
                         row={row}
                         winningBid={highestBids.find((highestBid) => highestBid.auction.id === row.auction.id)}
                         onCancelRow={() => handleCancelRow(row.id)}
                         onCheckoutRow={() => handleCheckoutRow(row)}
+                        isOwnerTable={user.role.name !== 'Customer'}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

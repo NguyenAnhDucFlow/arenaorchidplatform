@@ -32,6 +32,8 @@ public interface BidService {
     Map<String, List<BidDetailDTO>> getAllByUserId(int userId);
 
     void cancelBid(int id);
+
+    Map<String, List<BidDetailDTO>> getAllBidsOfAllAuctionByOwner(int ownerId);
 }
 
 @Service
@@ -150,6 +152,32 @@ class BidServiceImpl implements BidService {
         Bid bid = bidRepository.findById(id).orElseThrow(NoResultException::new);
         bid.setStatus(BidStatus.CANCELLED);
         bidRepository.save(bid);
+    }
+
+    @Override
+    public Map<String, List<BidDetailDTO>> getAllBidsOfAllAuctionByOwner(int ownerId) {
+        // Get all the auctions that the owner has created
+        List<Auction> auctions = auctionService.getAllByProductOwnerId(ownerId);
+
+        // Get all the bids of the auctions that the owner has created
+        List<Bid> bids = auctions.stream().flatMap(auction -> auction.getBids().stream().sorted(
+                (b1, b2) -> Date.from(b2.getCreatedAt().toInstant()).compareTo(Date.from(b1.getCreatedAt().toInstant()))
+        )).toList();
+        List<Bid> highestBids = auctions.stream()
+                .map(auction -> auction.getBids().stream()
+                        .filter(bid -> bid.getStatus().equals(BidStatus.PENDING) || bid.getStatus().equals(BidStatus.DONE))
+                        .min((b1, b2) -> {
+                            if (b1.getAmount() == b2.getAmount())
+                                return Date.from(b1.getCreatedAt().toInstant()).compareTo(Date.from(b2.getCreatedAt().toInstant()));
+                            return Double.compare(b2.getAmount(), b1.getAmount());
+                        }).orElse(null))
+                .toList();
+
+        Map<String, List<BidDetailDTO>> map = new HashMap<>();
+        map.put("bids", bids.stream().map(this::convertToBidDetailDTO).collect(Collectors.toList()));
+        map.put("highestBids", highestBids.stream().map(this::convertToBidDetailDTO).collect(Collectors.toList()));
+
+        return map;
     }
 
     private BidDTO convertToBidDTO(Bid bid) {

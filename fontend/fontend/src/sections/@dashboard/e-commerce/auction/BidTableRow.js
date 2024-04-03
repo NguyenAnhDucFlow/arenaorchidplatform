@@ -23,12 +23,13 @@ BidTableRow.propTypes = {
   winningBid: PropTypes.object || null,
   onCheckoutRow: PropTypes.func,
   onCancelRow: PropTypes.func,
+  isOwnerTable: PropTypes.bool,
 };
 
-export default function BidTableRow({ row, onCheckoutRow, onCancelRow, winningBid }) {
+export default function BidTableRow({ row, onCheckoutRow, onCancelRow, winningBid, isOwnerTable }) {
   const theme = useTheme();
 
-  const { amount, updatedAt, status, auction } = row;
+  const { amount, updatedAt, status, auction, user: bidder } = row;
   const { product, endDate } = auction;
   const { name, cover } = product;
   const { user } = winningBid;
@@ -76,7 +77,11 @@ export default function BidTableRow({ row, onCheckoutRow, onCancelRow, winningBi
       <TableCell>{fDate(updatedAt)}</TableCell>
 
       <TableCell align="center">{fCurrency(amount)}</TableCell>
-      <TableCell align="center">{user.displayName}</TableCell>
+      {isOwnerTable ? (
+        <TableCell align="center">{bidder.displayName}</TableCell>
+      ) : (
+        <TableCell align="center">{user.displayName}</TableCell>
+      )}
 
       {status === 'CANCELLED' ? (
         <TableCell align="center">

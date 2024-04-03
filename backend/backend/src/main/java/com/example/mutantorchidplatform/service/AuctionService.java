@@ -45,6 +45,8 @@ public interface AuctionService {
     void endAuction(int id, BidCreateDTO dto);
 
     List<AuctionMetadata> listAuction();
+
+    List<Auction> getAllByProductOwnerId(int ownerId);
 }
 
 @Service
@@ -180,6 +182,11 @@ class AuctionServiceImpl implements AuctionService {
         return auctionRepository.findByOrderByStartDateDesc(AuctionStatus.APPROVED)
                 .stream().map(this::convertToAuctionMetadata)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Auction> getAllByProductOwnerId(int ownerId) {
+        return auctionRepository.findAllByProduct_Owner_Id(ownerId);
     }
 
 

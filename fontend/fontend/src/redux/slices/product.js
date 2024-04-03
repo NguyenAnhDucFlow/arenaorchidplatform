@@ -589,3 +589,16 @@ export function getBidsByUserId(id) {
     }
   };
 }
+
+export function getBidsByProductOwnerId(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/bid/auctions-owner/${id}`);
+      console.log('bids', response.data.data);
+      dispatch(slice.actions.getBidsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
