@@ -182,9 +182,11 @@ export default function AuctionCheckoutPayment() {
           {
             product: { id: auctionCheckout.product.id },
             price: parseInt(auctionCheckout.product.price, 10),
-            quantity: auctionCheckout.product.quantity,
+            quantity: auctionCheckout.product.quantity || 1,
           },
         ],
+        shipping,
+        subtotal: total - shipping,
         deliveryOption: deliveryOption.title,
         paymentOption: paymentOption.title,
       };
