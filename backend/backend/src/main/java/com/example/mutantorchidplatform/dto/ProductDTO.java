@@ -51,8 +51,6 @@ public class ProductDTO {
 
     private List<RatingDTO> ratings;
 
-    @JsonManagedReference //đặt trên "bên chủ" của mối quan hệ (nơi chứa collection).
-    // chỉ hoạt động tốt với quan hệ 1 nhiều
     private List<ReviewDTO> reviews;
 
     private List<String> sizes;
@@ -65,7 +63,7 @@ public class ProductDTO {
 
     private List<String> tags;
 
-    private float totalRating;
+    private double totalRating;
 
     private double totalReview;
 
@@ -75,7 +73,6 @@ public class ProductDTO {
     @JsonIgnore
     private List<MultipartFile> files;
 
-    @ManyToOne
     private UserDTO owner;
 
     private AuctionLooseDTO auction;

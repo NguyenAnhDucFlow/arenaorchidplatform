@@ -61,7 +61,8 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
     try {
 
       const ratingData = {
-        ratingName: data.rating,
+        name: data.rating,
+        starValue: data.rating,
         product: {
           id
         },
@@ -77,6 +78,9 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
         product: {
           id
         },
+        user: {
+          id: user.id
+        }
       }
 
 

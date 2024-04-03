@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface RatingService {
 
     void create(RatingDTO ratingDTO);
@@ -26,35 +28,50 @@ class RatingServiceImpl implements RatingService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private ProductRepository productRepository;  // Giả sử bạn có ProductService để quản lý sản phẩm
+    private ProductRepository productRepository;
 
     @Override
     @Transactional
     public void create(RatingDTO ratingDTO) {
-        // Tìm kiếm hoặc tạo mới Rating dựa trên RatingName và Product
-        Rating rating = ratingRepository.findByRatingNameAndProductId(ratingDTO.getRatingName(), ratingDTO.getProduct().getId());
+
+        String ratingNameWithStar = ratingDTO.getName() + " Star";
+        Rating rating = ratingRepository.findByName(ratingNameWithStar);
 
         if (rating == null) {
-            rating = modelMapper.map(ratingDTO, Rating.class);
-            rating.setStarCount(ratingDTO.getStarCount());
-            rating.setReviewCount(1); // Vì là rating mới, count là 1
-        } else {
-            // Cập nhật thông tin cho rating đã tồn tại
-            rating.setStarCount(rating.getStarCount() + ratingDTO.getStarCount());
-            rating.setReviewCount(rating.getReviewCount() + 1);
+            rating = new Rating();
+            rating.setName(ratingDTO.getName());
+            rating.setStarCount(0);
+            rating.setReviewCount(0);
         }
 
-        // Lấy sản phẩm và cập nhật thông tin rating
-        Product product = productRepository.findById(ratingDTO.getProduct().getId()).orElseThrow(NoResultException::new);
+        Product product = productRepository.findById(ratingDTO.getProduct().getId()).orElseThrow(
+                () -> new NoResultException("Product with ID " + ratingDTO.getProduct().getId() + " not found")
+        );
+
+        rating.setStarCount(rating.getStarCount() + ratingDTO.getStarValue());
+        rating.setReviewCount(rating.getReviewCount() + 1);
+
+        // Calculate the new average rating
+        double totalRatingSum = product.getTotalRating() * product.getTotalReview();
+        totalRatingSum += ratingDTO.getStarValue();
+        double newTotalRating = totalRatingSum / (product.getTotalReview() + 1);
+        newTotalRating = roundToHalf(newTotalRating);
+
+
+        // Update product's total rating and total review count
+        product.setTotalRating(newTotalRating);
+        product.setTotalReview(product.getTotalReview() + 1);
+
+        // Set the product to the rating
         rating.setProduct(product);
 
-        // Cập nhật tổng số rating và review cho sản phẩm
-        product.updateTotalRating();
-        product.incrementReviewCount();
-
-        // Lưu cập nhật
+        // Persist changes in the database
         ratingRepository.save(rating);
-        product.updateTotalRating();  // Tính toán lại totalRating sau khi tất cả updates hoàn tất
         productRepository.save(product);
     }
+
+    private double roundToHalf(double value) {
+        return Math.round(value * 2) / 2.0;
+    }
+
 }

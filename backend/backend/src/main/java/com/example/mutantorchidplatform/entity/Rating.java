@@ -11,7 +11,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String ratingName;
+    private String name;
 
     private int starCount;
 
@@ -20,7 +20,7 @@ public class Rating {
     @ManyToOne
     private Product product;
 
-    public void setRatingName(String ratingName) {
-        this.ratingName = ratingName + " Star";
+    public void setName(String name) {
+        this.name = name + " Star";
     }
 }

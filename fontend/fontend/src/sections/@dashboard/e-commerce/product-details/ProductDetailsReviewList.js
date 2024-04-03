@@ -39,6 +39,7 @@ ReviewItem.propTypes = {
 };
 
 function ReviewItem({ review }) {
+  
   const [isHelpful, setHelpfuls] = useState(false);
 
   const { id, name, rating, comment, helpful, postedAt, avatarUrl, isPurchased } = review;

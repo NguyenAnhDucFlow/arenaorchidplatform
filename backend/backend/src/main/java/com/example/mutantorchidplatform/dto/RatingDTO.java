@@ -8,9 +8,11 @@ public class RatingDTO {
 
     private long id;
 
-    private String ratingName;
+    private String name;
 
     private int starCount;
+
+    private int starValue;
 
     private int reviewCount;
 
