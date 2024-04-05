@@ -140,7 +140,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       formData.append('owner.id', user.id);
       const colors = getValues('colors');
       colors.forEach((color) => {
-        formData.append('colors', color); 
+        formData.append('colors', color);
       });
       const sizes = getValues('sizes');
       sizes.forEach((size) => {
@@ -238,7 +238,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   type="number"
                   InputProps={{ inputProps: { min: 0 } }}
                 />
-                <RHFTextField name="sku" label="Product SKU" />
+                <RHFTextField name="sku" label="Product SKU" disabled />
+
                 <div>
                   <LabelStyle>Colors</LabelStyle>
                   <Controller
@@ -351,16 +352,18 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   label="Sale Price"
                   placeholder="0.00"
                   value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
-                  onChange={(event) => setValue('price', Number(event.target.value))}
+                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     type: 'number',
                   }}
+                  disabled
                 />
+
               </Stack>
 
-              <RHFSwitch name="taxes" label="Price includes taxes" />
+
             </Card>
 
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
