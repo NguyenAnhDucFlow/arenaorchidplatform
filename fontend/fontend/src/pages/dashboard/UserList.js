@@ -124,7 +124,7 @@ export default function UserList() {
         setSelected([]);
       })
       .catch(error => {
-        console.error('Error deleting user:', error);
+        enqueueSnackbar('Cannot delete user: Active orders exist', { variant: 'error' });
       });
   };
 
