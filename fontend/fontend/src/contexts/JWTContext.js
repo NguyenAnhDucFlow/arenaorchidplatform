@@ -59,8 +59,6 @@ const AuthContext = createContext({
   register: () => Promise.resolve(),
 });
 
-// ----------------------------------------------------------------------
-
 AuthProvider.propTypes = {
   children: PropTypes.node,
 };
@@ -73,10 +71,8 @@ function AuthProvider({ children }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
           const response = await axios.get('/users/my-account');
           const { user } = response.data.data;
 
@@ -84,10 +80,7 @@ function AuthProvider({ children }) {
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: true,
-              user: {
-                ...user,
-                role: user.role,
-              },
+              user,
             },
           });
         } else {
@@ -115,13 +108,12 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/login', {
-      email,
-      password,
-    });
+    const response = await axios.post('/login', { email, password });
     const { accessToken, user } = response.data.data;
 
+    window.localStorage.setItem('accessToken', accessToken);
     setSession(accessToken);
+
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -138,15 +130,11 @@ function AuthProvider({ children }) {
     formData.append('lastName', lastName);
     formData.append('displayName', displayName);
 
-    const response = await axios.post('/users/register', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await axios.post('/users/register', formData);
     const { accessToken, user } = response.data.data;
-    console.log(user);
 
     window.localStorage.setItem('accessToken', accessToken);
+
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -157,12 +145,12 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    window.localStorage.removeItem('accessToken');
 
     // Clear cart
-    // persistor.pause();
     await persistor.flush().then(() => persistor.purge());
-    await mainDispatch(resetCart());
-    await mainDispatch(resetAuctionCart());
+    mainDispatch(resetCart());
+    mainDispatch(resetAuctionCart());
 
     dispatch({ type: 'LOGOUT' });
   };
