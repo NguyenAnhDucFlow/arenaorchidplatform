@@ -9,12 +9,13 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
 
-    @Query("SELECT new com.example.mutantorchidplatform.dto.TopSellerDTO(u.displayName, u.email, p.name, u.country, SUM(od.quantity * od.price), COUNT(od.id)) " +
+    @Query("SELECT new com.example.mutantorchidplatform.dto.TopSellerDTO(" +
+            "p.owner.displayName, p.owner.email, p.name, SUM(od.quantity), SUM(od.quantity * od.price)) " +
             "FROM OrderDetail od " +
             "INNER JOIN od.product p " +
-            "INNER JOIN od.order o " +
-            "INNER JOIN o.customer u " +
-            "GROUP BY u.id, p.name " +
+            "GROUP BY p.owner.id, p.name " +
             "ORDER BY SUM(od.quantity * od.price) DESC")
     List<TopSellerDTO> findTopSellers();
+
+
 }

@@ -67,7 +67,7 @@ const SimpleHistoryItem = ({ status, date }) => (
     </ListItemIcon>
     <ListItemText
       primary={<><span>Status Updated - </span>{getStatusText(status)}</>}
-      secondary={new Date(date).toLocaleString()}
+      secondary={new Date(date).toLocaleString('en-US', { timeZone: 'UTC' })}
     />
   </ListItem>
 );
@@ -190,7 +190,7 @@ const SimpleHistory = ({ createdAt, updatedAt, status }) => {
           </ListItemIcon>
           <ListItemText
             primary="Order Created"
-            secondary={new Date(createdAt).toLocaleString()}
+            secondary={new Date(createdAt).toLocaleString('en-US', { timeZone: 'UTC' })}
           />
         </ListItem>
         {(updatedAt && updatedAt !== createdAt) && (

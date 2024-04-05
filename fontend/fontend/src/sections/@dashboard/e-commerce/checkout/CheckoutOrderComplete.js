@@ -72,13 +72,6 @@ export default function CheckoutOrderComplete({ isAuctionCheckout, ...other }) {
           <Button color="inherit" onClick={handleResetStep} startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}>
             Continue Shopping
           </Button>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon={'ant-design:file-pdf-filled'} />}
-            onClick={handleResetStep}
-          >
-            Download as PDF
-          </Button>
         </Stack>
       </Box>
     </DialogStyle>

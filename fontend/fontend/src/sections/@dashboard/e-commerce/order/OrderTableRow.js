@@ -112,7 +112,8 @@ export default function OrderTableRow({ row, selected, onEditRow, onSelectRow, o
         </Typography>
       </TableCell>
 
-      <TableCell>{createdAt}</TableCell>
+      <TableCell>{fDate(new Date(createdAt))}</TableCell>
+
 
       <TableCell align="center">
         {paymentOption === 'Cash on CheckoutDelivery' ? 'CheckoutDelivery' : 'Paypal'}

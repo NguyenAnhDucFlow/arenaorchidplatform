@@ -14,6 +14,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import OrderDetail from '../../sections/@dashboard/invoice/details';
 import axios from '../../utils/axios';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,8 @@ export default function OrderDetails() {
   const invoice = _invoices.find((invoice) => invoice.id === id);
 
   const [orderArr, setOrder] = useState();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +44,9 @@ export default function OrderDetails() {
 
   return (
     <Page title="Order details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'}
+        sx={{ ...(user.role.name === 'Customer' ? { marginBlockStart: 15 } : {}) }}
+      >
         <HeaderBreadcrumbs
           heading="Invoice Details"
           links={[
